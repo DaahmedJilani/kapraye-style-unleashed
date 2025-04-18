@@ -52,6 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Kaprayé brand colors
+				kapraye: {
+					cream: '#F9F1F0',
+					burgundy: '#663635',
+					pink: '#E1999F',
+					mauve: '#DEB3AD',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

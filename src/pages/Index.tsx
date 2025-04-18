@@ -1,13 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { HeroSection } from "@/components/home/hero-section";
+import { FeaturedCategories } from "@/components/home/featured-categories";
+import { FeaturedProducts } from "@/components/home/featured-products";
+import { LoyaltySection } from "@/components/home/loyalty-section";
+import { NewsletterSection } from "@/components/home/newsletter-section";
+import { AboutSection } from "@/components/home/about-section";
+import { MainLayout } from "@/components/layout/main-layout";
+import { useEffect } from "react";
 
 const Index = () => {
+  // Add parallax scroll effect for enhanced 3D feel
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const parallaxElements = document.querySelectorAll('.parallax-scroll');
+      
+      parallaxElements.forEach((element) => {
+        const speed = (element as HTMLElement).dataset.speed || "0.1";
+        const yPos = scrollPosition * parseFloat(speed);
+        (element as HTMLElement).style.transform = `translateY(${yPos}px)`;
+      });
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <MainLayout>
+      <HeroSection />
+      <FeaturedCategories />
+      <AboutSection />
+      <FeaturedProducts />
+      <LoyaltySection />
+      <NewsletterSection />
+    </MainLayout>
   );
 };
 
