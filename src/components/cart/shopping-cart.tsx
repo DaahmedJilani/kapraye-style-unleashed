@@ -1,16 +1,17 @@
 
 import { ShoppingBag } from "lucide-react";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CartItem {
   id: string;
@@ -18,6 +19,7 @@ interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  size?: string;
 }
 
 interface ShoppingCartProps {
@@ -38,87 +40,103 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
   };
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
+    <Sheet>
+      <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="relative">
           <ShoppingBag className="h-4 w-4" />
           {items.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 bg-kapraye-burgundy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {items.length}
             </span>
           )}
         </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            <DrawerTitle>Shopping Cart ({items.length} items)</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 space-y-4">
-            {items.length === 0 ? (
-              <p className="text-center text-muted-foreground">Your cart is empty</p>
-            ) : (
-              items.map((item) => (
-                <div key={item.id} className="flex items-center gap-4">
+      </SheetTrigger>
+      <SheetContent className="w-full sm:max-w-lg">
+        <SheetHeader>
+          <SheetTitle className="font-playfair text-2xl">Shopping Cart ({items.length})</SheetTitle>
+        </SheetHeader>
+        <ScrollArea className="flex-1 h-[calc(100vh-12rem)] mt-4">
+          {items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-lg font-medium mb-2">Your cart is empty</p>
+              <p className="text-sm text-muted-foreground">
+                Add items to your cart to see them here
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-start gap-4 p-4 bg-accent/50 rounded-lg"
+                >
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-16 h-16 object-cover rounded"
+                    className="w-20 h-20 object-cover rounded"
                   />
-                  <div className="flex-1">
+                  <div className="flex-1 space-y-1">
                     <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      ${item.price.toFixed(2)} x {item.quantity}
+                    {item.size && (
+                      <p className="text-sm text-muted-foreground">Size: {item.size}</p>
+                    )}
+                    <p className="text-sm font-medium text-kapraye-burgundy">
+                      ${(item.price * item.quantity).toFixed(2)}
                     </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </Button>
-                    <span>{item.quantity}</span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onRemoveItem(item.id)}
-                      className="text-red-500"
-                    >
-                      ×
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </Button>
+                      <span className="w-8 text-center">{item.quantity}</span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                      >
+                        +
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onRemoveItem(item.id)}
+                        className="ml-auto text-destructive hover:text-destructive"
+                      >
+                        Remove
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-          <DrawerFooter>
-            {items.length > 0 && (
-              <>
-                <div className="flex justify-between mb-4">
-                  <span className="font-medium">Total:</span>
-                  <span className="font-medium">${total.toFixed(2)}</span>
-                </div>
-                <Button onClick={handleCheckout} className="w-full">
-                  Checkout
-                </Button>
-              </>
-            )}
-            <DrawerClose asChild>
-              <Button variant="outline">Close</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
-    </Drawer>
+              ))}
+            </div>
+          )}
+        </ScrollArea>
+        <SheetFooter className="mt-4">
+          {items.length > 0 && (
+            <div className="w-full space-y-4">
+              <div className="flex items-center justify-between text-lg font-medium">
+                <span>Total:</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+              <Button onClick={handleCheckout} className="w-full" size="lg">
+                Proceed to Checkout
+              </Button>
+            </div>
+          )}
+          <SheetClose asChild>
+            <Button variant="outline" className="w-full mt-2">
+              Continue Shopping
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
