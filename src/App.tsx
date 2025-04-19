@@ -12,6 +12,10 @@ import Auth from "./pages/auth";
 import Wishlist from "./pages/wishlist";
 import MenPage from "./pages/categories/men";
 import WomenPage from "./pages/categories/women";
+import KidsPage from "./pages/categories/kids";
+import EasternPage from "./pages/categories/eastern";
+import WesternPage from "./pages/categories/western";
+import SaudiPage from "./pages/categories/saudi";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,10 @@ const App = () => (
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/men" element={<MenPage />} />
           <Route path="/women" element={<WomenPage />} />
+          <Route path="/kids" element={<KidsPage />} />
+          <Route path="/eastern" element={<EasternPage />} />
+          <Route path="/western" element={<WesternPage />} />
+          <Route path="/saudi" element={<SaudiPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
