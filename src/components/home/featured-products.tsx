@@ -5,6 +5,7 @@ import { ShoppingCart } from "../cart/shopping-cart";
 import { ProductReviews } from "../reviews/product-reviews";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface Product {
   id: string;
