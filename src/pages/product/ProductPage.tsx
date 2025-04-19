@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
@@ -90,6 +91,23 @@ export default function ProductPage() {
     toast({
       title: "Added to cart",
       description: `${product.name} (Size: ${selectedSize}) has been added to your cart.`
+    });
+  };
+
+  const handleAddToWishlist = () => {
+    // Check if size is selected
+    if (!selectedSize) {
+      toast({
+        title: "Please select a size",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Display success toast notification
+    toast({
+      title: "Added to wishlist",
+      description: `${product.name} (Size: ${selectedSize}) has been added to your wishlist.`
     });
   };
 
