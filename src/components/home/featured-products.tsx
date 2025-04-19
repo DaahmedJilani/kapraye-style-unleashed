@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { ProductSearch } from "./product-search";
+import { ProductFilters } from "./product-filters";
 
 interface Product {
   id: string;
@@ -39,6 +42,18 @@ const products: Product[] = [
 ];
 
 export function FeaturedProducts() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  const categories = Array.from(new Set(products.map(product => product.category)));
+
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === "all" || product.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <section className="py-20 bg-gradient-to-b from-kapraye-cream/20 to-white">
       <div className="container px-4 md:px-8">
@@ -66,9 +81,20 @@ export function FeaturedProducts() {
             </svg>
           </a>
         </div>
+
+        <div className="space-y-6 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+            <ProductSearch onSearch={setSearchTerm} />
+            <ProductFilters
+              categories={categories}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+            />
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
+          {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
               className="group relative animate-fade-in"
@@ -94,7 +120,6 @@ export function FeaturedProducts() {
                   ${product.price.toFixed(2)}
                 </p>
               </div>
-              {/* Hover overlay with quick actions */}
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
                 <div className="bg-white rounded-full p-3 m-2 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
                   <svg className="w-5 h-5 text-kapraye-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,6 +141,12 @@ export function FeaturedProducts() {
             </div>
           ))}
         </div>
+
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
+          </div>
+        )}
       </div>
     </section>
   );
