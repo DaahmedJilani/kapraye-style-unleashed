@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductReviews } from "@/components/reviews/product-reviews";
+import { SizeGuide } from "@/components/product/size-guide";
 
 interface ProductTabsProps {
   product: {
@@ -22,6 +23,12 @@ export function ProductTabs({ product }: ProductTabsProps) {
             className="text-base rounded-none px-0 mr-8 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-kapraye-burgundy data-[state=active]:shadow-none"
           >
             Product Details
+          </TabsTrigger>
+          <TabsTrigger 
+            value="size" 
+            className="text-base rounded-none px-0 mr-8 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-kapraye-burgundy data-[state=active]:shadow-none"
+          >
+            Size Guide
           </TabsTrigger>
           <TabsTrigger 
             value="care" 
@@ -67,6 +74,14 @@ export function ProductTabs({ product }: ProductTabsProps) {
                   </p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="size" className="mt-0">
+          <Card className="border-none shadow-none bg-transparent">
+            <CardContent className="p-0">
+              <SizeGuide />
             </CardContent>
           </Card>
         </TabsContent>
