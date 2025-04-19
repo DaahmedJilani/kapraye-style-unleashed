@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductInfo } from "@/components/product/product-info";
@@ -18,12 +17,25 @@ interface CartItem {
   size?: string;
 }
 
+interface WishlistItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  size: string;
+}
+
 export default function ProductPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
+    const saved = localStorage.getItem('wishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const product = {
     id: id,
@@ -95,7 +107,6 @@ export default function ProductPage() {
   };
 
   const handleAddToWishlist = () => {
-    // Check if size is selected
     if (!selectedSize) {
       toast({
         title: "Please select a size",
@@ -104,10 +115,35 @@ export default function ProductPage() {
       return;
     }
     
-    // Display success toast notification
-    toast({
-      title: "Added to wishlist",
-      description: `${product.name} (Size: ${selectedSize}) has been added to your wishlist.`
+    const wishlistItem: WishlistItem = {
+      id: `${id}-${selectedSize}`,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      size: selectedSize
+    };
+
+    setWishlistItems((prevItems) => {
+      const exists = prevItems.some(item => item.id === wishlistItem.id);
+      
+      if (exists) {
+        toast({
+          title: "Already in wishlist",
+          description: "This item is already in your wishlist.",
+          variant: "destructive"
+        });
+        return prevItems;
+      }
+
+      const newItems = [...prevItems, wishlistItem];
+      localStorage.setItem('wishlist', JSON.stringify(newItems));
+      
+      toast({
+        title: "Added to wishlist",
+        description: `${product.name} (Size: ${selectedSize}) has been added to your wishlist.`
+      });
+      
+      return newItems;
     });
   };
 
