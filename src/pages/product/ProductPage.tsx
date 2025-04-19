@@ -13,29 +13,35 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  // This would typically come from an API
+  // Sample T-shirt product data
   const product = {
     id: id,
-    name: "Dior Oblique Jacket",
-    price: 3800.00,
-    description: "The Dior Oblique jacket is crafted in blue technical cotton canvas and features the iconic Dior Oblique motif. The sportswear-inspired design has a regular fit and showcases the House's exceptional savoir-faire.",
-    sizes: ["XS", "S", "M", "L", "XL"],
+    name: "Essential Cotton T-Shirt",
+    price: 49.99,
+    description: "A luxurious cotton t-shirt crafted from the finest Egyptian cotton. Features a classic crew neck, short sleeves, and a comfortable regular fit. Perfect for everyday wear with a premium feel.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000",
-      "https://images.unsplash.com/photo-1578932750294-f5075e85f44a?q=80&w=1000",
-      "https://images.unsplash.com/photo-1578932750294-f5075e85f44b?q=80&w=1000",
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=60",
+      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=60",
+      "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=60",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=60"
     ],
     details: [
+      "100% Premium Egyptian Cotton",
       "Regular fit",
-      "100% cotton",
-      "Machine washable",
-      "Made in Italy"
+      "Crew neck",
+      "Short sleeves",
+      "Ribbed collar",
+      "Made in Portugal",
+      "Machine washable"
     ],
     care: [
-      "Machine wash cold",
+      "Machine wash at 30°C",
       "Do not bleach",
       "Tumble dry low",
-      "Iron low heat"
+      "Iron on medium heat",
+      "Do not dry clean",
+      "Wash with similar colors"
     ]
   };
 
