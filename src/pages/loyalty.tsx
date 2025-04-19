@@ -1,212 +1,135 @@
 
 import { MainLayout } from "@/components/layout/main-layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ParallaxContainer } from "@/components/ui/parallax-container";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Gift, Star, Crown, ShoppingBag } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-const Loyalty = () => {
+const tiers = [
+  {
+    name: "Bronze",
+    icon: ShoppingBag,
+    points: 0,
+    requiredPoints: 1000,
+    benefits: ["Free shipping on orders over $100", "Birthday special offer"]
+  },
+  {
+    name: "Silver",
+    icon: Star,
+    points: 1000,
+    requiredPoints: 2500,
+    benefits: ["5% discount on all orders", "Early access to sales", "Free returns"]
+  },
+  {
+    name: "Gold",
+    icon: Crown,
+    points: 2500,
+    requiredPoints: 5000,
+    benefits: ["10% discount on all orders", "Priority customer support", "Exclusive events access", "Double points weekends"]
+  }
+];
+
+// Mock user data - this would come from your backend
+const userPoints = 1500;
+const currentTier = tiers[1]; // Silver tier
+const pointsToNextTier = currentTier.requiredPoints - userPoints;
+
+const recentActivities = [
+  { date: "2024-04-15", activity: "Purchase", points: 150, orderId: "#ORD-001" },
+  { date: "2024-04-10", activity: "Review submitted", points: 50, orderId: "REV-001" },
+  { date: "2024-04-05", activity: "Purchase", points: 200, orderId: "#ORD-002" },
+];
+
+export default function Loyalty() {
   return (
     <MainLayout>
-      <section className="pt-32 pb-16 bg-luxury-gradient">
-        <div className="container px-4 md:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-playfair font-medium text-kapraye-burgundy mb-4">
-              SHUKRAN Loyalty Program
-            </h1>
-            <p className="text-lg text-foreground/90 max-w-2xl mx-auto mb-6">
-              Earn rewards with every purchase and enjoy exclusive benefits as a valued member
-              of our SHUKRAN loyalty program.
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-white">
-        <div className="container px-4 md:px-8">
-          <ParallaxContainer sensitivity={0.03}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-kapraye-cream/30 rounded-lg p-8 text-center hover-lift parallax-layer">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-kapraye-burgundy text-white mb-6">
-                  <span className="text-2xl font-playfair">1</span>
+      <div className="container mx-auto px-4 py-16 space-y-8">
+        {/* Current Status */}
+        <Card className="bg-gradient-to-r from-kapraye-burgundy/10 to-kapraye-pink/10">
+          <CardHeader>
+            <CardTitle className="text-2xl font-playfair text-kapraye-burgundy">
+              SHUKRAN Rewards
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1 space-y-4 w-full">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-medium">{userPoints} points</span>
+                  <span className="text-sm text-muted-foreground">
+                    {pointsToNextTier} points to next tier
+                  </span>
                 </div>
-                <h3 className="text-xl font-playfair font-medium text-kapraye-burgundy mb-3">Join</h3>
-                <p className="text-foreground/90">
-                  Create your account and start earning points with your first purchase.
-                  Membership is completely free.
-                </p>
+                <Progress value={(userPoints / currentTier.requiredPoints) * 100} className="h-2" />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{currentTier.name}</span>
+                  <span>{tiers[2].name}</span>
+                </div>
               </div>
-              
-              <div className="bg-kapraye-cream/30 rounded-lg p-8 text-center hover-lift parallax-layer depth-1">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-kapraye-burgundy text-white mb-6">
-                  <span className="text-2xl font-playfair">2</span>
-                </div>
-                <h3 className="text-xl font-playfair font-medium text-kapraye-burgundy mb-3">Earn</h3>
-                <p className="text-foreground/90">
-                  Collect 10 points for every $1 spent on any purchase online or in-store.
-                  Special promotions offer bonus points.
-                </p>
-              </div>
-              
-              <div className="bg-kapraye-cream/30 rounded-lg p-8 text-center hover-lift parallax-layer depth-2">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-kapraye-burgundy text-white mb-6">
-                  <span className="text-2xl font-playfair">3</span>
-                </div>
-                <h3 className="text-xl font-playfair font-medium text-kapraye-burgundy mb-3">Redeem</h3>
-                <p className="text-foreground/90">
-                  Use your points for discounts, exclusive products, early access to sales,
-                  and special experiences.
-                </p>
+              <div className="text-center md:text-right">
+                <currentTier.icon className="w-12 h-12 mx-auto md:ml-auto md:mr-0 text-kapraye-burgundy mb-2" />
+                <h3 className="text-xl font-medium">{currentTier.name} Member</h3>
               </div>
             </div>
-          </ParallaxContainer>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-kapraye-cream/20">
-        <div className="container px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl font-playfair font-medium text-kapraye-burgundy mb-6">
-                  Membership Tiers
-                </h2>
-                <p className="text-base text-foreground/90 mb-6">
-                  As you shop and earn points, you'll ascend through our exclusive membership tiers,
-                  unlocking enhanced benefits and privileges at each level.
-                </p>
-                
-                <div className="space-y-6">
-                  <div className="flex items-start">
-                    <div className="mr-4 mt-1">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-kapraye-cream to-kapraye-mauve flex items-center justify-center">
-                        <span className="text-xs font-bold text-kapraye-burgundy">1</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Pearl</h3>
-                      <p className="text-sm text-foreground/90">
-                        0-1000 points. Welcome gift, birthday offers, exclusive newsletter.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="mr-4 mt-1">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-kapraye-mauve to-kapraye-pink flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">2</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Ruby</h3>
-                      <p className="text-sm text-foreground/90">
-                        1001-5000 points. All Pearl benefits plus free shipping, early access to sales.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="mr-4 mt-1">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-kapraye-pink to-kapraye-burgundy flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">3</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Diamond</h3>
-                      <p className="text-sm text-foreground/90">
-                        5001+ points. All Ruby benefits plus personal shopping assistant, exclusive events, custom tailoring.
-                      </p>
-                    </div>
-                  </div>
+          </CardContent>
+        </Card>
+
+        {/* Benefits Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {tiers.map((tier) => (
+            <Card key={tier.name} className={`${tier.name === currentTier.name ? 'border-kapraye-burgundy' : ''}`}>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <tier.icon className="w-5 h-5 text-kapraye-burgundy" />
+                  <CardTitle className="text-lg">{tier.name}</CardTitle>
                 </div>
-              </div>
-              
-              <div className="bg-white rounded-xl p-8 shadow-sm">
-                <h3 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
-                  Join SHUKRAN Today
-                </h3>
-                <form className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-1">Full Name</label>
-                    <Input id="name" placeholder="Enter your full name" />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-1">Email Address</label>
-                    <Input id="email" type="email" placeholder="Enter your email" />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone Number</label>
-                    <Input id="phone" placeholder="Enter your phone number" />
-                  </div>
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium mb-1">Create Password</label>
-                    <Input id="password" type="password" placeholder="Create a secure password" />
-                  </div>
-                  <Button className="w-full bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white">
-                    Create SHUKRAN Account
-                  </Button>
-                  <p className="text-xs text-center text-foreground/70 mt-4">
-                    By signing up, you agree to our Terms of Service and Privacy Policy
-                  </p>
-                </form>
-              </div>
-            </div>
-          </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {tier.points.toLocaleString()} points required
+                </p>
+                <ul className="space-y-2">
+                  {tier.benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-center gap-2 text-sm">
+                      <Gift className="w-4 h-4 text-kapraye-burgundy" />
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </section>
-      
-      <section className="py-16 bg-white">
-        <div className="container px-4 md:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-playfair font-medium text-kapraye-burgundy mb-6">
-              Frequently Asked Questions
-            </h2>
-            
-            <div className="text-left space-y-6 mt-8">
-              <div>
-                <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy mb-2">
-                  How do I check my points balance?
-                </h3>
-                <p className="text-foreground/90">
-                  You can check your points balance by logging into your SHUKRAN account on our website 
-                  or mobile app. Your current points, tier status, and available rewards will be displayed on your dashboard.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy mb-2">
-                  Do my points expire?
-                </h3>
-                <p className="text-foreground/90">
-                  Points are valid for 12 months from the date they were earned. Any activity on your account 
-                  will extend the validity of all your existing points for another 12 months.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy mb-2">
-                  Can I earn points on sale items?
-                </h3>
-                <p className="text-foreground/90">
-                  Yes! You earn points on all purchases, including sale items. Special promotions may 
-                  offer bonus points on specific collections or during certain periods.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy mb-2">
-                  How do I redeem my points?
-                </h3>
-                <p className="text-foreground/90">
-                  During checkout, you'll have the option to apply your available points toward your purchase. 
-                  You can choose how many points you'd like to redeem. 1000 points equals $10 in redemption value.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+        {/* Recent Activity */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Activity</TableHead>
+                  <TableHead>Reference</TableHead>
+                  <TableHead>Points</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recentActivities.map((activity, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{activity.date}</TableCell>
+                    <TableCell>{activity.activity}</TableCell>
+                    <TableCell>{activity.orderId}</TableCell>
+                    <TableCell>+{activity.points}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </MainLayout>
   );
-};
-
-export default Loyalty;
+}
