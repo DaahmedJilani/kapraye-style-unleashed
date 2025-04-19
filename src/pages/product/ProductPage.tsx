@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductInfo } from "@/components/product/product-info";
 import { ProductTabs } from "@/components/product/product-tabs";
+import { SimilarItems } from "@/components/product/similar-items";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ProductPage() {
@@ -13,7 +13,6 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  // Sample T-shirt product data
   const product = {
     id: id,
     name: "Essential Cotton T-Shirt",
@@ -87,6 +86,7 @@ export default function ProductPage() {
           </div>
         </div>
         <ProductTabs product={product} />
+        <SimilarItems currentProductId={product.id} />
       </div>
     </MainLayout>
   );
