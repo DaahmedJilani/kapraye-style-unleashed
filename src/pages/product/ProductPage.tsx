@@ -69,18 +69,22 @@ export default function ProductPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-20 mt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ProductGallery images={product.images} />
-          <ProductInfo
-            product={product}
-            selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            onAddToCart={handleAddToCart}
-            onAddToWishlist={handleAddToWishlist}
-          />
+      <div className="container mx-auto px-4 py-10 mt-16 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-7">
+            <ProductGallery images={product.images} />
+          </div>
+          <div className="lg:col-span-5">
+            <ProductInfo
+              product={product}
+              selectedSize={selectedSize}
+              setSelectedSize={setSelectedSize}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              onAddToCart={handleAddToCart}
+              onAddToWishlist={handleAddToWishlist}
+            />
+          </div>
         </div>
         <ProductTabs product={product} />
       </div>
