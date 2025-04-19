@@ -1,10 +1,11 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
+import { ProductReviews } from "@/components/reviews/product-reviews";
 
 interface ProductTabsProps {
   product: {
+    id: string;
     details: string[];
     care: string[];
   };
@@ -27,6 +28,12 @@ export function ProductTabs({ product }: ProductTabsProps) {
             className="text-base rounded-none px-0 mr-8 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-kapraye-burgundy data-[state=active]:shadow-none"
           >
             Care Instructions
+          </TabsTrigger>
+          <TabsTrigger 
+            value="reviews" 
+            className="text-base rounded-none px-0 mr-8 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-kapraye-burgundy data-[state=active]:shadow-none"
+          >
+            Reviews
           </TabsTrigger>
           <TabsTrigger 
             value="shipping" 
@@ -90,6 +97,10 @@ export function ProductTabs({ product }: ProductTabsProps) {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="reviews" className="mt-0">
+          <ProductReviews productId={product.id} />
         </TabsContent>
         
         <TabsContent value="shipping" className="mt-0">
