@@ -1,5 +1,5 @@
 
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface CartItem {
   id: string;
@@ -30,12 +31,14 @@ interface ShoppingCartProps {
 
 export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: ShoppingCartProps) {
   const { toast } = useToast();
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal > 100 ? 0 : 10;
+  const total = subtotal + shipping;
 
   const handleCheckout = () => {
     toast({
       title: "Checkout initiated",
-      description: "Redirecting to payment...",
+      description: "Processing your order...",
     });
   };
 
@@ -51,91 +54,109 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
+      <SheetContent className="w-full sm:max-w-lg flex flex-col h-full">
+        <SheetHeader className="space-y-2.5">
           <SheetTitle className="font-playfair text-2xl">Shopping Cart ({items.length})</SheetTitle>
+          <Separator />
         </SheetHeader>
-        <ScrollArea className="flex-1 h-[calc(100vh-12rem)] mt-4">
-          {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium mb-2">Your cart is empty</p>
-              <p className="text-sm text-muted-foreground">
-                Add items to your cart to see them here
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-start gap-4 p-4 bg-accent/50 rounded-lg"
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-20 h-20 object-cover rounded"
-                  />
-                  <div className="flex-1 space-y-1">
-                    <h4 className="font-medium">{item.name}</h4>
-                    {item.size && (
-                      <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                    )}
-                    <p className="text-sm font-medium text-kapraye-burgundy">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                      >
-                        -
-                      </Button>
-                      <span className="w-8 text-center">{item.quantity}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                      >
-                        +
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onRemoveItem(item.id)}
-                        className="ml-auto text-destructive hover:text-destructive"
-                      >
-                        Remove
-                      </Button>
+
+        {items.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+            <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="font-medium text-lg mb-2">Your cart is empty</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Add items to your cart to see them here
+            </p>
+            <SheetClose asChild>
+              <Button variant="outline">Continue Shopping</Button>
+            </SheetClose>
+          </div>
+        ) : (
+          <>
+            <ScrollArea className="flex-1 px-1">
+              <div className="space-y-4 pt-4">
+                {items.map((item) => (
+                  <div key={item.id} className="flex gap-4 bg-accent/50 p-4 rounded-lg">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <div>
+                          <h4 className="font-medium line-clamp-2">{item.name}</h4>
+                          {item.size && (
+                            <p className="text-sm text-muted-foreground mt-1">Size: {item.size}</p>
+                          )}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => onRemoveItem(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center border rounded-md">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-none"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                            disabled={item.quantity <= 1}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-12 text-center text-sm">{item.quantity}</span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-none"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <p className="font-medium text-kapraye-burgundy">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            </ScrollArea>
+
+            <div className="space-y-4 pt-6">
+              <Separator />
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
-              ))}
-            </div>
-          )}
-        </ScrollArea>
-        <SheetFooter className="mt-4">
-          {items.length > 0 && (
-            <div className="w-full space-y-4">
-              <div className="flex items-center justify-between text-lg font-medium">
-                <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <div className="flex justify-between text-sm">
+                  <span>Shipping</span>
+                  <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                </div>
+                <div className="flex justify-between font-medium text-lg">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
               </div>
               <Button onClick={handleCheckout} className="w-full" size="lg">
-                Proceed to Checkout
+                Proceed to Checkout (${total.toFixed(2)})
               </Button>
+              <SheetClose asChild>
+                <Button variant="outline" className="w-full">
+                  Continue Shopping
+                </Button>
+              </SheetClose>
             </div>
-          )}
-          <SheetClose asChild>
-            <Button variant="outline" className="w-full mt-2">
-              Continue Shopping
-            </Button>
-          </SheetClose>
-        </SheetFooter>
+          </>
+        )}
       </SheetContent>
     </Sheet>
   );
