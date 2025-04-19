@@ -1,6 +1,13 @@
 
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface SimilarItem {
   id: string;
@@ -52,43 +59,57 @@ export function SimilarItems({ currentProductId }: SimilarItemsProps) {
       <h2 className="text-2xl font-light tracking-tight text-gray-900 mb-8 font-cormorant text-center">
         You Might Also Like
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {similarItems.map((item) => (
-          <Link 
-            key={item.id}
-            to={`/product/${item.id}`}
-            className="group"
-          >
-            <div className="aspect-[3/4] overflow-hidden bg-gray-50 mb-4">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-1 text-kapraye-burgundy">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star
-                    key={index}
-                    className={`w-4 h-4 ${
-                      index < Math.floor(item.rating)
-                        ? "fill-current"
-                        : index < item.rating
-                        ? "fill-current opacity-50"
-                        : "opacity-30"
-                    }`}
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {similarItems.map((item) => (
+            <CarouselItem key={item.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/4">
+              <Link 
+                to={`/product/${item.id}`}
+                className="group block"
+              >
+                <div className="aspect-[3/4] overflow-hidden bg-gray-50 rounded-lg mb-4">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
-                ))}
-              </div>
-              <h3 className="font-light text-gray-900">{item.name}</h3>
-              <p className="font-medium text-kapraye-burgundy">
-                ${item.price.toFixed(2)}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1 text-kapraye-burgundy">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star
+                        key={index}
+                        className={`w-4 h-4 ${
+                          index < Math.floor(item.rating)
+                            ? "fill-current"
+                            : index < item.rating
+                            ? "fill-current opacity-50"
+                            : "opacity-30"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <h3 className="font-light text-gray-900 group-hover:text-kapraye-burgundy transition-colors">
+                    {item.name}
+                  </h3>
+                  <p className="font-medium text-kapraye-burgundy">
+                    ${item.price.toFixed(2)}
+                  </p>
+                </div>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="hidden md:flex -left-4" />
+        <CarouselNext className="hidden md:flex -right-4" />
+      </Carousel>
     </section>
   );
 }
+
