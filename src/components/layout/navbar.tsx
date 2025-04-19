@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -10,12 +9,12 @@ interface NavLink {
 }
 
 const mainLinks: NavLink[] = [
-  { name: "Men", href: "#men" },
-  { name: "Women", href: "#women" },
-  { name: "Kids", href: "#kids" },
-  { name: "Eastern", href: "#eastern" },
-  { name: "Western", href: "#western" },
-  { name: "Saudi Style", href: "#saudi" },
+  { name: "Men", href: "/men" },
+  { name: "Women", href: "/women" },
+  { name: "Kids", href: "/kids" },
+  { name: "Eastern", href: "/eastern" },
+  { name: "Western", href: "/western" },
+  { name: "Saudi Style", href: "/saudi" },
 ];
 
 const secondaryLinks: NavLink[] = [
@@ -43,25 +42,25 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-8">
           {mainLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
+              to={link.href}
               className="text-sm font-medium text-foreground hover:text-kapraye-pink transition-colors"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
           
           <div className="h-4 w-px bg-kapraye-mauve/40 mx-2"></div>
           
           {secondaryLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
+              to={link.href}
               className="text-sm font-medium text-foreground hover:text-kapraye-pink transition-colors"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
         

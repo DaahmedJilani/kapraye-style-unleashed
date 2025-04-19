@@ -10,6 +10,8 @@ import Loyalty from "./pages/loyalty";
 import Dashboard from "./pages/dashboard";
 import Auth from "./pages/auth";
 import Wishlist from "./pages/wishlist";
+import MenPage from "./pages/categories/men";
+import WomenPage from "./pages/categories/women";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/men" element={<MenPage />} />
+          <Route path="/women" element={<WomenPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
