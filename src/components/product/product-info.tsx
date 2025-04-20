@@ -53,7 +53,12 @@ export function ProductInfo({ product, selectedSize, setSelectedSize, onAddToCar
           <span className="text-sm font-medium">{rating}</span>
           <span className="text-sm text-muted-foreground">({reviewCount} Reviews)</span>
         </div>
-        <h3 className="text-3xl font-bold">{formatPrice(product.price)}</h3>
+        <div className="mt-4">
+          <span className="text-lg text-muted-foreground font-cormorant tracking-wider">Price</span>
+          <h3 className="text-4xl font-cormorant font-light text-kapraye-burgundy tracking-widest">
+            {formatPrice(product.price)}
+          </h3>
+        </div>
       </div>
 
       <Separator />
