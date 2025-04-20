@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Define the available currencies
@@ -106,45 +105,63 @@ const AppSettingsContext = createContext<AppSettingsContextType>({
 export const useAppSettings = () => useContext(AppSettingsContext);
 
 export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currency, setCurrency] = useState<Currency>(currencies.PKR);
-  const [language, setLanguage] = useState<Language>(languages.en);
+  const [currency, setCurrency] = React.useState<Currency>(currencies.PKR);
+  const [language, setLanguage] = React.useState<Language>(languages.en);
 
   // Effect to handle setting the direction on the html tag
-  useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.dir = language.direction;
     document.documentElement.lang = language.code;
   }, [language]);
 
   // Load saved preferences from localStorage on component mount
-  useEffect(() => {
+  React.useEffect(() => {
     const savedCurrency = localStorage.getItem('kapraye-currency');
     const savedLanguage = localStorage.getItem('kapraye-language');
-    
+
+    // If saved currency exists and valid, use it, otherwise default will stay PKR
     if (savedCurrency && currencies[savedCurrency]) {
       setCurrency(currencies[savedCurrency]);
     }
-    
+
     if (savedLanguage && languages[savedLanguage]) {
       setLanguage(languages[savedLanguage]);
     }
   }, []);
 
   // Save preferences to localStorage when they change
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.setItem('kapraye-currency', currency.code);
   }, [currency]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.setItem('kapraye-language', language.code);
   }, [language]);
 
-  // Format price according to the current currency
+  // Format price according to the current currency with refined PKR formatting
   const formatPrice = (price: number): string => {
     const convertedPrice = price * currency.exchangeRate;
-    return `${currency.symbol}${convertedPrice.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })}`;
+
+    if (currency.code === 'PKR') {
+      // Format PKR with thousands separator, no decimal if zero cents, else two decimals
+      const priceRounded = Math.round(convertedPrice);
+      if (convertedPrice === priceRounded) {
+        // No decimal part
+        return `${currency.symbol}${priceRounded.toLocaleString('en-US')}`;
+      } else {
+        // With decimals (usually rare)
+        return `${currency.symbol}${convertedPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })}`;
+      }
+    } else {
+      // Default formatting for other currencies
+      return `${currency.symbol}${convertedPrice.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    }
   };
 
   // Translate function
@@ -153,13 +170,13 @@ export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   };
 
   return (
-    <AppSettingsContext.Provider value={{ 
-      currency, 
-      setCurrency, 
-      language, 
-      setLanguage, 
+    <AppSettingsContext.Provider value={{
+      currency,
+      setCurrency,
+      language,
+      setLanguage,
       formatPrice,
-      t 
+      t
     }}>
       {children}
     </AppSettingsContext.Provider>
