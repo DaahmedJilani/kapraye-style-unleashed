@@ -228,4 +228,12 @@
   .bg-accent-gradient {
     background: linear-gradient(135deg, #E1999F 0%, #663635 100%);
   }
+
+  .font-above-beyond {
+    font-family: 'Above the Beyond', cursive, sans-serif;
+  }
+
+  .font-allure {
+    font-family: 'Allure', cursive, sans-serif;
+  }
 }

@@ -57,13 +57,16 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
       <nav className="container py-2 px-2 sm:px-4 md:px-8 flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex-shrink-0">
+        {/* Logo and Title */}
+        <div className="flex-shrink-0 flex items-center space-x-2">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-playfair font-medium">
-              <span className="text-kapraye-burgundy">Kaprayé</span>
+            <span className="text-3xl font-above-beyond text-kapraye-burgundy font-normal leading-none">
+              Kaprayé
             </span>
           </Link>
+          <span className="text-sm font-allure text-kapraye-mauve select-none" style={{marginTop: '0.3rem'}}>
+            By Rayan
+          </span>
         </div>
 
         {/* Desktop Navigation */}
