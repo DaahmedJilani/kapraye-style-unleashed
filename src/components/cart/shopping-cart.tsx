@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 interface CartItem {
   id: string;
@@ -31,6 +32,8 @@ interface ShoppingCartProps {
 
 export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: ShoppingCartProps) {
   const { toast } = useToast();
+  const { formatPrice, t } = useAppSettings();
+  
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 100 ? 0 : 10;
   const total = subtotal + shipping;
@@ -56,19 +59,19 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-lg flex flex-col h-full">
         <SheetHeader className="space-y-2.5">
-          <SheetTitle className="font-playfair text-2xl">Shopping Cart ({items.length})</SheetTitle>
+          <SheetTitle className="font-playfair text-2xl">{t('cart.title')} ({items.length})</SheetTitle>
           <Separator />
         </SheetHeader>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
             <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="font-medium text-lg mb-2">Your cart is empty</h3>
+            <h3 className="font-medium text-lg mb-2">{t('cart.empty')}</h3>
             <p className="text-sm text-muted-foreground mb-6">
-              Add items to your cart to see them here
+              {t('cart.empty')}
             </p>
             <SheetClose asChild>
-              <Button variant="outline">Continue Shopping</Button>
+              <Button variant="outline">{t('cart.continue')}</Button>
             </SheetClose>
           </div>
         ) : (
@@ -87,7 +90,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                         <div>
                           <h4 className="font-medium line-clamp-2">{item.name}</h4>
                           {item.size && (
-                            <p className="text-sm text-muted-foreground mt-1">Size: {item.size}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{t('product.size')}: {item.size}</p>
                           )}
                         </div>
                         <Button
@@ -121,7 +124,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                           </Button>
                         </div>
                         <p className="font-medium text-kapraye-burgundy">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
                     </div>
@@ -134,24 +137,24 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
               <Separator />
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{t('cart.subtotal')}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span>{t('cart.shipping')}</span>
+                  <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                 </div>
                 <div className="flex justify-between font-medium text-lg">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{t('cart.total')}</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
               </div>
               <Button onClick={handleCheckout} className="w-full" size="lg">
-                Proceed to Checkout (${total.toFixed(2)})
+                {t('cart.checkout')} ({formatPrice(total)})
               </Button>
               <SheetClose asChild>
                 <Button variant="outline" className="w-full">
-                  Continue Shopping
+                  {t('cart.continue')}
                 </Button>
               </SheetClose>
             </div>

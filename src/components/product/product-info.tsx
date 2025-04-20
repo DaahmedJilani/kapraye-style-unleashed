@@ -3,6 +3,7 @@ import { Heart, Share2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 interface ProductInfoProps {
   product: {
@@ -28,6 +29,8 @@ export function ProductInfo({
   onAddToCart,
   onAddToWishlist,
 }: ProductInfoProps) {
+  const { formatPrice, t } = useAppSettings();
+
   return (
     <div className="space-y-8">
       <div>
@@ -51,7 +54,7 @@ export function ProductInfo({
         </Badge>
         
         <p className="text-2xl font-medium text-kapraye-burgundy tracking-wide mt-4">
-          ${product.price.toLocaleString()}
+          {formatPrice(product.price)}
         </p>
       </div>
 
@@ -67,7 +70,7 @@ export function ProductInfo({
 
       <div className="space-y-6">
         <div>
-          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">Size</label>
+          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">{t('product.size')}</label>
           <div className="flex flex-wrap gap-3">
             {product.sizes.map((size) => (
               <button
@@ -86,7 +89,7 @@ export function ProductInfo({
         </div>
 
         <div>
-          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">Quantity</label>
+          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">{t('product.quantity')}</label>
           <div className="flex items-center border border-gray-300 w-fit">
             <button
               onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -110,7 +113,7 @@ export function ProductInfo({
           onClick={onAddToCart}
           className="h-12 rounded-none bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white uppercase tracking-widest font-medium"
         >
-          Add to Bag
+          {t('product.addToCart')}
         </Button>
         
         <div className="flex gap-2">
@@ -119,7 +122,7 @@ export function ProductInfo({
             onClick={onAddToWishlist}
             className="flex-1 h-12 rounded-none border-gray-300 hover:bg-gray-50 text-gray-800 uppercase tracking-widest font-medium"
           >
-            <Heart className="mr-2 h-4 w-4" /> Wishlist
+            <Heart className="mr-2 h-4 w-4" /> {t('product.addToWishlist')}
           </Button>
           
           <Button

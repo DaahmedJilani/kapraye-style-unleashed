@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ProductSearch } from "./product-search";
 import { ProductFilters } from "./product-filters";
@@ -6,6 +7,8 @@ import { ProductReviews } from "../reviews/product-reviews";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { SettingsMenu } from "../settings/settings-menu";
 
 interface Product {
   id: string;
@@ -59,6 +62,7 @@ export function FeaturedProducts() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const { formatPrice, t } = useAppSettings();
 
   const categories = Array.from(new Set(products.map(product => product.category)));
 
@@ -112,6 +116,7 @@ export function FeaturedProducts() {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <SettingsMenu />
             <ShoppingCart
               items={cartItems}
               onUpdateQuantity={updateCartItemQuantity}
@@ -155,7 +160,7 @@ export function FeaturedProducts() {
                   {product.name}
                 </h3>
                 <p className="text-base font-medium text-kapraye-pink">
-                  ${product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
