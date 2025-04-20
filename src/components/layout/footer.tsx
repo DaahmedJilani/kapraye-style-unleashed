@@ -62,7 +62,7 @@ export function Footer() {
             <div className="flex items-center mb-4 md:mb-0">
               <Link to="/" className="text-xl font-playfair font-medium">
                 <span className="text-kapraye-burgundy">Kaprayé</span>
-                <span className="text-sm font-montserrat ml-2">by Rayan</span>
+                <span className="text-sm font-allure ml-2">By Rayan</span>
               </Link>
             </div>
             
