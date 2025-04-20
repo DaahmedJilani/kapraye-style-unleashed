@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,22 +11,22 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-playfair font-medium mb-4 text-kapraye-burgundy">Shop</h3>
             <ul className="space-y-2">
-              <li><a href="#men" className="text-sm hover:text-kapraye-pink transition-colors">Men</a></li>
-              <li><a href="#women" className="text-sm hover:text-kapraye-pink transition-colors">Women</a></li>
-              <li><a href="#kids" className="text-sm hover:text-kapraye-pink transition-colors">Kids</a></li>
-              <li><a href="#eastern" className="text-sm hover:text-kapraye-pink transition-colors">Eastern</a></li>
-              <li><a href="#western" className="text-sm hover:text-kapraye-pink transition-colors">Western</a></li>
-              <li><a href="#saudi" className="text-sm hover:text-kapraye-pink transition-colors">Saudi Style</a></li>
+              <li><Link to="/men" className="text-sm hover:text-kapraye-pink transition-colors">Men</Link></li>
+              <li><Link to="/women" className="text-sm hover:text-kapraye-pink transition-colors">Women</Link></li>
+              <li><Link to="/kids" className="text-sm hover:text-kapraye-pink transition-colors">Kids</Link></li>
+              <li><Link to="/eastern" className="text-sm hover:text-kapraye-pink transition-colors">Eastern</Link></li>
+              <li><Link to="/western" className="text-sm hover:text-kapraye-pink transition-colors">Western</Link></li>
+              <li><Link to="/saudi" className="text-sm hover:text-kapraye-pink transition-colors">Saudi Style</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-xl font-playfair font-medium mb-4 text-kapraye-burgundy">Categories</h3>
             <ul className="space-y-2">
-              <li><a href="#makeup" className="text-sm hover:text-kapraye-pink transition-colors">Makeup</a></li>
-              <li><a href="#accessories" className="text-sm hover:text-kapraye-pink transition-colors">Accessories</a></li>
-              <li><a href="#perfumes" className="text-sm hover:text-kapraye-pink transition-colors">Perfumes</a></li>
-              <li><a href="#shoes" className="text-sm hover:text-kapraye-pink transition-colors">Shoes</a></li>
+              <li><Link to="/makeup" className="text-sm hover:text-kapraye-pink transition-colors">Makeup</Link></li>
+              <li><Link to="/accessories" className="text-sm hover:text-kapraye-pink transition-colors">Accessories</Link></li>
+              <li><Link to="/perfumes" className="text-sm hover:text-kapraye-pink transition-colors">Perfumes</Link></li>
+              <li><Link to="/shoes" className="text-sm hover:text-kapraye-pink transition-colors">Shoes</Link></li>
             </ul>
           </div>
           

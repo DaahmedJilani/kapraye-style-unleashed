@@ -19,10 +19,10 @@ const mainLinks: NavLink[] = [
 ];
 
 const secondaryLinks: NavLink[] = [
-  { name: "Makeup", href: "#makeup" },
-  { name: "Accessories", href: "#accessories" },
-  { name: "Perfumes", href: "#perfumes" },
-  { name: "Shoes", href: "#shoes" },
+  { name: "Makeup", href: "/makeup" },
+  { name: "Accessories", href: "/accessories" },
+  { name: "Perfumes", href: "/perfumes" },
+  { name: "Shoes", href: "/shoes" },
 ];
 
 export function Navbar() {

@@ -24,6 +24,10 @@ import ContactPage from "./pages/company/contact";
 import CareersPage from "./pages/company/careers";
 import TermsPage from "./pages/company/terms";
 import PrivacyPage from "./pages/company/privacy";
+import MakeupPage from "./pages/categories/makeup";
+import AccessoriesPage from "./pages/categories/accessories";
+import PerfumesPage from "./pages/categories/perfumes";
+import ShoesPage from "./pages/categories/shoes";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +60,12 @@ const App = () => (
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            
+            {/* Category routes */}
+            <Route path="/makeup" element={<MakeupPage />} />
+            <Route path="/accessories" element={<AccessoriesPage />} />
+            <Route path="/perfumes" element={<PerfumesPage />} />
+            <Route path="/shoes" element={<ShoesPage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
