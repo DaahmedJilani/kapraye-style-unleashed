@@ -193,7 +193,7 @@ export default function SubcategoryPage() {
           <SortAndFilterSidebar
             categories={filters}
             selectedCategory={subcategoryTitle}
-            onCategoryChange={() => {}} // No-op since subcategory already determined; you can expand this if desired
+            onCategoryChange={() => {}} // No-op since subcategory already determined
             sortOption={sortOption}
             onSortChange={setSortOption}
           />
@@ -205,7 +205,7 @@ export default function SubcategoryPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedProducts.map((product, index) => (
-                <div 
+                <div
                   key={product.id}
                   className="group relative animate-fade-in cursor-pointer"
                   style={{ animationDelay: `${index * 100}ms` }}
@@ -221,7 +221,7 @@ export default function SubcategoryPage() {
                   <div className="mt-4 space-y-1">
                     <div className="flex justify-between">
                       <h3 className="text-sm text-kapraye-burgundy">
-                        {product.subcategory}
+                        <span onClick={e => e.stopPropagation()}>{product.subcategory}</span>
                       </h3>
                     </div>
                     <h3 className="font-playfair text-lg font-medium text-foreground">
