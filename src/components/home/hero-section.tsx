@@ -6,11 +6,11 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
       {/* Banner Background Image */}
-      <div className="absolute inset-0 w-full h-full z-0">
+      <div className="absolute inset-0 w-full h-full z-0 flex justify-center items-center overflow-hidden">
         <img
           src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
           alt="Rizz Fit Hero Banner"
-          className="w-full h-full object-cover object-center"
+          className="max-w-full max-h-[85vh] object-contain"
         />
         {/* Overlay gradient for better text readability */}
         <div className="absolute inset-0 bg-luxury-gradient opacity-50 pointer-events-none"></div>
