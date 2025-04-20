@@ -10,7 +10,7 @@ export function HeroSection() {
         <img
           src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
           alt="Rizz Fit Hero Banner"
-          className="max-w-full max-h-[85vh] object-contain"
+          className="max-w-full max-h-[75vh] object-contain"
         />
         {/* Overlay gradient for better text readability */}
         <div className="absolute inset-0 bg-luxury-gradient opacity-50 pointer-events-none"></div>
