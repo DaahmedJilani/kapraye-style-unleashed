@@ -5,21 +5,19 @@ import { Button } from "@/components/ui/button";
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-luxury-gradient opacity-50"></div>
-      
-      <div className="container px-4 md:px-8 pt-12 flex flex-col items-center">
+      {/* Banner Background Image */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <img
+          src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
+          alt="Rizz Fit Hero Banner"
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Overlay gradient for better text readability */}
+        <div className="absolute inset-0 bg-luxury-gradient opacity-50 pointer-events-none"></div>
+      </div>
+
+      <div className="container px-4 md:px-8 pt-12 flex flex-col items-center relative z-10">
         <ParallaxContainer className="w-full">
-          {/* Main Hero Image */}
-          <div className="parallax-layer depth-3 relative w-full flex justify-center mb-8">
-            <img
-              src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
-              alt="Rizz Fit Hero"
-              className="w-full max-w-2xl h-auto rounded-2xl shadow-xl object-cover animate-fade-in"
-              style={{ aspectRatio: "2.2/1" }}
-            />
-          </div>
-          
           {/* Headline */}
           <div className="parallax-layer depth-2 text-center max-w-4xl mx-auto mb-8 animate-fade-in delay-200">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-above-beyond text-kapraye-burgundy mb-4">
@@ -57,11 +55,10 @@ export function HeroSection() {
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-fade-in delay-500">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-fade-in delay-500 z-10">
         <span className="text-sm text-kapraye-burgundy/70 mb-2">Scroll to explore</span>
         <div className="w-px h-8 bg-kapraye-burgundy/30 animate-[fadeIn_1.5s_ease-in-out_infinite]"></div>
       </div>
     </section>
   );
 }
-
