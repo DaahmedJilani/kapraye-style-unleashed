@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
@@ -44,6 +43,7 @@ export default function ProductPage() {
     price: 49.99,
     description: "A luxurious cotton t-shirt crafted from the finest Egyptian cotton. Features a classic crew neck, short sleeves, and a comfortable regular fit. Perfect for everyday wear with a premium feel.",
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    inStock: false,
     images: [
       "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=60",
       "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=60",
@@ -69,7 +69,6 @@ export default function ProductPage() {
     ]
   };
 
-  // Sample 360° view images (for now using the same images, but in a real app these would be sequential rotation images)
   const images360 = [
     "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=60",
     "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=60",

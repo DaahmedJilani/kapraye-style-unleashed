@@ -1,9 +1,9 @@
-
 import { Heart, Share2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { StockNotification } from "./stock-notification";
 
 interface ProductInfoProps {
   product: {
@@ -11,6 +11,7 @@ interface ProductInfoProps {
     price: number;
     description: string;
     sizes: string[];
+    inStock?: boolean;
   };
   selectedSize: string;
   setSelectedSize: (size: string) => void;
@@ -109,12 +110,16 @@ export function ProductInfo({
       </div>
 
       <div className="flex flex-col gap-4 pt-4">
-        <Button
-          onClick={onAddToCart}
-          className="h-12 rounded-none bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white uppercase tracking-widest font-medium"
-        >
-          {t('product.addToCart')}
-        </Button>
+        {product.inStock ? (
+          <Button
+            onClick={onAddToCart}
+            className="h-12 rounded-none bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white uppercase tracking-widest font-medium"
+          >
+            {t('product.addToCart')}
+          </Button>
+        ) : (
+          <StockNotification productId={product.id} productName={product.name} />
+        )}
         
         <div className="flex gap-2">
           <Button
