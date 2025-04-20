@@ -38,8 +38,8 @@ export default function ProductPage() {
   });
 
   const product = {
-    id: id,
-    name: "Essential Cotton T-Shirt",
+    id: "cotton-tshirt-001",
+    name: "Premium Cotton T-Shirt",
     price: 49.99,
     description: "A luxurious cotton t-shirt crafted from the finest Egyptian cotton. Features a classic crew neck, short sleeves, and a comfortable regular fit. Perfect for everyday wear with a premium feel.",
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],

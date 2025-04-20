@@ -7,6 +7,7 @@ import { StockNotification } from "./stock-notification";
 
 interface ProductInfoProps {
   product: {
+    id: string; // Added id property
     name: string;
     price: number;
     description: string;
@@ -15,128 +16,92 @@ interface ProductInfoProps {
   };
   selectedSize: string;
   setSelectedSize: (size: string) => void;
-  quantity: number;
-  setQuantity: (quantity: number) => void;
   onAddToCart: () => void;
-  onAddToWishlist: () => void;
 }
 
-export function ProductInfo({
-  product,
-  selectedSize,
-  setSelectedSize,
-  quantity,
-  setQuantity,
-  onAddToCart,
-  onAddToWishlist,
-}: ProductInfoProps) {
+export function ProductInfo({ product, selectedSize, setSelectedSize, onAddToCart }: ProductInfoProps) {
   const { formatPrice, t } = useAppSettings();
+
+  const rating = 4.5; // Example rating
+  const reviewCount = 120; // Example review count
 
   return (
     <div className="space-y-8">
-      <div>
-        <div className="flex items-center mb-1">
-          <div className="flex gap-0.5 text-kapraye-burgundy">
-            <Star className="h-4 w-4 fill-current" />
-            <Star className="h-4 w-4 fill-current" />
-            <Star className="h-4 w-4 fill-current" />
-            <Star className="h-4 w-4 fill-current" />
-            <Star className="h-4 w-4" />
-          </div>
-          <span className="text-xs text-gray-500 ml-2">(127 reviews)</span>
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold">{product.name}</h2>
+        <div className="flex items-center gap-2">
+          <Star className="h-4 w-4 text-yellow-500" />
+          <span className="text-sm font-medium">{rating}</span>
+          <span className="text-sm text-muted-foreground">({reviewCount} Reviews)</span>
         </div>
-        
-        <h1 className="text-3xl font-light tracking-tight text-gray-900 mb-2 font-cormorant">
-          {product.name}
-        </h1>
-        
-        <Badge variant="outline" className="rounded-sm font-normal bg-kapraye-cream text-kapraye-burgundy border-none mb-4">
-          New Collection
-        </Badge>
-        
-        <p className="text-2xl font-medium text-kapraye-burgundy tracking-wide mt-4">
-          {formatPrice(product.price)}
-        </p>
+        <h3 className="text-3xl font-bold">{formatPrice(product.price)}</h3>
       </div>
 
-      <Separator className="bg-gray-100" />
+      <Separator />
 
-      <div>
-        <p className="text-gray-600 leading-relaxed font-light tracking-wide">
-          {product.description}
-        </p>
-      </div>
-
-      <Separator className="bg-gray-100" />
-
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">{t('product.size')}</label>
-          <div className="flex flex-wrap gap-3">
-            {product.sizes.map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`min-w-[3.5rem] h-10 text-sm border rounded-none transition-colors ${
-                  selectedSize === size
-                    ? "border-kapraye-burgundy bg-kapraye-burgundy text-white"
-                    : "border-gray-300 hover:border-kapraye-burgundy text-gray-900"
-                }`}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm uppercase tracking-wider font-medium mb-3 text-gray-900">{t('product.quantity')}</label>
-          <div className="flex items-center border border-gray-300 w-fit">
-            <button
-              onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-              className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+      <div className="space-y-4">
+        <h4 className="text-lg font-medium">{t('product.size')}</h4>
+        <div className="flex gap-2">
+          {product.sizes.map((size) => (
+            <Button
+              key={size}
+              variant={selectedSize === size ? "default" : "outline"}
+              onClick={() => setSelectedSize(size)}
             >
-              -
-            </button>
-            <span className="w-10 text-center font-medium">{quantity}</span>
-            <button
-              onClick={() => setQuantity(quantity + 1)}
-              className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-            >
-              +
-            </button>
-          </div>
+              {size}
+            </Button>
+          ))}
         </div>
       </div>
 
       <div className="flex flex-col gap-4 pt-4">
         {product.inStock ? (
-          <Button
-            onClick={onAddToCart}
-            className="h-12 rounded-none bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white uppercase tracking-widest font-medium"
-          >
-            {t('product.addToCart')}
-          </Button>
+          <div className="space-y-4">
+            <Button
+              onClick={onAddToCart}
+              className="w-full h-12 rounded-none bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white uppercase tracking-widest font-medium"
+            >
+              {t('product.addToCart')}
+            </Button>
+            <div className="grid grid-cols-2 gap-4">
+              <Button variant="outline" className="w-full">
+                Bank Transfer
+              </Button>
+              <Button variant="outline" className="w-full">
+                Jazz Cash
+              </Button>
+              <Button variant="outline" className="w-full">
+                Easy Paisa
+              </Button>
+              <Button variant="outline" className="w-full">
+                Cash on Delivery
+              </Button>
+            </div>
+          </div>
         ) : (
           <StockNotification productId={product.id} productName={product.name} />
         )}
         
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={onAddToWishlist}
-            className="flex-1 h-12 rounded-none border-gray-300 hover:bg-gray-50 text-gray-800 uppercase tracking-widest font-medium"
-          >
-            <Heart className="mr-2 h-4 w-4" /> {t('product.addToWishlist')}
+        <div className="grid grid-cols-2 gap-4">
+          <Button variant="outline" className="w-full">
+            <Heart className="mr-2 h-4 w-4" />
+            {t('product.addToWishlist')}
           </Button>
-          
-          <Button
-            variant="outline"
-            className="h-12 w-12 rounded-none border-gray-300 hover:bg-gray-50"
-          >
-            <Share2 className="h-4 w-4" />
+          <Button variant="outline" className="w-full">
+            <Share2 className="mr-2 h-4 w-4" />
+            Share
           </Button>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <h4 className="text-lg font-medium">Description</h4>
+        <p className="text-sm text-muted-foreground">{product.description}</p>
+      </div>
+
+      <div>
+        <h4 className="text-lg font-medium">Reviews</h4>
+        <Badge>Coming Soon</Badge>
       </div>
     </div>
   );
