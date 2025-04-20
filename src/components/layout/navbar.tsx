@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,9 +33,27 @@ const demoCartItems = [];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Navigate to search results page with query parameter
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm(""); // Clear search after submission
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
+      {/* Settings bar at the top */}
+      <div className="bg-kapraye-cream/30 py-1">
+        <div className="container flex justify-end items-center">
+          <SettingsMenu />
+        </div>
+      </div>
+      
       <nav className="container py-4 px-2 sm:px-4 md:px-8 flex justify-between items-center">
         {/* Settings Menu at the top right */}
         <div className="absolute top-4 right-4 flex items-center space-x-2">
@@ -79,23 +97,26 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Search bar - mobile responsive */}
-        <div className="flex-1 px-2">
-          <form
-            className="w-full flex flex-col items-center"
-            onSubmit={e => { e.preventDefault(); }}
+        {/* Search bar */}
+        <div className="flex-1 flex justify-center px-4">
+          <form 
+            className="max-w-xs w-full"
+            onSubmit={handleSearch}
           >
-            <div className="w-full flex flex-row justify-center">
-              <div className="relative w-full max-w-[350px]">
-                <input
-                  type="search"
-                  placeholder="Search products..."
-                  className="pl-9 pr-4 py-2 rounded-md border border-kapraye-cream bg-white placeholder:text-muted-foreground text-sm w-full transition-all focus:ring-2 focus:ring-kapraye-pink focus:border-kapraye-pink"
-                />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-kapraye-pink">
-                  <Search className="h-4 w-4" />
-                </span>
-              </div>
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Search products..."
+                className="pl-9 pr-4 py-2 rounded-md border border-kapraye-cream bg-white placeholder:text-muted-foreground text-sm w-full transition-all focus:ring-2 focus:ring-kapraye-pink focus:border-kapraye-pink"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button 
+                type="submit" 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-kapraye-pink"
+              >
+                <Search className="h-4 w-4" />
+              </button>
             </div>
           </form>
         </div>

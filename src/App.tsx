@@ -30,6 +30,7 @@ import AccessoriesPage from "./pages/categories/accessories";
 import PerfumesPage from "./pages/categories/perfumes";
 import ShoesPage from "./pages/categories/shoes";
 import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
+import SearchPage from "./pages/search";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/dashboard/*" element={<Dashboard />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/search" element={<SearchPage />} />
             
             {/* Main category pages */}
             <Route path="/men" element={<MenPage />} />
