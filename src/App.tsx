@@ -19,6 +19,11 @@ import SaudiPage from "./pages/categories/saudi";
 import ProductPage from "./pages/product/ProductPage";
 import QuizPage from "./pages/quiz";
 import Recommendations from "./pages/recommendations";
+import AboutPage from "./pages/company/about";
+import ContactPage from "./pages/company/contact";
+import CareersPage from "./pages/company/careers";
+import TermsPage from "./pages/company/terms";
+import PrivacyPage from "./pages/company/privacy";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +49,14 @@ const App = () => (
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/recommendations" element={<Recommendations />} />
+            
+            {/* Company routes */}
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
