@@ -4,10 +4,11 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { StockNotification } from "./stock-notification";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProductInfoProps {
   product: {
-    id: string; // Added id property
+    id: string;
     name: string;
     price: number;
     description: string;
@@ -21,9 +22,27 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product, selectedSize, setSelectedSize, onAddToCart }: ProductInfoProps) {
   const { formatPrice, t } = useAppSettings();
+  const { toast } = useToast();
 
-  const rating = 4.5; // Example rating
-  const reviewCount = 120; // Example review count
+  const handlePaymentMethod = async (method: string) => {
+    if (!selectedSize) {
+      toast({
+        title: "Please select a size",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: `Processing ${method} payment`,
+      description: "Redirecting to payment gateway..."
+    });
+    
+    console.log(`Processing ${method} payment for ${product.name}`);
+  };
+
+  const rating = 4.5;
+  const reviewCount = 120;
 
   return (
     <div className="space-y-8">
@@ -64,16 +83,32 @@ export function ProductInfo({ product, selectedSize, setSelectedSize, onAddToCar
               {t('product.addToCart')}
             </Button>
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handlePaymentMethod('Bank Transfer')}
+              >
                 Bank Transfer
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handlePaymentMethod('Jazz Cash')}
+              >
                 Jazz Cash
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handlePaymentMethod('Easy Paisa')}
+              >
                 Easy Paisa
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handlePaymentMethod('Cash on Delivery')}
+              >
                 Cash on Delivery
               </Button>
             </div>

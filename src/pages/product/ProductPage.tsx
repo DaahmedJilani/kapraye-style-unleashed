@@ -195,10 +195,7 @@ export default function ProductPage() {
               product={product}
               selectedSize={selectedSize}
               setSelectedSize={setSelectedSize}
-              quantity={quantity}
-              setQuantity={setQuantity}
               onAddToCart={handleAddToCart}
-              onAddToWishlist={handleAddToWishlist}
             />
           </div>
         </div>
