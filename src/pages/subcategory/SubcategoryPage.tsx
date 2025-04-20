@@ -4,7 +4,7 @@ import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { useParams, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
