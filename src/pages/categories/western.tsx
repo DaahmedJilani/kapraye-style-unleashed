@@ -1,3 +1,4 @@
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
@@ -79,6 +80,15 @@ export default function WesternPage() {
   const goToProductPage = (productId: string) => {
     navigate(`/product/${productId}`);
   };
+  
+  const navigateToSubcategory = (subcategory: string) => {
+    navigate(`/western/${subcategory.toLowerCase().replace(/\s+/g, '-')}`, {
+      state: {
+        title: subcategory,
+        mainCategory: 'western'
+      }
+    });
+  };
 
   return (
     <MainLayout>
@@ -90,6 +100,34 @@ export default function WesternPage() {
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
             Discover our modern collection of western wear, from casual to formal attire.
           </p>
+        </div>
+        
+        {/* Browse by Category section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
+            Browse by Category
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <div
+                key={category}
+                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => navigateToSubcategory(category)}
+              >
+                <div className="aspect-[3/2] overflow-hidden bg-gray-100">
+                  <img
+                    src={westernProducts.find(p => p.category === category)?.image || ''}
+                    alt={category}
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy">{category}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">View all {category.toLowerCase()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-6 mb-8">
