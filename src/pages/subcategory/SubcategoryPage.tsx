@@ -2,12 +2,12 @@
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
+import { useParams, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Link, useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -15,53 +15,155 @@ interface Product {
   image: string;
   price: number;
   category: string;
+  subcategory: string;
 }
 
-const perfumeProducts: Product[] = [
+// This is a shared product database that would normally come from an API
+// In a real app, you'd fetch this data from a backend
+const allProducts: Product[] = [
+  // Men's products
+  {
+    id: "men-1",
+    name: "Premium Linen Shirt",
+    image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=800",
+    price: 89.50,
+    category: "men",
+    subcategory: "Shirts"
+  },
+  {
+    id: "men-2",
+    name: "Classic Denim Jeans",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800",
+    price: 125.00,
+    category: "men",
+    subcategory: "Pants"
+  },
+  {
+    id: "men-3",
+    name: "Wool Blend Blazer",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800",
+    price: 299.99,
+    category: "men",
+    subcategory: "Formal"
+  },
+  {
+    id: "men-4",
+    name: "Oxford Cotton Shirt",
+    image: "https://images.unsplash.com/photo-1626497764746-6dc36546b388?q=80&w=800",
+    price: 79.99,
+    category: "men",
+    subcategory: "Shirts"
+  },
+  // Shoes products
+  {
+    id: "shoe-1",
+    name: "Classic Leather Loafers",
+    image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=800",
+    price: 150.00,
+    category: "shoes",
+    subcategory: "Formal"
+  },
+  {
+    id: "shoe-2",
+    name: "Sport Sneakers",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800",
+    price: 120.00,
+    category: "shoes",
+    subcategory: "Casual"
+  },
+  {
+    id: "shoe-3",
+    name: "Leather Dress Shoes",
+    image: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=800",
+    price: 175.00,
+    category: "shoes",
+    subcategory: "Formal"
+  },
+  // Perfumes products
   {
     id: "perf-1",
     name: "Oriental Essence",
     image: "https://images.unsplash.com/photo-1592914610354-fd354ea45e48?q=80&w=800",
     price: 120.00,
-    category: "Oriental"
+    category: "perfumes",
+    subcategory: "Oriental"
   },
   {
     id: "perf-2",
     name: "Floral Dreams",
     image: "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800",
     price: 85.00,
-    category: "Floral"
+    category: "perfumes",
+    subcategory: "Floral"
+  },
+  // Makeup products
+  {
+    id: "makeup-1",
+    name: "Luxury Lipstick",
+    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=800",
+    price: 29.99,
+    category: "makeup",
+    subcategory: "Lipstick"
+  },
+  {
+    id: "makeup-2",
+    name: "Premium Foundation",
+    image: "https://images.unsplash.com/photo-1631730486572-226d1f595b68?q=80&w=800",
+    price: 45.00,
+    category: "makeup",
+    subcategory: "Foundation"
+  },
+  // Accessories products
+  {
+    id: "acc-1",
+    name: "Designer Handbag",
+    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=800",
+    price: 199.99,
+    category: "accessories",
+    subcategory: "Bags"
+  },
+  {
+    id: "acc-2",
+    name: "Gold Necklace",
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800",
+    price: 299.99,
+    category: "accessories",
+    subcategory: "Jewelry"
   }
 ];
 
-export default function PerfumesPage() {
+export default function SubcategoryPage() {
+  const { category, subcategory } = useParams();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const categories = Array.from(new Set(perfumeProducts.map(product => product.category)));
-
-  const filteredProducts = perfumeProducts.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === "all" || product.category === activeCategory;
-    return matchesSearch && matchesCategory;
+  
+  // Extract subcategory title from location state or fallback to URL parameter
+  const subcategoryTitle = location.state?.title || subcategory;
+  const mainCategory = location.state?.mainCategory || category;
+  
+  // Filter products by category and subcategory
+  const filteredProducts = allProducts.filter(product => {
+    const matchesCategory = product.category === category;
+    const matchesSubcategory = product.subcategory === subcategoryTitle;
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesCategory && matchesSubcategory && matchesSearch;
   });
+  
+  // Get filters for this category/subcategory
+  const filters = Array.from(
+    new Set(
+      allProducts
+        .filter(p => p.category === category)
+        .map(p => p.subcategory)
+    )
+  );
 
   const addToCart = (product: Product) => {
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,
-    });
-  };
-  
-  const navigateToSubcategory = (subcategory: string) => {
-    navigate(`/perfumes/${subcategory.toLowerCase().replace(/\s+/g, '-')}`, { 
-      state: { 
-        title: subcategory,
-        mainCategory: 'perfumes'
-      } 
     });
   };
 
@@ -70,48 +172,20 @@ export default function PerfumesPage() {
       <div className="container mx-auto px-4 py-20 mt-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-playfair font-medium text-kapraye-burgundy mb-4">
-            Perfumes Collection
+            {subcategoryTitle} Collection
           </h1>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            Discover our exquisite collection of fragrances.
+            Discover our premium collection of {subcategoryTitle.toLowerCase()}.
           </p>
-        </div>
-        
-        {/* Categories as clickable cards */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
-            Browse by Category
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <div 
-                key={category}
-                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => navigateToSubcategory(category)}
-              >
-                <div className="aspect-[3/2] overflow-hidden bg-gray-100">
-                  <img
-                    src={perfumeProducts.find(p => p.category === category)?.image || ''}
-                    alt={category}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy">{category}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">View all {category.toLowerCase()}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="space-y-6 mb-8">
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <ProductSearch onSearch={setSearchTerm} />
             <ProductFilters
-              categories={categories}
-              activeCategory={activeCategory}
-              onCategoryChange={setActiveCategory}
+              categories={filters}
+              activeCategory={subcategoryTitle}
+              onCategoryChange={() => {}}
             />
           </div>
         </div>
@@ -133,13 +207,7 @@ export default function PerfumesPage() {
               <div className="mt-4 space-y-1">
                 <div className="flex justify-between">
                   <h3 className="text-sm text-kapraye-burgundy">
-                    <Link 
-                      to={`/perfumes/${product.category.toLowerCase().replace(/\s+/g, '-')}`}
-                      state={{ title: product.category, mainCategory: 'perfumes' }}
-                      className="hover:underline"
-                    >
-                      {product.category}
-                    </Link>
+                    {product.subcategory}
                   </h3>
                 </div>
                 <h3 className="font-playfair text-lg font-medium text-foreground">

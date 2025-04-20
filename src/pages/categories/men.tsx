@@ -4,10 +4,11 @@ import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { ShoppingCart } from "@/components/cart/shopping-cart";
 import { useToast } from "@/hooks/use-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -46,6 +47,7 @@ export default function MenPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [cartItems, setCartItems] = useState<any[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const categories = Array.from(new Set(menProducts.map(product => product.category)));
 
@@ -73,6 +75,15 @@ export default function MenPage() {
       description: `${product.name} has been added to your cart.`,
     });
   };
+  
+  const navigateToSubcategory = (subcategory: string) => {
+    navigate(`/men/${subcategory.toLowerCase().replace(/\s+/g, '-')}`, { 
+      state: { 
+        title: subcategory,
+        mainCategory: 'men'
+      } 
+    });
+  };
 
   return (
     <MainLayout>
@@ -84,6 +95,34 @@ export default function MenPage() {
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
             Discover our premium collection of men's clothing, from casual essentials to formal wear.
           </p>
+        </div>
+        
+        {/* Categories as clickable cards */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
+            Browse by Category
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <div 
+                key={category}
+                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => navigateToSubcategory(category)}
+              >
+                <div className="aspect-[3/2] overflow-hidden bg-gray-100">
+                  <img
+                    src={menProducts.find(p => p.category === category)?.image || ''}
+                    alt={category}
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy">{category}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">View all {category.toLowerCase()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-6 mb-8">
@@ -114,7 +153,13 @@ export default function MenPage() {
               <div className="mt-4 space-y-1">
                 <div className="flex justify-between">
                   <h3 className="text-sm text-kapraye-burgundy">
-                    {product.category}
+                    <Link 
+                      to={`/men/${product.category.toLowerCase().replace(/\s+/g, '-')}`}
+                      state={{ title: product.category, mainCategory: 'men' }}
+                      className="hover:underline"
+                    >
+                      {product.category}
+                    </Link>
                   </h3>
                 </div>
                 <h3 className="font-playfair text-lg font-medium text-foreground">
@@ -133,6 +178,8 @@ export default function MenPage() {
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl">
+                      <DialogTitle>Product Reviews</DialogTitle>
+                      <DialogDescription>See what others are saying about this product</DialogDescription>
                       <ProductReviews productId={product.id} />
                     </DialogContent>
                   </Dialog>

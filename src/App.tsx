@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +29,7 @@ import MakeupPage from "./pages/categories/makeup";
 import AccessoriesPage from "./pages/categories/accessories";
 import PerfumesPage from "./pages/categories/perfumes";
 import ShoesPage from "./pages/categories/shoes";
+import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,8 @@ const App = () => (
             <Route path="/dashboard/*" element={<Dashboard />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            
+            {/* Main category pages */}
             <Route path="/men" element={<MenPage />} />
             <Route path="/women" element={<WomenPage />} />
             <Route path="/kids" element={<KidsPage />} />
@@ -66,6 +70,9 @@ const App = () => (
             <Route path="/accessories" element={<AccessoriesPage />} />
             <Route path="/perfumes" element={<PerfumesPage />} />
             <Route path="/shoes" element={<ShoesPage />} />
+            
+            {/* Subcategory routes */}
+            <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
