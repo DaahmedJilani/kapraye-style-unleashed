@@ -4,6 +4,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
 
+@font-face {
+  font-family: 'Above the Beyond';
+  src: url('/DEMO-atbscript-rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Allure';
+  src: url('/allura.regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 351 22% 96%; /* Based on #F9F1F0 */
@@ -116,7 +131,15 @@
   .font-cormorant {
     font-family: 'Cormorant Garamond', serif;
   }
-  
+
+  .font-above-beyond {
+    font-family: 'Above the Beyond', cursive, sans-serif;
+  }
+
+  .font-allure {
+    font-family: 'Allure', cursive, sans-serif;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -227,13 +250,5 @@
   
   .bg-accent-gradient {
     background: linear-gradient(135deg, #E1999F 0%, #663635 100%);
-  }
-
-  .font-above-beyond {
-    font-family: 'Above the Beyond', cursive, sans-serif;
-  }
-
-  .font-allure {
-    font-family: 'Allure', cursive, sans-serif;
   }
 }

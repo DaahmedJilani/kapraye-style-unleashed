@@ -21,9 +21,12 @@ export function HeroSection() {
           
           {/* Headline */}
           <div className="parallax-layer depth-2 text-center max-w-4xl mx-auto mb-8 animate-fade-in delay-200">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-playfair font-medium text-kapraye-burgundy mb-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-above-beyond text-kapraye-burgundy mb-4">
               Style Without Limits
             </h1>
+            <p className="text-lg md:text-2xl font-allure text-kapraye-pink/80 max-w-2xl mx-auto mb-2">
+              Kaprayé by Rayan
+            </p>
             <p className="text-base md:text-lg font-montserrat text-foreground/90 max-w-2xl mx-auto">
               Discover the finest collection of premium fashion, accessories, and lifestyle products designed for the modern connoisseur.
             </p>
