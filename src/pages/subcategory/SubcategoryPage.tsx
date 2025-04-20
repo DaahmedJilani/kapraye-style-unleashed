@@ -8,6 +8,8 @@ import { ProductReviews } from "@/components/reviews/product-reviews";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { SortAndFilterSidebar } from "@/components/home/SortAndFilterSidebar";
+import { ProductGrid } from "@/components/home/ProductGrid";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
 
 interface Product {
   id: string;
@@ -138,6 +140,7 @@ export default function SubcategoryPage() {
   const [sortOption, setSortOption] = useState("default");
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { formatPrice } = useAppSettings();
 
   const subcategoryTitle = location.state?.title || subcategory;
   const mainCategory = location.state?.mainCategory || category;
@@ -203,64 +206,12 @@ export default function SubcategoryPage() {
                 <ProductSearch onSearch={setSearchTerm} />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="group relative animate-fade-in cursor-pointer"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => goToProductPage(product.id)}
-                >
-                  <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="mt-4 space-y-1">
-                    <div className="flex justify-between">
-                      <h3 className="text-sm text-kapraye-burgundy">
-                        <span onClick={e => e.stopPropagation()}>{product.subcategory}</span>
-                      </h3>
-                    </div>
-                    <h3 className="font-playfair text-lg font-medium text-foreground">
-                      {product.name}
-                    </h3>
-                    <p className="text-base font-medium text-kapraye-pink">
-                      ${product.price.toFixed(2)}
-                    </p>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="secondary" size="sm">
-                            Reviews
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
-                          <DialogTitle>Product Reviews</DialogTitle>
-                          <DialogDescription>See what others are saying about this product</DialogDescription>
-                          <ProductReviews productId={product.id} />
-                        </DialogContent>
-                      </Dialog>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart(product);
-                        }}
-                      >
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
+            <ProductGrid
+              products={sortedProducts}
+              onProductClick={goToProductPage}
+              onAddToCart={addToCart}
+              formatPrice={formatPrice}
+            />
             {sortedProducts.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
