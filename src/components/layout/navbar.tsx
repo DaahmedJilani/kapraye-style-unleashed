@@ -3,6 +3,9 @@ import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SettingsMenu } from "@/components/settings/settings-menu";
+import { AccountDropdown } from "@/components/account/account-dropdown";
+import { ShoppingCart } from "@/components/cart/shopping-cart";
+import { useState } from "react";
 
 interface NavLink {
   name: string;
@@ -25,15 +28,23 @@ const secondaryLinks: NavLink[] = [
   { name: "Shoes", href: "/shoes" },
 ];
 
+// dummy items for cart, replace with actual app state if needed
+const demoCartItems = [];
+
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
-      <nav className="container py-4 px-4 md:px-8 flex justify-between items-center">
+      <nav className="container py-4 px-2 sm:px-4 md:px-8 flex justify-between items-center">
         {/* Settings Menu at the top right */}
         <div className="absolute top-4 right-4 flex items-center space-x-2">
-          <SettingsMenu />
+          {/* Cart Button */}
+          <ShoppingCart
+            items={demoCartItems}
+            onUpdateQuantity={() => {}}
+            onRemoveItem={() => {}}
+          />
         </div>
 
         {/* Logo */}
@@ -44,7 +55,7 @@ export function Navbar() {
             </span>
           </Link>
         </div>
-        
+
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-8">
           {mainLinks.map((link) => (
@@ -56,9 +67,7 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          
           <div className="h-4 w-px bg-kapraye-mauve/40 mx-2"></div>
-          
           {secondaryLinks.map((link) => (
             <Link
               key={link.name}
@@ -69,22 +78,34 @@ export function Navbar() {
             </Link>
           ))}
         </div>
-        
+
+        {/* Search bar - mobile responsive */}
+        <div className="flex-1 px-2">
+          <form
+            className="w-full flex flex-col items-center"
+            onSubmit={e => { e.preventDefault(); }}
+          >
+            <div className="w-full flex flex-row justify-center">
+              <div className="relative w-full max-w-[350px]">
+                <input
+                  type="search"
+                  placeholder="Search products..."
+                  className="pl-9 pr-4 py-2 rounded-md border border-kapraye-cream bg-white placeholder:text-muted-foreground text-sm w-full transition-all focus:ring-2 focus:ring-kapraye-pink focus:border-kapraye-pink"
+                />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-kapraye-pink">
+                  <Search className="h-4 w-4" />
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+
         {/* Actions */}
-        <div className="flex items-center space-x-4">
-          <button className="p-2 rounded-full hover:bg-kapraye-cream/50 transition-colors">
-            <Search className="h-5 w-5" />
-          </button>
-          <Link to="/loyalty" className="p-2 rounded-full hover:bg-kapraye-cream/50 transition-colors">
-            <User className="h-5 w-5" />
-          </Link>
-          <button className="p-2 rounded-full hover:bg-kapraye-cream/50 transition-colors">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-kapraye-pink rounded-full">0</span>
-          </button>
-          
-          {/* Mobile menu button */}
-          <button 
+        <div className="flex items-center space-x-2">
+          {/* Account Actions Dropdown */}
+          <AccountDropdown />
+          {/* Hamburger for mobile */}
+          <button
             className="lg:hidden p-2 rounded-full hover:bg-kapraye-cream/50 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -96,7 +117,7 @@ export function Navbar() {
           </button>
         </div>
       </nav>
-      
+
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in">
