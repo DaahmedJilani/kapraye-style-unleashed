@@ -1,4 +1,3 @@
-
 import { ParallaxContainer } from "@/components/ui/parallax-container";
 
 export function AboutSection() {
@@ -13,12 +12,12 @@ export function AboutSection() {
                 Our Story
               </span>
               <h2 className="text-3xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-6">
-                Kaprayé by Rayan
+                <span className="font-above-beyond">Kaprayé</span> by Rayan
               </h2>
               <div className="prose prose-lg text-foreground/90 max-w-none">
                 <p>
-                  Founded with a passion for bringing together traditional craftsmanship and contemporary design, 
-                  Kaprayé by Rayan offers a carefully curated collection of premium clothing and accessories.
+                  Founded with a passion for bringing together traditional craftsmanship and contemporary design,{" "}
+                  <span className="font-above-beyond">Kaprayé</span> by Rayan offers a carefully curated collection of premium clothing and accessories.
                 </p>
                 <p>
                   Our brand celebrates the richness of Eastern, Western and Saudi aesthetics, blending cultural 
@@ -26,7 +25,7 @@ export function AboutSection() {
                   stand the test of time both in durability and style.
                 </p>
                 <p>
-                  Every Kaprayé piece tells a story - one of meticulous attention to detail, ethical production, 
+                  Every <span className="font-above-beyond">Kaprayé</span> piece tells a story - one of meticulous attention to detail, ethical production, 
                   and timeless elegance that transcends seasons and trends.
                 </p>
               </div>

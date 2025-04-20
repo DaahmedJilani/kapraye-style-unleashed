@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -50,7 +49,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="p-6">
               <Link to="/" className="flex items-center">
                 <span className="text-2xl font-playfair font-medium">
-                  <span className="text-kapraye-burgundy">Kaprayé</span>
+                  <span className="font-above-beyond text-kapraye-burgundy">Kaprayé</span>
                 </span>
               </Link>
             </div>
@@ -67,7 +66,11 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
                   )}
                 >
                   <item.icon className="mr-3 h-4 w-4" />
-                  {item.label}
+                  {item.label === "Overview" ? (
+                    <span className="font-above-beyond">Kaprayé</span>
+                  ) : (
+                    item.label
+                  )}
                 </Link>
               ))}
             </nav>

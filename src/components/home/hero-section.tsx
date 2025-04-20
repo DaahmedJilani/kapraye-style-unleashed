@@ -1,4 +1,3 @@
-
 import { ParallaxContainer } from "@/components/ui/parallax-container";
 import { Button } from "@/components/ui/button";
 
@@ -22,7 +21,7 @@ export function HeroSection() {
           {/* Headline */}
           <div className="parallax-layer depth-2 text-center max-w-4xl mx-auto mb-8 animate-fade-in delay-200">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-above-beyond text-kapraye-burgundy mb-4">
-              Kaprayé
+              <span className="font-above-beyond">Kaprayé</span>
             </h1>
             <p className="text-lg md:text-2xl font-allure text-kapraye-pink/80 max-w-2xl mx-auto mb-2">
               By Rayan
