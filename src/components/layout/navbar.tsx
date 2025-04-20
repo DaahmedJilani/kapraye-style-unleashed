@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { SettingsMenu } from "@/components/settings/settings-menu";
 import { AccountDropdown } from "@/components/account/account-dropdown";
 import { ShoppingCart } from "@/components/cart/shopping-cart";
-import { useState } from "react";
 
 interface NavLink {
   name: string;
