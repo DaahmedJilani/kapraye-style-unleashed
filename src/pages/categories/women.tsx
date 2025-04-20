@@ -1,3 +1,4 @@
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
@@ -7,6 +8,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { ShoppingCart } from "@/components/cart/shopping-cart";
 import { useToast } from "@/hooks/use-toast";
+import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { useNavigate, Link } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -45,6 +48,8 @@ export default function WomenPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [cartItems, setCartItems] = useState<any[]>([]);
   const { toast } = useToast();
+  const { formatPrice } = useAppSettings();
+  const navigate = useNavigate();
 
   const categories = Array.from(new Set(womenProducts.map(product => product.category)));
 
@@ -71,6 +76,10 @@ export default function WomenPage() {
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,
     });
+  };
+
+  const goToProductPage = (productId: string) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -100,8 +109,9 @@ export default function WomenPage() {
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
-              className="group relative animate-fade-in"
+              className="group relative animate-fade-in cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => goToProductPage(product.id)}
             >
               <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
                 <img
@@ -113,18 +123,18 @@ export default function WomenPage() {
               <div className="mt-4 space-y-1">
                 <div className="flex justify-between">
                   <h3 className="text-sm text-kapraye-burgundy">
-                    {product.category}
+                    <span onClick={e => e.stopPropagation()}>{product.category}</span>
                   </h3>
                 </div>
                 <h3 className="font-playfair text-lg font-medium text-foreground">
                   {product.name}
                 </h3>
                 <p className="text-base font-medium text-kapraye-pink">
-                  ${product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                <div className="flex gap-2">
+                <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="secondary" size="sm">
@@ -138,7 +148,10 @@ export default function WomenPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
                   >
                     Add to Cart
                   </Button>
