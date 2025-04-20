@@ -1,3 +1,4 @@
+
 import { ParallaxContainer } from "@/components/ui/parallax-container";
 import { Button } from "@/components/ui/button";
 
@@ -9,12 +10,13 @@ export function HeroSection() {
       
       <div className="container px-4 md:px-8 pt-12 flex flex-col items-center">
         <ParallaxContainer className="w-full">
-          {/* Logo */}
+          {/* Main Hero Image */}
           <div className="parallax-layer depth-3 relative w-full flex justify-center mb-8">
-            <img 
-              src="/lovable-uploads/40e24681-5545-43f2-939e-e27f867c2e2a.png" 
-              alt="Kaprayé by Rayan" 
-              className="h-32 md:h-40 animate-fade-in"
+            <img
+              src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
+              alt="Rizz Fit Hero"
+              className="w-full max-w-2xl h-auto rounded-2xl shadow-xl object-cover animate-fade-in"
+              style={{ aspectRatio: "2.2/1" }}
             />
           </div>
           
@@ -62,3 +64,4 @@ export function HeroSection() {
     </section>
   );
 }
+
