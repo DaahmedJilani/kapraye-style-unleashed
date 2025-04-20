@@ -2,6 +2,7 @@
 import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedCategories } from "@/components/home/featured-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
+import { ShopTheLook } from "@/components/product/shop-the-look";
 import { LoyaltySection } from "@/components/home/loyalty-section";
 import { NewsletterSection } from "@/components/home/newsletter-section";
 import { AboutSection } from "@/components/home/about-section";
@@ -35,6 +36,7 @@ const Index = () => {
       <FeaturedCategories />
       <AboutSection />
       <FeaturedProducts />
+      <ShopTheLook />
       <LoyaltySection />
       <NewsletterSection />
     </MainLayout>
