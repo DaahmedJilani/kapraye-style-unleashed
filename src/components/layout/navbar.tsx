@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { SettingsMenu } from "@/components/settings/settings-menu";
 
 interface NavLink {
   name: string;
@@ -30,6 +31,11 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
       <nav className="container py-4 px-4 md:px-8 flex justify-between items-center">
+        {/* Settings Menu at the top right */}
+        <div className="absolute top-4 right-4 flex items-center space-x-2">
+          <SettingsMenu />
+        </div>
+
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link to="/" className="flex items-center">
