@@ -84,6 +84,10 @@ export default function MenPage() {
       } 
     });
   };
+  
+  const goToProductPage = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <MainLayout>
@@ -140,8 +144,9 @@ export default function MenPage() {
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
-              className="group relative animate-fade-in"
+              className="group relative animate-fade-in cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => goToProductPage(product.id)}
             >
               <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
                 <img
@@ -157,6 +162,7 @@ export default function MenPage() {
                       to={`/men/${product.category.toLowerCase().replace(/\s+/g, '-')}`}
                       state={{ title: product.category, mainCategory: 'men' }}
                       className="hover:underline"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {product.category}
                     </Link>
@@ -170,7 +176,7 @@ export default function MenPage() {
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                <div className="flex gap-2">
+                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="secondary" size="sm">
@@ -186,7 +192,10 @@ export default function MenPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
                   >
                     Add to Cart
                   </Button>

@@ -2,11 +2,11 @@
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSearch } from "@/components/home/product-search";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface Product {
@@ -137,6 +137,7 @@ export default function SubcategoryPage() {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // Extract subcategory title from location state or fallback to URL parameter
   const subcategoryTitle = location.state?.title || subcategory;
@@ -166,6 +167,10 @@ export default function SubcategoryPage() {
       description: `${product.name} has been added to your cart.`,
     });
   };
+  
+  const goToProductPage = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <MainLayout>
@@ -194,8 +199,9 @@ export default function SubcategoryPage() {
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
-              className="group relative animate-fade-in"
+              className="group relative animate-fade-in cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => goToProductPage(product.id)}
             >
               <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
                 <img
@@ -218,7 +224,7 @@ export default function SubcategoryPage() {
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                <div className="flex gap-2">
+                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="secondary" size="sm">
@@ -234,7 +240,10 @@ export default function SubcategoryPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
                   >
                     Add to Cart
                   </Button>

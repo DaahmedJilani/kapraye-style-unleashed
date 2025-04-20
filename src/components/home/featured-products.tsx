@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { SettingsMenu } from "../settings/settings-menu";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -63,6 +64,7 @@ export function FeaturedProducts() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const { formatPrice, t } = useAppSettings();
+  const navigate = useNavigate();
 
   const categories = Array.from(new Set(products.map(product => product.category)));
 
@@ -102,6 +104,10 @@ export function FeaturedProducts() {
   const removeCartItem = (id: string) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
+  
+  const goToProductPage = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-kapraye-cream/20 to-white">
@@ -140,8 +146,9 @@ export function FeaturedProducts() {
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
-              className="group relative animate-fade-in"
+              className="group relative animate-fade-in cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => goToProductPage(product.id)}
             >
               <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
                 <img
@@ -164,7 +171,7 @@ export function FeaturedProducts() {
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                <div className="flex gap-2">
+                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="secondary" size="sm">
@@ -178,7 +185,10 @@ export function FeaturedProducts() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
                   >
                     Add to Cart
                   </Button>
