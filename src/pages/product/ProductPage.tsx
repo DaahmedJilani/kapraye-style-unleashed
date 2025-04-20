@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
@@ -67,6 +68,14 @@ export default function ProductPage() {
       "Wash with similar colors"
     ]
   };
+
+  // Sample 360° view images (for now using the same images, but in a real app these would be sequential rotation images)
+  const images360 = [
+    "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=60"
+  ];
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -175,7 +184,12 @@ export default function ProductPage() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7">
-            <ProductGallery images={product.images} />
+            <ProductGallery 
+              images={product.images} 
+              productName={product.name}
+              has360View={true}
+              images360={images360}
+            />
           </div>
           <div className="lg:col-span-5">
             <ProductInfo
