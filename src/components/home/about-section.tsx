@@ -37,7 +37,7 @@ export function AboutSection() {
           <div className="order-1 lg:order-2 relative">
             <div className="aspect-square rounded-2xl overflow-hidden">
               <img
-                src="/lovable-uploads/e5f87f66-0f74-44c0-89cd-9e1a21f6488a.png"
+                src="/lovable-uploads/f7ad58eb-f874-4d63-b84c-77b0e59cf275.png"
                 alt="Kaprayé by Rayan"
                 className="w-full h-full object-cover"
               />
@@ -45,7 +45,7 @@ export function AboutSection() {
             {/* Logo overlay */}
             <div className="absolute -bottom-6 -right-6 w-32 h-32 md:w-40 md:h-40 bg-white rounded-full shadow-lg flex items-center justify-center p-4">
               <img 
-                src="/lovable-uploads/40e24681-5545-43f2-939e-e27f867c2e2a.png" 
+                src="/lovable-uploads/0d763ae9-f51c-467f-b7f1-659ddb01387e.png" 
                 alt="Kaprayé Logo" 
                 className="w-full h-auto"
               />

@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -20,7 +19,6 @@ interface NavLink {
 
 const mainLinks: NavLink[] = [
   { name: "Men", href: "/men" },
-  // Women will be handled with dropdown
   { name: "Kids", href: "/kids" },
 ];
 
@@ -38,7 +36,6 @@ const secondaryLinks: NavLink[] = [
   { name: "Shoes", href: "/shoes" },
 ];
 
-// dummy items for cart, replace with actual app state if needed
 const demoCartItems = [];
 
 export function Navbar() {
@@ -55,16 +52,16 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
-      <nav className="container py-4 px-2 sm:px-4 md:px-8 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream" style={{ height: '72px' }}>
+      <nav className="container py-5 px-2 sm:px-4 md:px-8 flex justify-between items-center" style={{ height: '72px' }}>
         {/* Logo and Title */}
         <div className="flex-shrink-0 flex items-center space-x-2">
-          <Link to="/" className="flex items-center">
-            <span className="text-3xl font-above-beyond text-kapraye-burgundy font-normal leading-none">
+          <Link to="/" className="flex items-center" style={{ lineHeight: 1 }}>
+            <span className="text-3xl font-above-beyond text-kapraye-burgundy font-normal leading-none" style={{ lineHeight: 1.1, paddingTop: '0.15rem', paddingBottom: '0.15rem' }}>
               Kaprayé
             </span>
           </Link>
-          <span className="text-sm font-allure text-kapraye-mauve select-none" style={{marginTop: '0.3rem'}}>
+          <span className="text-sm font-allure text-kapraye-mauve select-none" style={{ marginTop: '0.3rem' }}>
             By Rayan
           </span>
         </div>
@@ -80,7 +77,6 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          {/* Women Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center text-sm font-medium px-2 py-1">
@@ -116,7 +112,6 @@ export function Navbar() {
 
         {/* Compact Search and Right Actions */}
         <div className="flex items-center space-x-2">
-          {/* Search Bar */}
           <form
             className="hidden md:block"
             onSubmit={handleSearch}
@@ -139,11 +134,9 @@ export function Navbar() {
             </div>
           </form>
           
-          {/* Settings (Currency/Language) */}
           <div className="hidden md:block">
             <SettingsMenu />
           </div>
-          {/* Cart & Account */}
           <div className="flex items-center gap-2">
             <ShoppingCart
               items={demoCartItems}
@@ -152,7 +145,6 @@ export function Navbar() {
             />
             <AccountDropdown />
           </div>
-          {/* Hamburger for mobile */}
           <button
             className="lg:hidden p-2 rounded-full hover:bg-kapraye-cream/50 transition-colors ml-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -166,11 +158,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in">
           <div className="container py-6 px-4 flex flex-col space-y-6">
-            {/* Search in mobile */}
             <form
               className="mb-6"
               onSubmit={handleSearch}
@@ -203,7 +193,6 @@ export function Navbar() {
                   {link.name}
                 </a>
               ))}
-              {/* Women Group with sublinks */}
               <div>
                 <div className="text-base py-2 font-medium text-kapraye-burgundy">Women</div>
                 <div className="flex flex-col pl-4 space-y-1">
