@@ -56,7 +56,7 @@ export function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-kapraye-cream">
-      <nav className="container py-2 px-2 sm:px-4 md:px-8 flex justify-between items-center">
+      <nav className="container py-4 px-2 sm:px-4 md:px-8 flex justify-between items-center">
         {/* Logo and Title */}
         <div className="flex-shrink-0 flex items-center space-x-2">
           <Link to="/" className="flex items-center">
@@ -261,4 +261,3 @@ export function Navbar() {
     </header>
   );
 }
-
