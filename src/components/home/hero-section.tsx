@@ -1,6 +1,8 @@
 
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Circle, CircleDot } from "lucide-react";
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 const bannerSlides = [
   {
@@ -29,9 +31,6 @@ const bannerSlides = [
   }
 ];
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
@@ -45,6 +44,7 @@ export function HeroSection() {
         <Carousel 
           opts={{ loop: true }}
           className="w-full"
+          onSelect={(index) => setActiveIndex(index)}
         >
           <CarouselContent>
             {bannerSlides.map((slide, idx) => (
@@ -75,7 +75,7 @@ export function HeroSection() {
                       <Button 
                         size="lg" 
                         variant="outline" 
-                        className="border-white/70 text-white hover:bg-white/10 min-w-[160px] rounded-full"
+                        className="border-white/70 text-white bg-black/40 hover:bg-black/50 min-w-[160px] rounded-full"
                       >
                         Explore SHUKRAN
                       </Button>
