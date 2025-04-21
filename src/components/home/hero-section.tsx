@@ -1,3 +1,4 @@
+
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Circle, CircleDot } from "lucide-react";
 import React, { useEffect } from "react";
@@ -7,23 +8,23 @@ const bannerSlides = [
   {
     src: "/lovable-uploads/cdc9ab83-eb85-41ae-b867-8befc33219b7.png",
     headline: (
-      <h1 className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold font-playfair drop-shadow-lg">
+      <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-playfair drop-shadow-lg">
         <span className="block text-white/90">Shop Eid Collection</span>
       </h1>
     ),
     subheadline: (
-      <p className="text-base mt-4 md:text-lg text-white/90">Elevate your festive style with our exclusive Eid edits – timeless elegance for every celebration.</p>
+      <p className="text-sm md:text-base lg:text-lg text-white/90 mt-2">Elevate your festive style with our exclusive Eid edits – timeless elegance for every celebration.</p>
     )
   },
   {
     src: "/lovable-uploads/45912cc0-46ec-4968-a1dd-a7b61ede248b.png",
     headline: (
-      <h1 className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold font-playfair drop-shadow-lg">
+      <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-playfair drop-shadow-lg">
         <span className="block text-white/90">Top Trending Looks</span>
       </h1>
     ),
     subheadline: (
-      <p className="text-base mt-4 md:text-lg text-white/90">Discover the styles our community loves – modern classics and trending favorites.</p>
+      <p className="text-sm md:text-base lg:text-lg text-white/90 mt-2">Discover the styles our community loves – modern classics and trending favorites.</p>
     )
   }
 ];
@@ -31,14 +32,13 @@ const bannerSlides = [
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [api, setApi] = React.useState<any>(null);
-  
+
+  // Set carousel to change every 4 seconds (4000ms)
   useEffect(() => {
     if (!api) return;
-    
     const autoSlideInterval = setInterval(() => {
       api.scrollNext();
-    }, 3000);
-    
+    }, 4000);
     return () => {
       clearInterval(autoSlideInterval);
     };
@@ -74,21 +74,22 @@ export function HeroSection() {
                     transform: activeIndex === idx ? "scale(1)" : "scale(0.98)",
                   }}
                 />
-                <div className="relative container text-left md:px-8 z-10 flex flex-col items-start justify-center h-full">
-                  <div className="bg-black/25 rounded-md p-6 md:p-12 max-w-2xl backdrop-blur-sm">
+                {/* Move text area further down and reduce overlay size */}
+                <div className="relative container z-10 flex flex-col items-start justify-end h-full pb-10 md:pb-16 lg:pb-24">
+                  <div className="bg-black/25 rounded-md p-4 md:p-7 max-w-lg backdrop-blur-sm mt-auto shadow-lg">
                     {slide.headline}
                     {slide.subheadline}
-                    <div className="mt-6 flex gap-4">
+                    <div className="mt-4 flex gap-4">
                       <Button 
                         size="lg" 
-                        className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white min-w-[160px] rounded-full shadow-lg"
+                        className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white min-w-[140px] rounded-full shadow-lg text-base md:text-lg"
                       >
                         Shop Collection
                       </Button>
                       <Button 
                         size="lg"
                         variant="outline"
-                        className="border-white/70 text-white bg-black/70 hover:bg-black/90 min-w-[160px] rounded-full"
+                        className="border-white/70 text-white bg-black/70 hover:bg-black/90 min-w-[140px] rounded-full text-base md:text-lg"
                       >
                         Explore SHUKRAN
                       </Button>
