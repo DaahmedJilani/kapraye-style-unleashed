@@ -1,3 +1,4 @@
+
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
@@ -10,22 +11,42 @@ export function AccountDropdown() {
   
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      // Skip if Supabase client is not initialized
+      if (!supabase) {
+        console.warn('Supabase client not initialized. Auth functionality will be limited.');
+        return;
+      }
+      
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
     };
     
     getUser();
     
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-    
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    // Only set up auth listener if supabase client exists
+    if (supabase) {
+      const { data: authListener } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          setUser(session?.user ?? null);
+        }
+      );
+      
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    }
   }, []);
+  
+  const handleSignOut = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    }
+  };
   
   return (
     <DropdownMenu>
@@ -59,12 +80,7 @@ export function AccountDropdown() {
             
             <DropdownMenuSeparator />
             
-            <DropdownMenuItem 
-              onClick={async () => {
-                await supabase.auth.signOut();
-                window.location.href = "/";
-              }}
-            >
+            <DropdownMenuItem onClick={handleSignOut}>
               Sign Out
             </DropdownMenuItem>
           </>
