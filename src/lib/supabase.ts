@@ -3,12 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { ProductFormData } from '../types/product';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Get environment variables with fallbacks to prevent crashes
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+// Create a conditional client to prevent runtime errors
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+  : null;
 
 export async function fetchProducts() {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -23,6 +32,11 @@ export async function fetchProducts() {
 }
 
 export async function fetchProductById(id: string) {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -38,6 +52,11 @@ export async function fetchProductById(id: string) {
 }
 
 export async function createProduct(product: ProductFormData) {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .insert([{ 
@@ -57,6 +76,11 @@ export async function createProduct(product: ProductFormData) {
 }
 
 export async function updateProduct(id: string, product: ProductFormData) {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('products')
     .update({ 
@@ -76,6 +100,11 @@ export async function updateProduct(id: string, product: ProductFormData) {
 }
 
 export async function deleteProduct(id: string) {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return false;
+  }
+  
   const { error } = await supabase
     .from('products')
     .delete()
@@ -90,6 +119,11 @@ export async function deleteProduct(id: string) {
 }
 
 export async function uploadProductImage(file: File): Promise<string | null> {
+  if (!supabase) {
+    console.error('Supabase client is not initialized');
+    return null;
+  }
+  
   const fileExt = file.name.split('.').pop();
   const fileName = `${Date.now()}.${fileExt}`;
   const filePath = `product-images/${fileName}`;
