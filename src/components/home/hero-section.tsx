@@ -1,64 +1,112 @@
 
-import { ParallaxContainer } from "@/components/ui/parallax-container";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Circle, CircleDot } from "lucide-react";
+
+const bannerSlides = [
+  {
+    src: "/lovable-uploads/cdc9ab83-eb85-41ae-b867-8befc33219b7.png",
+    headline: (
+      <h1 className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold font-playfair drop-shadow-lg">
+        <span className="block text-white/90">BRING YOUR EASTERN</span>
+        <span className="block text-white/90">TOUCH BACK TO LIFE</span>
+      </h1>
+    ),
+    subheadline: (
+      <p className="text-base mt-4 md:text-lg text-white/90">Shop these bestselling articals!</p>
+    )
+  },
+  {
+    src: "/lovable-uploads/45912cc0-46ec-4968-a1dd-a7b61ede248b.png",
+    headline: (
+      <h1 className="text-[2rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold font-playfair drop-shadow-lg">
+        <span className="block text-white/90">YOUR FAVORITES</span>
+        <span className="block text-white/90">ARE BACK!</span>
+      </h1>
+    ),
+    subheadline: (
+      <p className="text-base mt-4 md:text-lg text-white/90">Shop these Original bestsellers!</p>
+    )
+  }
+];
+
+import React from "react";
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
-  return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Banner Background Image */}
-      <div className="absolute inset-0 w-full h-full z-0 flex justify-center items-center overflow-hidden">
-        <img
-          src="/lovable-uploads/f735aa4e-d866-403e-8e04-81e8bc202810.png"
-          alt="Rizz Fit Hero Banner"
-          className="max-w-full max-h-[75vh] object-contain"
-        />
-        {/* Overlay gradient for better text readability */}
-        <div className="absolute inset-0 bg-luxury-gradient opacity-50 pointer-events-none"></div>
-      </div>
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
-      <div className="container px-4 md:px-8 pt-12 flex flex-col items-center relative z-10">
-        <ParallaxContainer className="w-full">
-          {/* Headline */}
-          <div className="parallax-layer depth-2 text-center max-w-4xl mx-auto mb-8 animate-fade-in delay-200">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-above-beyond text-kapraye-burgundy mb-4">
-              <span className="font-above-beyond">Kaprayé</span>
-            </h1>
-            <p className="text-lg md:text-2xl text-kapraye-pink/80 max-w-2xl mx-auto mb-2">
-              <span className="font-allure">By Rayan</span>
-            </p>
-            <p className="text-base md:text-lg font-montserrat text-foreground/90 max-w-2xl mx-auto">
-              Discover the finest collection of premium fashion, accessories, and lifestyle products designed for the modern connoisseur.
-            </p>
+  return (
+    <section 
+      className="relative w-full min-h-[350px] md:min-h-[480px] xl:min-h-[640px] flex items-center justify-center bg-gradient-to-b from-[#dcc1be] to-[#f9f1f0] overflow-hidden"
+      style={{ perspective: "1200px" }}
+    >
+      {/* Carousel container */}
+      <div className="w-full">
+        <Carousel 
+          opts={{ loop: true }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {bannerSlides.map((slide, idx) => (
+              <CarouselItem key={idx} className="w-full !pl-0 relative aspect-video flex items-center overflow-hidden">
+                <img 
+                  src={slide.src}
+                  alt=""
+                  className="absolute w-full h-full object-cover object-center"
+                  style={{
+                    zIndex: 0,
+                    transition: "transform 0.5s cubic-bezier(0.33, 1, 0.68, 1)",
+                    // simple scale for a subtle 3d effect
+                    transform: activeIndex === idx ? "scale(1)" : "scale(0.98)",
+                  }}
+                />
+                {/* 3D-ish overlay -- could be solid or semi-transparent */}
+                <div className="relative container text-left md:px-8 z-10 flex flex-col items-start justify-center h-full">
+                  <div className="bg-black/25 rounded-md p-6 md:p-12 max-w-2xl backdrop-blur-sm">
+                    {slide.headline}
+                    {slide.subheadline}
+                    <div className="mt-6 flex gap-4">
+                      <Button 
+                        size="lg" 
+                        className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white min-w-[160px] rounded-full shadow-lg"
+                      >
+                        Shop Collection
+                      </Button>
+                      <Button 
+                        size="lg" 
+                        variant="outline" 
+                        className="border-white/70 text-white hover:bg-white/10 min-w-[160px] rounded-full"
+                      >
+                        Explore SHUKRAN
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {/* Dots navigation */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            {bannerSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className="w-4 h-4 flex items-center justify-center"
+              >
+                {activeIndex === i ? (
+                  <CircleDot className="text-white drop-shadow" size={18} />
+                ) : (
+                  <Circle className="text-white/70" size={16} />
+                )}
+              </button>
+            ))}
           </div>
-          
-          {/* CTA Buttons */}
-          <div className="parallax-layer depth-1 flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 mt-8 animate-fade-in delay-300">
-            <Button 
-              size="lg" 
-              className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white min-w-[180px] rounded-full"
-            >
-              Shop Collection
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-kapraye-burgundy text-kapraye-burgundy hover:bg-kapraye-burgundy/10 min-w-[180px] rounded-full"
-            >
-              Explore SHUKRAN
-            </Button>
-          </div>
-        </ParallaxContainer>
-        
-        {/* Decorative elements */}
-        <div className="absolute -right-20 top-1/4 w-64 h-64 rounded-full bg-kapraye-pink opacity-10 blur-3xl"></div>
-        <div className="absolute -left-20 bottom-1/4 w-80 h-80 rounded-full bg-kapraye-mauve opacity-10 blur-3xl"></div>
+        </Carousel>
       </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-fade-in delay-500 z-10">
-        <span className="text-sm text-kapraye-burgundy/70 mb-2">Scroll to explore</span>
-        <div className="w-px h-8 bg-kapraye-burgundy/30 animate-[fadeIn_1.5s_ease-in-out_infinite]"></div>
-      </div>
+      {/* 3D Decorative gradients at edges */}
+      <div className="absolute -right-20 top-1/4 w-64 h-64 rounded-full bg-kapraye-pink opacity-10 blur-3xl pointer-events-none"></div>
+      <div className="absolute -left-20 bottom-1/4 w-80 h-80 rounded-full bg-kapraye-mauve opacity-10 blur-3xl pointer-events-none"></div>
     </section>
   );
 }
