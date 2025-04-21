@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,7 +38,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className={`font-sans ${isDarkMode ? 'dark bg-background' : 'bg-white'}`}>
+    <div className="font-sans bg-white">
       <QueryClientProvider client={queryClient}>
         <AppSettingsProvider>
           <TooltipProvider>
