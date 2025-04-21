@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,57 +30,67 @@ import PerfumesPage from "./pages/categories/perfumes";
 import ShoesPage from "./pages/categories/shoes";
 import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
 import SearchPage from "./pages/search";
+import AdminDashboard from "./pages/admin/index";
+import ProductsAdminPage from "./pages/admin/products";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AppSettingsProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/loyalty" element={<Loyalty />} />
-            <Route path="/dashboard/*" element={<Dashboard />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/search" element={<SearchPage />} />
-            
-            {/* Main category pages */}
-            <Route path="/men" element={<MenPage />} />
-            <Route path="/women" element={<WomenPage />} />
-            <Route path="/kids" element={<KidsPage />} />
-            <Route path="/eastern" element={<EasternPage />} />
-            <Route path="/western" element={<WesternPage />} />
-            <Route path="/saudi" element={<SaudiPage />} />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-            
-            {/* Company routes */}
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/careers" element={<CareersPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            
-            {/* Category routes */}
-            <Route path="/makeup" element={<MakeupPage />} />
-            <Route path="/accessories" element={<AccessoriesPage />} />
-            <Route path="/perfumes" element={<PerfumesPage />} />
-            <Route path="/shoes" element={<ShoesPage />} />
-            
-            {/* Subcategory routes */}
-            <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AppSettingsProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <div className={`font-sans ${isDarkMode ? 'dark bg-background' : 'bg-white'}`}>
+      <QueryClientProvider client={queryClient}>
+        <AppSettingsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/loyalty" element={<Loyalty />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/search" element={<SearchPage />} />
+                
+                {/* Main category pages */}
+                <Route path="/men" element={<MenPage />} />
+                <Route path="/women" element={<WomenPage />} />
+                <Route path="/kids" element={<KidsPage />} />
+                <Route path="/eastern" element={<EasternPage />} />
+                <Route path="/western" element={<WesternPage />} />
+                <Route path="/saudi" element={<SaudiPage />} />
+                <Route path="/product/:id" element={<ProductPage />} />
+                <Route path="/quiz" element={<QuizPage />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                
+                {/* Company routes */}
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                
+                {/* Category routes */}
+                <Route path="/makeup" element={<MakeupPage />} />
+                <Route path="/accessories" element={<AccessoriesPage />} />
+                <Route path="/perfumes" element={<PerfumesPage />} />
+                <Route path="/shoes" element={<ShoesPage />} />
+                
+                {/* Subcategory routes */}
+                <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/products" element={<ProductsAdminPage />} />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AppSettingsProvider>
+      </QueryClientProvider>
+    </div>
+  );
+}
 
 export default App;
