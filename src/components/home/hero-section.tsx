@@ -74,9 +74,9 @@ export function HeroSection() {
                     transform: activeIndex === idx ? "scale(1)" : "scale(0.98)",
                   }}
                 />
-                {/* Move text area further down and reduce overlay size */}
-                <div className="relative container z-10 flex flex-col items-start justify-end h-full pb-10 md:pb-16 lg:pb-24">
-                  <div className="bg-black/25 rounded-md p-4 md:p-7 max-w-lg backdrop-blur-sm mt-auto shadow-lg">
+                {/* Move text area further down and reduce overlay size, box bigger and closer to dots */}
+                <div className="relative container z-10 flex flex-col items-start justify-end h-full pb-20 md:pb-24 lg:pb-28">
+                  <div className="bg-black/30 rounded-md p-6 md:p-9 max-w-lg backdrop-blur-sm mt-auto shadow-lg">
                     {slide.headline}
                     {slide.subheadline}
                     <div className="mt-4 flex gap-4">
@@ -99,7 +99,7 @@ export function HeroSection() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {bannerSlides.map((_, i) => (
               <button
                 key={i}
