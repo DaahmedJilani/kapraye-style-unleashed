@@ -44,7 +44,10 @@ export function HeroSection() {
         <Carousel 
           opts={{ loop: true }}
           className="w-full"
-          onSelect={(index) => setActiveIndex(index)}
+          onSelect={(api) => {
+            const currentIndex = api.selectedScrollSnap();
+            setActiveIndex(currentIndex);
+          }}
         >
           <CarouselContent>
             {bannerSlides.map((slide, idx) => (
