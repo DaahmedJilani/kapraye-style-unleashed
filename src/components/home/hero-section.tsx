@@ -1,7 +1,7 @@
 
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Circle, CircleDot } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const bannerSlides = [
@@ -33,6 +33,28 @@ const bannerSlides = [
 
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [api, setApi] = React.useState<any>(null);
+  
+  // Auto-slide effect that changes slides every 3 seconds
+  useEffect(() => {
+    if (!api) return;
+    
+    // Setup interval for auto-sliding
+    const autoSlideInterval = setInterval(() => {
+      api.scrollNext();
+    }, 3000); // 3 seconds
+    
+    // Clear interval on component unmount
+    return () => {
+      clearInterval(autoSlideInterval);
+    };
+  }, [api]);
+
+  // Handle slide change
+  const handleSelect = React.useCallback((api: any) => {
+    const currentIndex = api.selectedScrollSnap();
+    setActiveIndex(currentIndex);
+  }, []);
 
   return (
     <section 
@@ -44,10 +66,8 @@ export function HeroSection() {
         <Carousel 
           opts={{ loop: true }}
           className="w-full"
-          onSelect={(api) => {
-            const currentIndex = api.selectedScrollSnap();
-            setActiveIndex(currentIndex);
-          }}
+          setApi={setApi}
+          onSelect={handleSelect}
         >
           <CarouselContent>
             {bannerSlides.map((slide, idx) => (
@@ -93,7 +113,7 @@ export function HeroSection() {
             {bannerSlides.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActiveIndex(i)}
+                onClick={() => api?.scrollTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
                 className="w-4 h-4 flex items-center justify-center"
               >
