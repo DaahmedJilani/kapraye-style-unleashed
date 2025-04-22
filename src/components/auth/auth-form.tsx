@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,15 +18,22 @@ export function AuthForm() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const supabaseInitialized = !!supabase;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!supabaseInitialized) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Supabase client not initialized. Please check your environment variables.",
+      });
+      return;
+    }
+    
     setLoading(true);
     
     try {
-      if (!supabase) {
-        throw new Error("Supabase client not initialized");
-      }
-      
       if (isLogin) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -75,6 +84,16 @@ export function AuthForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {!supabaseInitialized && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Configuration Error</AlertTitle>
+            <AlertDescription>
+              Supabase client not initialized. Please set up your Supabase environment variables.
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -99,7 +118,7 @@ export function AuthForm() {
           <Button 
             type="submit" 
             className="w-full bg-kapraye-burgundy hover:bg-kapraye-burgundy/90"
-            disabled={loading}
+            disabled={loading || !supabaseInitialized}
           >
             {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
           </Button>

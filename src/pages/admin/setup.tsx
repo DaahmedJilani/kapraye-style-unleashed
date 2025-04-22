@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/lib/supabase";
 import { addAdminUser } from "@/lib/admin-setup";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function AdminSetupPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -14,10 +16,12 @@ export default function AdminSetupPage() {
   const [success, setSuccess] = useState(false);
   const { toast } = useToast();
 
+  const supabaseInitialized = !!supabase;
+
   useEffect(() => {
     async function fetchCurrentUser() {
       setLoading(true);
-      if (!supabase) {
+      if (!supabaseInitialized) {
         setLoading(false);
         return;
       }
@@ -33,10 +37,10 @@ export default function AdminSetupPage() {
     }
 
     fetchCurrentUser();
-  }, []);
+  }, [supabaseInitialized]);
 
   const handleAddAsAdmin = async () => {
-    if (!currentUser) return;
+    if (!currentUser || !supabaseInitialized) return;
     
     setAdding(true);
     try {
@@ -81,9 +85,19 @@ export default function AdminSetupPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {!supabaseInitialized && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Configuration Error</AlertTitle>
+                <AlertDescription>
+                  Supabase client not initialized. Please set up your Supabase environment variables first.
+                </AlertDescription>
+              </Alert>
+            )}
+            
             {loading ? (
               <div className="text-center py-4">Loading...</div>
-            ) : !currentUser ? (
+            ) : !currentUser && supabaseInitialized ? (
               <div className="text-center py-4">
                 <p className="mb-4">You need to be logged in to perform this action.</p>
                 <Button onClick={() => window.location.href = "/auth"}>
@@ -99,17 +113,24 @@ export default function AdminSetupPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-md">
-                  <p className="font-medium">Your User ID:</p>
-                  <p className="text-sm break-all mt-1">{currentUser.id}</p>
-                </div>
+                {currentUser && (
+                  <div className="p-4 bg-gray-50 rounded-md">
+                    <p className="font-medium">Your User ID:</p>
+                    <p className="text-sm break-all mt-1">{currentUser?.id}</p>
+                  </div>
+                )}
                 <Button 
                   onClick={handleAddAsAdmin}
-                  disabled={adding}
+                  disabled={adding || !supabaseInitialized || !currentUser}
                   className="w-full"
                 >
                   {adding ? "Adding..." : "Add Me As Admin"}
                 </Button>
+                {!supabaseInitialized && (
+                  <p className="text-center text-sm text-gray-500">
+                    You need to set up Supabase to use this feature
+                  </p>
+                )}
               </div>
             )}
           </CardContent>
