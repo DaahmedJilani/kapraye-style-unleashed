@@ -1,8 +1,8 @@
 
-import { supabase } from './supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export async function isAdmin(userId: string | undefined): Promise<boolean> {
-  if (!userId || !supabase) return false;
+  if (!userId) return false;
   
   try {
     const { data, error } = await supabase
@@ -11,6 +11,11 @@ export async function isAdmin(userId: string | undefined): Promise<boolean> {
       .eq('user_id', userId)
       .single();
       
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
+    
     return !!data;
   } catch (error) {
     console.error('Error checking admin status:', error);
@@ -19,8 +24,6 @@ export async function isAdmin(userId: string | undefined): Promise<boolean> {
 }
 
 export async function getCurrentUser() {
-  if (!supabase) return null;
-  
   try {
     const { data: { user } } = await supabase.auth.getUser();
     return user;

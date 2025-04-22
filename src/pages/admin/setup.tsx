@@ -14,6 +14,7 @@ export default function AdminSetupPage() {
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function AdminSetupPage() {
         setCurrentUser(user);
       } catch (error) {
         console.error("Error fetching user:", error);
+        setError("Failed to fetch user information");
       } finally {
         setLoading(false);
       }
@@ -37,6 +39,8 @@ export default function AdminSetupPage() {
     if (!currentUser) return;
     
     setAdding(true);
+    setError(null);
+    
     try {
       const result = await addAdminUser(currentUser.id);
       if (result) {
@@ -46,6 +50,7 @@ export default function AdminSetupPage() {
           description: "You've been added as an admin user!",
         });
       } else {
+        setError("Failed to add you as an admin. Please check console for details.");
         toast({
           title: "Error",
           description: "Failed to add you as an admin. Please check console for details.",
@@ -54,6 +59,7 @@ export default function AdminSetupPage() {
       }
     } catch (error: any) {
       console.error("Error adding admin:", error);
+      setError(error?.message || "An unexpected error occurred");
       toast({
         title: "Error",
         description: "An unexpected error occurred",
@@ -97,6 +103,14 @@ export default function AdminSetupPage() {
               </div>
             ) : (
               <div className="space-y-4">
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                
                 {currentUser && (
                   <div className="p-4 bg-gray-50 rounded-md">
                     <p className="font-medium">Your User ID:</p>
