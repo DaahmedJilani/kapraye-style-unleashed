@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client"; // Updated import path
 import { addAdminUser } from "@/lib/admin-setup";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -16,15 +16,11 @@ export default function AdminSetupPage() {
   const [success, setSuccess] = useState(false);
   const { toast } = useToast();
 
-  const supabaseInitialized = !!supabase;
+  const supabaseInitialized = true; // Updated since we're using the correct client
 
   useEffect(() => {
     async function fetchCurrentUser() {
       setLoading(true);
-      if (!supabaseInitialized) {
-        setLoading(false);
-        return;
-      }
       
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -37,10 +33,10 @@ export default function AdminSetupPage() {
     }
 
     fetchCurrentUser();
-  }, [supabaseInitialized]);
+  }, []);
 
   const handleAddAsAdmin = async () => {
-    if (!currentUser || !supabaseInitialized) return;
+    if (!currentUser) return;
     
     setAdding(true);
     try {
@@ -58,7 +54,7 @@ export default function AdminSetupPage() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding admin:", error);
       toast({
         title: "Error",
@@ -85,44 +81,9 @@ export default function AdminSetupPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!supabaseInitialized && (
-              <>
-                <Alert variant="destructive" className="mb-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Configuration Error</AlertTitle>
-                  <AlertDescription>
-                    Supabase client not initialized. Please set up your Supabase environment variables first.
-                  </AlertDescription>
-                </Alert>
-                
-                <div className="mt-6 p-4 bg-blue-50 rounded-md border border-blue-100">
-                  <div className="flex items-start">
-                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-blue-900">How to fix this:</h3>
-                      <ol className="mt-2 space-y-2 text-sm text-blue-800">
-                        <li>
-                          1. Click the green Supabase button in the top right of the Lovable interface
-                        </li>
-                        <li>
-                          2. Connect to or create a Supabase project
-                        </li>
-                        <li>
-                          3. After connecting, Lovable will automatically set up the required environment variables
-                        </li>
-                        <li>
-                          4. Refresh this page after connecting to Supabase
-                        </li>
-                      </ol>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-            
             {loading ? (
               <div className="text-center py-4">Loading...</div>
-            ) : !currentUser && supabaseInitialized ? (
+            ) : !currentUser ? (
               <div className="text-center py-4">
                 <p className="mb-4">You need to be logged in to perform this action.</p>
                 <Button onClick={() => window.location.href = "/auth"}>
@@ -146,16 +107,11 @@ export default function AdminSetupPage() {
                 )}
                 <Button 
                   onClick={handleAddAsAdmin}
-                  disabled={adding || !supabaseInitialized || !currentUser}
+                  disabled={adding}
                   className="w-full"
                 >
                   {adding ? "Adding..." : "Add Me As Admin"}
                 </Button>
-                {!supabaseInitialized && (
-                  <p className="text-center text-sm text-gray-500">
-                    You need to set up Supabase to use this feature
-                  </p>
-                )}
               </div>
             )}
           </CardContent>
