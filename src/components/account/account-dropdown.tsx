@@ -2,24 +2,26 @@
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 
 export function AccountDropdown() {
   const [user, setUser] = useState<any>(null);
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const getUser = async () => {
-      // Skip if Supabase client is not initialized
-      if (!supabase) {
-        console.warn('Supabase client not initialized. Auth functionality will be limited.');
-        return;
-      }
-      
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
+        
+        if (user) {
+          const adminStatus = await isAdmin(user.id);
+          setIsAdminUser(adminStatus);
+        }
       } catch (error) {
         console.error('Error fetching user:', error);
       }
@@ -27,24 +29,33 @@ export function AccountDropdown() {
     
     getUser();
     
-    // Only set up auth listener if supabase client exists
-    if (supabase) {
-      const { data: authListener } = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          setUser(session?.user ?? null);
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          // Use setTimeout to avoid potential recursion issues with Supabase auth
+          setTimeout(async () => {
+            const adminStatus = await isAdmin(session.user.id);
+            setIsAdminUser(adminStatus);
+          }, 0);
+        } else {
+          setIsAdminUser(false);
         }
-      );
-      
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
-    }
+      }
+    );
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
   
   const handleSignOut = async () => {
-    if (supabase) {
+    try {
       await supabase.auth.signOut();
-      window.location.href = "/";
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
   };
   
@@ -70,9 +81,11 @@ export function AccountDropdown() {
               <Link to="/dashboard">Dashboard</Link>
             </DropdownMenuItem>
             
-            <DropdownMenuItem asChild>
-              <Link to="/admin">Admin Panel</Link>
-            </DropdownMenuItem>
+            {isAdminUser && (
+              <DropdownMenuItem asChild>
+                <Link to="/admin">Admin Panel</Link>
+              </DropdownMenuItem>
+            )}
             
             <DropdownMenuItem asChild>
               <Link to="/wishlist">Wishlist</Link>
@@ -91,6 +104,10 @@ export function AccountDropdown() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/wishlist">Wishlist</Link>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem asChild>
+              <Link to="/admin/setup">Admin Setup</Link>
             </DropdownMenuItem>
           </>
         )}

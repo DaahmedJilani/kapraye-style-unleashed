@@ -4,19 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 export async function addAdminUser(userId: string) {
   try {
     // First check if the user is already an admin to avoid duplicate entries
-    const { data: existingAdmin, error: checkError } = await supabase
-      .from('admin_users')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
-    
-    if (checkError) {
-      console.error('Error checking existing admin:', checkError);
-      return false;
-    }
+    const isAdmin = await isUserAdmin(userId);
     
     // If already an admin, return success without inserting
-    if (existingAdmin) {
+    if (isAdmin) {
       console.log('User is already an admin');
       return true;
     }
@@ -34,6 +25,26 @@ export async function addAdminUser(userId: string) {
     return true;
   } catch (error) {
     console.error('Unexpected error in addAdminUser:', error);
+    return false;
+  }
+}
+
+export async function isUserAdmin(userId: string): Promise<boolean> {
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error checking existing admin:', error);
+      return false;
+    }
+    
+    return !!data;
+  } catch (error) {
+    console.error('Error checking admin status:', error);
     return false;
   }
 }

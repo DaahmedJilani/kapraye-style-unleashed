@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+
+import { ReactNode, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   User,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NavItem {
   icon: typeof User;
@@ -30,14 +32,49 @@ const navItems: NavItem[] = [
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [user, setUser] = useState<any>(null);
 
-  const handleLogout = () => {
-    // TODO: Implement Supabase logout
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account.",
-    });
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    
+    getUser();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account.",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+      });
+    }
   };
 
   return (
@@ -73,6 +110,21 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
                   )}
                 </Link>
               ))}
+              
+              {user?.email && (
+                <Link
+                  to="/admin"
+                  className={cn(
+                    "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    location.pathname.startsWith("/admin")
+                      ? "bg-kapraye-burgundy text-white"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <Settings className="mr-3 h-4 w-4" />
+                  Admin Panel
+                </Link>
+              )}
             </nav>
             <div className="border-t p-4">
               <Button

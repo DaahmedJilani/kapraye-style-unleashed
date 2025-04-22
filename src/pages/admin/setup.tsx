@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { addAdminUser } from "@/lib/admin-setup";
+import { addAdminUser, isUserAdmin } from "@/lib/admin-setup";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Info } from "lucide-react";
@@ -16,6 +17,7 @@ export default function AdminSetupPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchCurrentUser() {
@@ -24,6 +26,14 @@ export default function AdminSetupPage() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setCurrentUser(user);
+        
+        // Check if user is already an admin
+        if (user) {
+          const isAdmin = await isUserAdmin(user.id);
+          if (isAdmin) {
+            setSuccess(true);
+          }
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
         setError("Failed to fetch user information");
@@ -70,6 +80,10 @@ export default function AdminSetupPage() {
     }
   };
 
+  const handleGoToAdmin = () => {
+    navigate("/admin");
+  };
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-20 mt-16">
@@ -90,14 +104,14 @@ export default function AdminSetupPage() {
             ) : !currentUser ? (
               <div className="text-center py-4">
                 <p className="mb-4">You need to be logged in to perform this action.</p>
-                <Button onClick={() => window.location.href = "/auth"}>
+                <Button onClick={() => navigate("/auth", { state: { returnTo: "/admin/setup" } })}>
                   Go to Login Page
                 </Button>
               </div>
             ) : success ? (
               <div className="text-center py-4">
                 <p className="text-green-600 mb-4">✅ Successfully added you as an admin!</p>
-                <Button onClick={() => window.location.href = "/admin"}>
+                <Button onClick={handleGoToAdmin}>
                   Go to Admin Dashboard
                 </Button>
               </div>
