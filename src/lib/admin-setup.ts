@@ -1,5 +1,5 @@
 
-import { supabase } from './supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export async function addAdminUser(userId: string) {
   const { data, error } = await supabase

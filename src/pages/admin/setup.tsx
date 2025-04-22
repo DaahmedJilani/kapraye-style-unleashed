@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client"; // Updated import path
+import { supabase } from "@/integrations/supabase/client";
 import { addAdminUser } from "@/lib/admin-setup";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -15,8 +15,6 @@ export default function AdminSetupPage() {
   const [adding, setAdding] = useState(false);
   const [success, setSuccess] = useState(false);
   const { toast } = useToast();
-
-  const supabaseInitialized = true; // Updated since we're using the correct client
 
   useEffect(() => {
     async function fetchCurrentUser() {
