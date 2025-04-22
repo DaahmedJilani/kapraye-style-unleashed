@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,6 +32,7 @@ import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
 import SearchPage from "./pages/search";
 import AdminDashboard from "./pages/admin/index";
 import ProductsAdminPage from "./pages/admin/products";
+import { ProtectedRoute } from "./components/auth/protected-route";
 
 const queryClient = new QueryClient();
 
@@ -80,9 +80,23 @@ function App() {
                 {/* Subcategory routes */}
                 <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
                 
-                {/* Admin Routes */}
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/products" element={<ProductsAdminPage />} />
+                {/* Admin Routes - Protected */}
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin/products" 
+                  element={
+                    <ProtectedRoute>
+                      <ProductsAdminPage />
+                    </ProtectedRoute>
+                  } 
+                />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>
