@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
 export default function AdminDashboard() {
-  const [productCount, setProductCount] = useState(0);
+  const [adminCount, setAdminCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
 
@@ -26,13 +26,13 @@ export default function AdminDashboard() {
     setLoading(true);
     
     try {
-      // Get product count
+      // Get admin users count
       const { count, error } = await supabase
-        .from('products')
+        .from('admin_users')
         .select('*', { count: 'exact', head: true });
       
       if (!error && count !== null) {
-        setProductCount(count);
+        setAdminCount(count);
       }
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -61,18 +61,18 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Products</CardTitle>
-                  <CardDescription>Manage your product inventory</CardDescription>
+                  <CardTitle>Admin Users</CardTitle>
+                  <CardDescription>Manage admin access</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">
-                    {loading ? "..." : productCount}
+                    {loading ? "..." : adminCount}
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">Total products</p>
+                  <p className="text-sm text-muted-foreground mt-1">Total admin users</p>
                 </CardContent>
                 <CardFooter>
                   <Button asChild className="w-full">
-                    <Link to="/admin/products">Manage Products</Link>
+                    <Link to="/admin/setup">Manage Admins</Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -115,10 +115,10 @@ export default function AdminDashboard() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
               <Button asChild variant="outline" className="h-auto py-4 justify-start">
-                <Link to="/admin/products">
+                <Link to="/admin/setup">
                   <div>
-                    <div className="font-medium">Manage Products</div>
-                    <div className="text-sm text-muted-foreground mt-1">Add, edit or remove products from your inventory</div>
+                    <div className="font-medium">Manage Admins</div>
+                    <div className="text-sm text-muted-foreground mt-1">Add or manage admin users</div>
                   </div>
                 </Link>
               </Button>
