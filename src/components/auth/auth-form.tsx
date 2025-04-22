@@ -6,29 +6,59 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 export function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    
     try {
-      // TODO: Implement Supabase auth
-      toast({
-        title: isLogin ? "Welcome back!" : "Account created successfully!",
-        description: "You will be redirected to your dashboard.",
-      });
-      navigate("/dashboard");
-    } catch (error) {
+      if (!supabase) {
+        throw new Error("Supabase client not initialized");
+      }
+      
+      if (isLogin) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Welcome back!",
+          description: "You will be redirected to your dashboard.",
+        });
+        navigate("/dashboard");
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Account created successfully!",
+          description: "Please check your email for verification instructions.",
+        });
+      }
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: error.message || "Something went wrong. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +96,12 @@ export function AuthForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full bg-kapraye-burgundy hover:bg-kapraye-burgundy/90">
-            {isLogin ? "Sign In" : "Create Account"}
+          <Button 
+            type="submit" 
+            className="w-full bg-kapraye-burgundy hover:bg-kapraye-burgundy/90"
+            disabled={loading}
+          >
+            {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
           </Button>
         </form>
         <div className="mt-4 text-center">

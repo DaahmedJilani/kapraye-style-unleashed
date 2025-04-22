@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +33,7 @@ import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
 import SearchPage from "./pages/search";
 import AdminDashboard from "./pages/admin/index";
 import ProductsAdminPage from "./pages/admin/products";
+import AdminSetupPage from "./pages/admin/setup";
 import { ProtectedRoute } from "./components/auth/protected-route";
 
 const queryClient = new QueryClient();
@@ -97,6 +99,7 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
+                <Route path="/admin/setup" element={<AdminSetupPage />} />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>
