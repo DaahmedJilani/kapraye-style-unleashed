@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { addAdminUser } from "@/lib/admin-setup";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
 
 export default function AdminSetupPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -86,13 +86,38 @@ export default function AdminSetupPage() {
           </CardHeader>
           <CardContent>
             {!supabaseInitialized && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Configuration Error</AlertTitle>
-                <AlertDescription>
-                  Supabase client not initialized. Please set up your Supabase environment variables first.
-                </AlertDescription>
-              </Alert>
+              <>
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Configuration Error</AlertTitle>
+                  <AlertDescription>
+                    Supabase client not initialized. Please set up your Supabase environment variables first.
+                  </AlertDescription>
+                </Alert>
+                
+                <div className="mt-6 p-4 bg-blue-50 rounded-md border border-blue-100">
+                  <div className="flex items-start">
+                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+                    <div>
+                      <h3 className="font-medium text-blue-900">How to fix this:</h3>
+                      <ol className="mt-2 space-y-2 text-sm text-blue-800">
+                        <li>
+                          1. Click the green Supabase button in the top right of the Lovable interface
+                        </li>
+                        <li>
+                          2. Connect to or create a Supabase project
+                        </li>
+                        <li>
+                          3. After connecting, Lovable will automatically set up the required environment variables
+                        </li>
+                        <li>
+                          4. Refresh this page after connecting to Supabase
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
             
             {loading ? (
