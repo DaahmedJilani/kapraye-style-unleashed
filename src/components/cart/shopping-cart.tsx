@@ -1,5 +1,5 @@
-
-import { ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { ShoppingBag, Minus, Plus, Trash2, Banknote, Cash } from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -33,15 +33,22 @@ interface ShoppingCartProps {
 export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: ShoppingCartProps) {
   const { toast } = useToast();
   const { formatPrice, t } = useAppSettings();
-  
+
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 100 ? 0 : 10;
   const total = subtotal + shipping;
 
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+
   const handleCheckout = () => {
+    setShowPaymentMethods(true);
+  };
+
+  const handlePaymentMethod = (method: string) => {
+    setShowPaymentMethods(false);
     toast({
-      title: "Checkout initiated",
-      description: "Processing your order...",
+      title: `${method} Selected`,
+      description: "Proceeding with your order. You'll be contacted with payment instructions.",
     });
   };
 
@@ -149,9 +156,48 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
-              <Button onClick={handleCheckout} className="w-full" size="lg">
-                {t('cart.checkout')} ({formatPrice(total)})
-              </Button>
+              {!showPaymentMethods && (
+                <Button onClick={handleCheckout} className="w-full" size="lg">
+                  {t('cart.checkout')} ({formatPrice(total)})
+                </Button>
+              )}
+              {showPaymentMethods && (
+                <div className="flex flex-col gap-3">
+                  <span className="text-center font-medium text-lg mb-2">Choose Payment Method</span>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 w-full"
+                    onClick={() => handlePaymentMethod('JazzCash')}
+                  >
+                    <Banknote className="h-5 w-5 text-yellow-500" />
+                    JazzCash
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 w-full"
+                    onClick={() => handlePaymentMethod('EasyPaisa')}
+                  >
+                    <Banknote className="h-5 w-5 text-green-600" />
+                    EasyPaisa
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 w-full"
+                    onClick={() => handlePaymentMethod('Bank Transfer')}
+                  >
+                    <Banknote className="h-5 w-5 text-blue-600" />
+                    Bank Transfer
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 w-full"
+                    onClick={() => handlePaymentMethod('Cash on Delivery')}
+                  >
+                    <Cash className="h-5 w-5" />
+                    Cash on Delivery
+                  </Button>
+                </div>
+              )}
               <SheetClose asChild>
                 <Button variant="outline" className="w-full">
                   {t('cart.continue')}
