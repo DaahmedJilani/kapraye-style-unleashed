@@ -22,6 +22,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         const user = await getCurrentUser();
         
         if (!user) {
+          console.log("No user found, redirecting to auth");
           setHasAccess(false);
           setLoading(false);
           return;
@@ -29,6 +30,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         
         // Check admin status
         const adminStatus = await isAdmin(user.id);
+        console.log("Admin status check result:", adminStatus, "for user:", user.id);
         setHasAccess(adminStatus);
         
         if (!adminStatus) {
@@ -42,26 +44,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       }
     };
 
-    // Check for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          if (session?.user) {
-            const adminStatus = await isAdmin(session.user.id);
-            setHasAccess(adminStatus);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setHasAccess(false);
-        }
-        setLoading(false);
-      }
-    );
-
     checkAccess();
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    
+    // Don't need to recheck on auth state changes since we're already checking
+    // when the component mounts, and we'll navigate away if the user is not an admin
   }, []);
 
   if (loading) {
