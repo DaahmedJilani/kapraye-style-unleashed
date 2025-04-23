@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
@@ -7,15 +8,7 @@ import { ProductTabs } from "@/components/product/product-tabs";
 import { SimilarItems } from "@/components/product/similar-items";
 import { ShoppingCart } from "@/components/cart/shopping-cart";
 import { useToast } from "@/hooks/use-toast";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  size?: string;
-}
+import { useCart } from "@/contexts/CartContext";
 
 interface WishlistItem {
   id: string;
@@ -29,9 +22,9 @@ export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addItem } = useCart();
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
     const saved = localStorage.getItem('wishlist');
     return saved ? JSON.parse(saved) : [];
@@ -85,32 +78,13 @@ export default function ProductPage() {
       return;
     }
     
-    const newItem: CartItem = {
+    addItem({
       id: `${product.id}-${selectedSize}`,
       name: product.name,
       price: product.price,
       quantity: quantity,
       image: product.images[0],
       size: selectedSize
-    };
-
-    setCartItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex(
-        (item) => item.id === newItem.id
-      );
-
-      if (existingItemIndex !== -1) {
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        return updatedItems;
-      }
-
-      return [...prevItems, newItem];
-    });
-
-    toast({
-      title: "Added to cart",
-      description: `${product.name} (Size: ${selectedSize}) has been added to your cart.`
     });
   };
 
@@ -155,31 +129,11 @@ export default function ProductPage() {
     });
   };
 
-  const updateCartItemQuantity = (id: string, quantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      ).filter((item) => item.quantity > 0)
-    );
-  };
-
-  const removeCartItem = (id: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-    toast({
-      title: "Item removed",
-      description: "The item has been removed from your cart."
-    });
-  };
-
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-10 mt-16 max-w-7xl">
         <div className="flex justify-end mb-6">
-          <ShoppingCart
-            items={cartItems}
-            onUpdateQuantity={updateCartItemQuantity}
-            onRemoveItem={removeCartItem}
-          />
+          <ShoppingCart />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7">

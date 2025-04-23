@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ShoppingBag, Minus, Plus, Trash2, Banknote } from "lucide-react";
 import {
@@ -14,25 +15,12 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
+import { useCart } from "@/contexts/CartContext";
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  size?: string;
-}
-
-interface ShoppingCartProps {
-  items: CartItem[];
-  onUpdateQuantity: (id: string, quantity: number) => void;
-  onRemoveItem: (id: string) => void;
-}
-
-export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: ShoppingCartProps) {
+export function ShoppingCart() {
   const { toast } = useToast();
   const { formatPrice, t } = useAppSettings();
+  const { items, updateItemQuantity, removeItem } = useCart();
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 100 ? 0 : 10;
@@ -104,7 +92,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                           variant="ghost"
                           size="icon"
                           className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => onRemoveItem(item.id)}
+                          onClick={() => removeItem(item.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -115,7 +103,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 rounded-none"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
                           >
                             <Minus className="h-3 w-3" />
@@ -125,7 +113,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 rounded-none"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>

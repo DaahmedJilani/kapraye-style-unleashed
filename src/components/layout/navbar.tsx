@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingBag, User, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -35,8 +36,6 @@ const secondaryLinks: NavLink[] = [
   { name: "Perfumes", href: "/perfumes" },
   { name: "Shoes", href: "/shoes" },
 ];
-
-const demoCartItems = [];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -138,11 +137,7 @@ export function Navbar() {
             <SettingsMenu />
           </div>
           <div className="flex items-center gap-2">
-            <ShoppingCart
-              items={demoCartItems}
-              onUpdateQuantity={() => {}}
-              onRemoveItem={() => {}}
-            />
+            <ShoppingCart />
             <AccountDropdown />
           </div>
           <button

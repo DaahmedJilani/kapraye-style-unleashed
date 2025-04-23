@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { SettingsMenu } from "../settings/settings-menu";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 interface Product {
   id: string;
@@ -50,21 +51,13 @@ const products: Product[] = [
   }
 ];
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
 export function FeaturedProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const { formatPrice, t } = useAppSettings();
   const navigate = useNavigate();
+  const { addItem } = useCart();
 
   const categories = Array.from(new Set(products.map(product => product.category)));
 
@@ -75,34 +68,14 @@ export function FeaturedProducts() {
     return matchesSearch && matchesCategory;
   });
 
-  const addToCart = (product: Product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
+  const handleAddToCart = (product: Product) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.image
     });
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
-  };
-
-  const updateCartItemQuantity = (id: string, quantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      ).filter((item) => item.quantity > 0)
-    );
-  };
-
-  const removeCartItem = (id: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
   
   const goToProductPage = (productId: string) => {
@@ -123,11 +96,7 @@ export function FeaturedProducts() {
           </div>
           <div className="flex items-center gap-4">
             <SettingsMenu />
-            <ShoppingCart
-              items={cartItems}
-              onUpdateQuantity={updateCartItemQuantity}
-              onRemoveItem={removeCartItem}
-            />
+            <ShoppingCart />
           </div>
         </div>
 
@@ -187,7 +156,7 @@ export function FeaturedProducts() {
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      addToCart(product);
+                      handleAddToCart(product);
                     }}
                   >
                     Add to Cart
