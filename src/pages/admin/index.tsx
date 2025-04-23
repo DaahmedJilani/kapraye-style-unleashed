@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AdminLayout } from "@/components/admin/admin-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Users, ShoppingBag, ArrowUp, ArrowDown } from "lucide-react";
+import { Package, Users, ShoppingBag, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function AdminDashboard() {
@@ -31,17 +30,9 @@ export default function AdminDashboard() {
         setAdminCount(adminCount);
       }
       
-      // Get products count
-      const { count: productCount, error: productError } = await supabase
-        .from('products')
-        .select('*', { count: 'exact', head: true });
-        
-      if (!productError && productCount !== null) {
-        setProductCount(productCount);
-      } else {
-        // If no products table yet, just show 0
-        setProductCount(0);
-      }
+      // Check if products table exists (it might not yet)
+      // For now, just set to 0 since we'll create this table later
+      setProductCount(0);
       
       // For now, just mock these counts as they will be implemented later
       setOrderCount(0);
