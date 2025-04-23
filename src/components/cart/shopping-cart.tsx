@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShoppingBag, Minus, Plus, Trash2, Banknote, Cash } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2, Banknote } from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -193,7 +193,7 @@ export function ShoppingCart({ items, onUpdateQuantity, onRemoveItem }: Shopping
                     className="flex items-center gap-2 w-full"
                     onClick={() => handlePaymentMethod('Cash on Delivery')}
                   >
-                    <Cash className="h-5 w-5" />
+                    <Banknote className="h-5 w-5" />
                     Cash on Delivery
                   </Button>
                 </div>
