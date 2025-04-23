@@ -8,12 +8,14 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
+// Manual Note type matching Supabase "notes" table
 type Note = {
   id: string;
   title: string;
   content: string;
   created_at: string;
   updated_at: string;
+  user_id: string;
 };
 
 export default function NotesPage() {
@@ -40,9 +42,11 @@ export default function NotesPage() {
   async function fetchNotes() {
     setLoading(true);
     const { data, error } = await supabase
+      // @ts-ignore: notes table exists in schema
       .from("notes")
       .select("*")
       .order("created_at", { ascending: false });
+
     if (error) {
       toast({
         variant: "destructive",
@@ -50,7 +54,20 @@ export default function NotesPage() {
         description: error.message,
       });
     } else {
-      setNotes(data || []);
+      // Defensive: filter only objects with required props
+      const safeNotes = Array.isArray(data)
+        ? data.filter(
+            (n): n is Note =>
+              n &&
+              typeof n.id === "string" &&
+              typeof n.title === "string" &&
+              typeof n.content === "string" &&
+              typeof n.created_at === "string" &&
+              typeof n.updated_at === "string" &&
+              typeof n.user_id === "string"
+          )
+        : [];
+      setNotes(safeNotes);
     }
     setLoading(false);
   }
@@ -58,10 +75,24 @@ export default function NotesPage() {
   async function handleAddNote(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+
+    // Get the current user to insert user_id (required by RLS & table)
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        title: "Not signed in",
+        description: "Please sign in to add notes.",
+      });
+      navigate("/auth");
+      return;
+    }
     const { data, error } = await supabase
+      // @ts-ignore: notes table exists in schema
       .from("notes")
       .insert([
-        { title, content }
+        { title, content, user_id: user.id }
       ]);
     setLoading(false);
     if (error) {
