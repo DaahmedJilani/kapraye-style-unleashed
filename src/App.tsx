@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,6 +35,7 @@ import ProductsAdminPage from "./pages/admin/products";
 import ProductImportPage from "./pages/admin/products/import";
 import AdminSetupPage from "./pages/admin/setup";
 import { ProtectedRoute } from "./components/auth/protected-route";
+import NotesPage from "./pages/notes";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +109,8 @@ function App() {
                   } 
                 />
                 <Route path="/admin/setup" element={<AdminSetupPage />} />
+                
+                <Route path="/notes" element={<NotesPage />} />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>

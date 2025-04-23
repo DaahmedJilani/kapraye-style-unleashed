@@ -1,4 +1,3 @@
-
 import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedCategories } from "@/components/home/featured-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
@@ -39,6 +38,17 @@ const Index = () => {
       <ShopTheLook />
       <LoyaltySection />
       <NewsletterSection />
+      <section className="py-12">
+        <div className="max-w-2xl mx-auto text-center">
+          {/* Add link to the notes page */}
+          <a
+            href="/notes"
+            className="inline-block px-4 py-2 bg-kapraye-burgundy text-white rounded-lg shadow hover:bg-kapraye-burgundy/90 transition"
+          >
+            My Notes
+          </a>
+        </div>
+      </section>
     </MainLayout>
   );
 };
