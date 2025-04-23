@@ -83,25 +83,25 @@ export function FeaturedProducts() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-kapraye-cream/20 to-white">
-      <div className="container px-4 md:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-4">
+    <section className="py-12 bg-gradient-to-b from-kapraye-cream/20 to-white">
+      <div className="container px-2 md:px-4 xl:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 gap-4 md:gap-0">
+          <div className="w-full md:w-auto">
+            <h2 className="text-2xl xs:text-2xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-3 md:mb-4">
               Latest Arrivals
             </h2>
-            <p className="text-base text-foreground/90 max-w-2xl">
+            <p className="text-sm md:text-base text-foreground/80 max-w-xl">
               Discover our newest collection of premium fashion pieces.
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4 min-w-fit">
             <SettingsMenu />
             <ShoppingCart />
           </div>
         </div>
 
-        <div className="space-y-6 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+        <div className="space-y-3 md:space-y-6 mb-6 md:mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-between w-full">
             <ProductSearch onSearch={setSearchTerm} />
             <ProductFilters
               categories={categories}
@@ -111,7 +111,7 @@ export function FeaturedProducts() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
@@ -124,23 +124,25 @@ export function FeaturedProducts() {
                   src={product.image}
                   alt={product.name}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  sizes="(max-width: 640px) 50vw, 25vw"
                 />
               </div>
-              <div className="mt-4 space-y-1">
+              <div className="mt-2 md:mt-4 space-y-0.5 md:space-y-1">
                 <div className="flex justify-between">
-                  <h3 className="text-sm text-kapraye-burgundy">
+                  <h3 className="text-xs xs:text-sm text-kapraye-burgundy">
                     {product.category}
                   </h3>
                 </div>
-                <h3 className="font-playfair text-lg font-medium text-foreground">
+                <h3 className="font-playfair text-base md:text-lg font-medium text-foreground">
                   {product.name}
                 </h3>
-                <p className="text-base font-medium text-kapraye-pink">
+                <p className="text-sm md:text-base font-medium text-kapraye-pink">
                   {formatPrice(product.price)}
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="secondary" size="sm">
@@ -168,8 +170,8 @@ export function FeaturedProducts() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
+          <div className="text-center py-6 md:py-12">
+            <p className="text-base md:text-lg text-muted-foreground">No products found matching your criteria.</p>
           </div>
         )}
       </div>

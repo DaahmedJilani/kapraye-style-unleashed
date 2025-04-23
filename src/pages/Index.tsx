@@ -9,7 +9,6 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { useEffect } from "react";
 
 const Index = () => {
-  // Add parallax scroll effect for enhanced 3D feel
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -31,24 +30,31 @@ const Index = () => {
 
   return (
     <MainLayout>
-      <HeroSection />
-      <FeaturedCategories />
-      <AboutSection />
-      <FeaturedProducts />
-      <ShopTheLook />
-      <LoyaltySection />
-      <NewsletterSection />
-      <section className="py-12">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Add link to the notes page */}
-          <a
-            href="/notes"
-            className="inline-block px-4 py-2 bg-kapraye-burgundy text-white rounded-lg shadow hover:bg-kapraye-burgundy/90 transition"
-          >
-            My Notes
-          </a>
+      <div className="space-y-10 md:space-y-16">
+        <HeroSection />
+        <div className="md:mt-6">
+          <FeaturedCategories />
         </div>
-      </section>
+        <AboutSection />
+        <div className="md:mt-6">
+          <FeaturedProducts />
+        </div>
+        <div className="md:mt-8">
+          <ShopTheLook />
+        </div>
+        <LoyaltySection />
+        <NewsletterSection />
+        <section className="py-8 md:py-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <a
+              href="/notes"
+              className="inline-block px-4 py-2 text-base sm:text-lg bg-kapraye-burgundy text-white rounded-lg shadow hover:bg-kapraye-burgundy/90 transition"
+            >
+              My Notes
+            </a>
+          </div>
+        </section>
+      </div>
     </MainLayout>
   );
 };
