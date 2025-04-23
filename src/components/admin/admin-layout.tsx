@@ -27,6 +27,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarProvider,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -75,144 +76,146 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        {/* Admin Sidebar */}
-        <Sidebar>
-          <SidebarHeader>
-            <div className="px-3 py-2">
-              <Link to="/admin" className="flex items-center">
-                <span className="text-xl font-semibold text-primary">
-                  Kaprayé Admin
-                </span>
-              </Link>
+      <SidebarProvider>
+        <div className="flex w-full">
+          {/* Admin Sidebar */}
+          <Sidebar>
+            <SidebarHeader>
+              <div className="px-3 py-2">
+                <Link to="/admin" className="flex items-center">
+                  <span className="text-xl font-semibold text-primary">
+                    Kaprayé Admin
+                  </span>
+                </Link>
+              </div>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin">
+                          <LayoutDashboard className="w-4 h-4 mr-2" />
+                          <span>Overview</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              
+              <SidebarGroup>
+                <SidebarGroupLabel>Products</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/products">
+                          <Package className="w-4 h-4 mr-2" />
+                          <span>All Products</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/products/import">
+                          <Upload className="w-4 h-4 mr-2" />
+                          <span>Import Products</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/products/categories">
+                          <FileText className="w-4 h-4 mr-2" />
+                          <span>Categories</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              
+              <SidebarGroup>
+                <SidebarGroupLabel>Sales</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/orders">
+                          <ShoppingBag className="w-4 h-4 mr-2" />
+                          <span>Orders</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              
+              <SidebarGroup>
+                <SidebarGroupLabel>Users</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/users">
+                          <Users className="w-4 h-4 mr-2" />
+                          <span>Customers</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              
+              <SidebarGroup>
+                <SidebarGroupLabel>Configuration</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/setup">
+                          <Settings className="w-4 h-4 mr-2" />
+                          <span>Admin Access</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            <SidebarFooter>
+              <div className="px-3 py-2">
+                {user?.email && (
+                  <div className="text-xs mb-2 text-muted-foreground">
+                    Signed in as: {user.email}
+                  </div>
+                )}
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </SidebarFooter>
+          </Sidebar>
+          
+          {/* Main content */}
+          <main className="flex-1 p-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-center mb-8">
+                <h1 className="text-2xl font-bold">{title}</h1>
+              </div>
+              {children}
             </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin">
-                        <LayoutDashboard className="w-4 h-4 mr-2" />
-                        <span>Overview</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            
-            <SidebarGroup>
-              <SidebarGroupLabel>Products</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/products">
-                        <Package className="w-4 h-4 mr-2" />
-                        <span>All Products</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/products/import">
-                        <Upload className="w-4 h-4 mr-2" />
-                        <span>Import Products</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/products/categories">
-                        <FileText className="w-4 h-4 mr-2" />
-                        <span>Categories</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            
-            <SidebarGroup>
-              <SidebarGroupLabel>Sales</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/orders">
-                        <ShoppingBag className="w-4 h-4 mr-2" />
-                        <span>Orders</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            
-            <SidebarGroup>
-              <SidebarGroupLabel>Users</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/users">
-                        <Users className="w-4 h-4 mr-2" />
-                        <span>Customers</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            
-            <SidebarGroup>
-              <SidebarGroupLabel>Configuration</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/admin/setup">
-                        <Settings className="w-4 h-4 mr-2" />
-                        <span>Admin Access</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarFooter>
-            <div className="px-3 py-2">
-              {user?.email && (
-                <div className="text-xs mb-2 text-muted-foreground">
-                  Signed in as: {user.email}
-                </div>
-              )}
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
-          </SidebarFooter>
-        </Sidebar>
-        
-        {/* Main content */}
-        <main className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl font-bold">{title}</h1>
-            </div>
-            {children}
-          </div>
-        </main>
-      </div>
+          </main>
+        </div>
+      </SidebarProvider>
     </div>
   );
 }
