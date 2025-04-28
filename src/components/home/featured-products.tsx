@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ProductSearch } from "./product-search";
 import { ProductFilters } from "./product-filters";
@@ -84,14 +85,14 @@ export function FeaturedProducts() {
   };
 
   return (
-    <section className="py-8 md:py-12 bg-gradient-to-b from-kapraye-cream/20 to-white">
-      <div className="container px-4 md:px-6 xl:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4 md:gap-0">
+    <section className="py-4 md:py-12 bg-gradient-to-b from-kapraye-cream/20 to-white">
+      <div className="container px-2 xs:px-3 md:px-6 xl:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-8 gap-2 md:gap-0">
           <div className="w-full md:w-auto">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-playfair font-medium text-kapraye-burgundy mb-2 md:mb-4">
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-playfair font-medium text-kapraye-burgundy mb-1 md:mb-4">
               Latest Arrivals
             </h2>
-            <p className="text-sm md:text-base text-foreground/80 max-w-xl">
+            <p className="text-xs md:text-base text-foreground/80 max-w-xl">
               Discover our newest collection of premium fashion pieces.
             </p>
           </div>
@@ -101,8 +102,8 @@ export function FeaturedProducts() {
           </div>
         </div>
 
-        <div className="space-y-3 md:space-y-6 mb-6 md:mb-8">
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-between w-full">
+        <div className="space-y-2 md:space-y-6 mb-3 md:mb-8">
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-4 justify-between w-full">
             <ProductSearch onSearch={setSearchTerm} />
             <ProductFilters
               categories={categories}
@@ -112,7 +113,7 @@ export function FeaturedProducts() {
           </div>
         </div>
         
-        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
@@ -128,19 +129,21 @@ export function FeaturedProducts() {
                   loading="lazy"
                 />
               </div>
-              <div className="mt-2 md:mt-4 space-y-0.5 md:space-y-1">
+              <div className="mt-1.5 md:mt-4 space-y-0.5 md:space-y-1">
                 <div className="flex justify-between">
-                  <h3 className="text-xs xs:text-sm text-kapraye-burgundy">
+                  <h3 className="text-xs text-kapraye-burgundy">
                     {product.category}
                   </h3>
                 </div>
-                <h3 className="font-playfair text-sm sm:text-base md:text-lg font-medium text-foreground truncate">
+                <h3 className="font-playfair text-xs sm:text-sm md:text-lg font-medium text-foreground truncate">
                   {product.name}
                 </h3>
-                <p className="text-sm md:text-base font-medium text-kapraye-pink">
+                <p className="text-xs md:text-base font-medium text-kapraye-pink">
                   {formatPrice(product.price)}
                 </p>
               </div>
+              
+              {/* Desktop hover actions */}
               <div className={`absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 ${isMobile ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
                 <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                   {!isMobile && (
@@ -168,12 +171,13 @@ export function FeaturedProducts() {
                 </div>
               </div>
               
+              {/* Mobile action button */}
               {isMobile && (
-                <div className="absolute bottom-2 right-2 z-10" onClick={e => e.stopPropagation()}>
+                <div className="absolute bottom-1 right-1 z-10" onClick={e => e.stopPropagation()}>
                   <Button
                     variant="secondary"
                     size="sm"
-                    className="bg-white/80 backdrop-blur-sm h-7 w-7 p-0"
+                    className="bg-white/80 backdrop-blur-sm h-6 w-6 p-0"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product);
@@ -188,8 +192,8 @@ export function FeaturedProducts() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center py-6 md:py-12">
-            <p className="text-base md:text-lg text-muted-foreground">No products found matching your criteria.</p>
+          <div className="text-center py-4 md:py-12">
+            <p className="text-sm md:text-lg text-muted-foreground">No products found matching your criteria.</p>
           </div>
         )}
       </div>
