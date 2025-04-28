@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ProductSearch } from "./product-search";
 import { ProductFilters } from "./product-filters";
@@ -169,13 +168,12 @@ export function FeaturedProducts() {
                 </div>
               </div>
               
-              {/* Mobile-only action button */}
               {isMobile && (
                 <div className="absolute bottom-2 right-2 z-10" onClick={e => e.stopPropagation()}>
                   <Button
                     variant="secondary"
-                    size="xs"
-                    className="bg-white/80 backdrop-blur-sm"
+                    size="sm"
+                    className="bg-white/80 backdrop-blur-sm h-7 w-7 p-0"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(product);
