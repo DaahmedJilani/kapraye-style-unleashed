@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Category {
   id: string;
@@ -49,26 +50,27 @@ const categories: Category[] = [
 
 export function FeaturedCategories() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   return (
-    <section className="py-20 bg-white" id="categories">
-      <div className="container px-4 md:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-4">
+    <section className="py-6 md:py-20 bg-white" id="categories">
+      <div className="container px-3 md:px-8">
+        <div className="text-center mb-6 md:mb-16">
+          <h2 className="text-2xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-2 md:mb-4">
             Explore Our Collections
           </h2>
-          <p className="text-base text-foreground/90 max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-foreground/90 max-w-2xl mx-auto">
             Discover premium clothing and accessories crafted for those who appreciate 
             quality, style, and cultural heritage.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-6">
           {categories.map((category, index) => (
             <a 
               key={category.id}
               href={`#${category.id}`}
-              className="group relative overflow-hidden rounded-xl aspect-[4/5] hover-lift"
+              className="group relative overflow-hidden rounded-lg md:rounded-xl aspect-[3/4] md:aspect-[4/5] hover-lift"
               onMouseEnter={() => setHoveredId(category.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
@@ -91,22 +93,28 @@ export function FeaturedCategories() {
               </div>
               
               {/* Content overlay */}
-              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                <h3 className="text-2xl font-playfair font-medium mb-1 text-shadow">
+              <div className="absolute inset-0 flex flex-col justify-end p-2 sm:p-3 md:p-6 text-white">
+                <h3 className="text-base sm:text-lg md:text-2xl font-playfair font-medium mb-0 md:mb-1 text-shadow">
                   {category.name}
                 </h3>
-                <p className={`text-sm text-white/90 max-w-xs transition-opacity duration-300 ${hoveredId === category.id ? 'opacity-100' : 'opacity-80'}`}>
-                  {category.description}
-                </p>
                 
-                <div className={`mt-4 overflow-hidden transition-all duration-300 ${hoveredId === category.id ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <span className="inline-flex items-center text-sm font-medium">
-                    Explore
-                    <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </span>
-                </div>
+                {!isMobile ? (
+                  <>
+                    <p className={`text-xs md:text-sm text-white/90 max-w-xs transition-opacity duration-300 ${hoveredId === category.id ? 'opacity-100' : 'opacity-80'}`}>
+                      {category.description}
+                    </p>
+                    <div className={`mt-2 md:mt-4 overflow-hidden transition-all duration-300 ${hoveredId === category.id ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'}`}>
+                      <span className="inline-flex items-center text-xs md:text-sm font-medium">
+                        Explore
+                        <svg className="w-3 h-3 md:w-4 md:h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <span className="text-xs text-white/80">Explore</span>
+                )}
               </div>
             </a>
           ))}
