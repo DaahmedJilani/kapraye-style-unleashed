@@ -11,6 +11,7 @@ import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { SettingsMenu } from "../settings/settings-menu";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Product {
   id: string;
@@ -58,6 +59,7 @@ export function FeaturedProducts() {
   const { formatPrice, t } = useAppSettings();
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const isMobile = useIsMobile();
 
   const categories = Array.from(new Set(products.map(product => product.category)));
 
@@ -83,11 +85,11 @@ export function FeaturedProducts() {
   };
 
   return (
-    <section className="py-12 bg-gradient-to-b from-kapraye-cream/20 to-white">
-      <div className="container px-2 md:px-4 xl:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 gap-4 md:gap-0">
+    <section className="py-8 md:py-12 bg-gradient-to-b from-kapraye-cream/20 to-white">
+      <div className="container px-4 md:px-6 xl:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4 md:gap-0">
           <div className="w-full md:w-auto">
-            <h2 className="text-2xl xs:text-2xl md:text-4xl font-playfair font-medium text-kapraye-burgundy mb-3 md:mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-playfair font-medium text-kapraye-burgundy mb-2 md:mb-4">
               Latest Arrivals
             </h2>
             <p className="text-sm md:text-base text-foreground/80 max-w-xl">
@@ -111,7 +113,7 @@ export function FeaturedProducts() {
           </div>
         </div>
         
-        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {filteredProducts.map((product, index) => (
             <div 
               key={product.id}
@@ -125,7 +127,6 @@ export function FeaturedProducts() {
                   alt={product.name}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
-                  sizes="(max-width: 640px) 50vw, 25vw"
                 />
               </div>
               <div className="mt-2 md:mt-4 space-y-0.5 md:space-y-1">
@@ -134,25 +135,27 @@ export function FeaturedProducts() {
                     {product.category}
                   </h3>
                 </div>
-                <h3 className="font-playfair text-base md:text-lg font-medium text-foreground">
+                <h3 className="font-playfair text-sm sm:text-base md:text-lg font-medium text-foreground truncate">
                   {product.name}
                 </h3>
                 <p className="text-sm md:text-base font-medium text-kapraye-pink">
                   {formatPrice(product.price)}
                 </p>
               </div>
-              <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
+              <div className={`absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 ${isMobile ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
                 <div className="flex gap-2" onClick={e => e.stopPropagation()}>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="secondary" size="sm">
-                        Reviews
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
-                      <ProductReviews productId={product.id} />
-                    </DialogContent>
-                  </Dialog>
+                  {!isMobile && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="secondary" size="sm">
+                          Reviews
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <ProductReviews productId={product.id} />
+                      </DialogContent>
+                    </Dialog>
+                  )}
                   <Button
                     variant="secondary"
                     size="sm"
@@ -165,6 +168,23 @@ export function FeaturedProducts() {
                   </Button>
                 </div>
               </div>
+              
+              {/* Mobile-only action button */}
+              {isMobile && (
+                <div className="absolute bottom-2 right-2 z-10" onClick={e => e.stopPropagation()}>
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    className="bg-white/80 backdrop-blur-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
+                    +
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -3,6 +3,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { Circle, CircleDot } from "lucide-react";
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const bannerSlides = [
   {
@@ -32,6 +33,7 @@ const bannerSlides = [
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [api, setApi] = React.useState<any>(null);
+  const isMobile = useIsMobile();
 
   // Set carousel to change every 4 seconds (4000ms)
   useEffect(() => {
@@ -51,7 +53,7 @@ export function HeroSection() {
 
   return (
     <section 
-      className="relative w-full min-h-[350px] md:min-h-[480px] xl:min-h-[640px] flex items-center justify-center bg-gradient-to-b from-[#dcc1be] to-[#f9f1f0] overflow-hidden"
+      className="relative w-full min-h-[280px] xs:min-h-[350px] md:min-h-[480px] xl:min-h-[640px] flex items-center justify-center bg-gradient-to-b from-[#dcc1be] to-[#f9f1f0] overflow-hidden"
       style={{ perspective: "1200px" }}
     >
       <div className="w-full">
@@ -63,7 +65,7 @@ export function HeroSection() {
         >
           <CarouselContent>
             {bannerSlides.map((slide, idx) => (
-              <CarouselItem key={idx} className="w-full !pl-0 relative aspect-video flex items-center overflow-hidden">
+              <CarouselItem key={idx} className="w-full !pl-0 relative aspect-[3/2] sm:aspect-video flex items-center overflow-hidden">
                 <img 
                   src={slide.src}
                   alt=""
@@ -72,24 +74,25 @@ export function HeroSection() {
                     zIndex: 0,
                     transition: "transform 0.5s cubic-bezier(0.33, 1, 0.68, 1)",
                     transform: activeIndex === idx ? "scale(1)" : "scale(0.98)",
+                    objectPosition: isMobile ? "70% center" : "center",
                   }}
                 />
-                {/* Bigger text box, moved closer to dots but not covering image text */}
-                <div className="relative container z-10 flex flex-col items-start justify-end h-full pb-12 md:pb-14 lg:pb-16">
-                  <div className="bg-black/30 rounded-md p-8 md:p-12 max-w-xl backdrop-blur-sm mt-auto shadow-lg">
+                {/* Text overlay box - adjusted for mobile */}
+                <div className="relative container z-10 flex flex-col items-start justify-end h-full pb-8 md:pb-14 lg:pb-16">
+                  <div className="bg-black/30 rounded-md p-4 sm:p-6 md:p-8 lg:p-12 max-w-xs xs:max-w-sm md:max-w-xl backdrop-blur-sm mt-auto shadow-lg">
                     {slide.headline}
-                    {slide.subheadline}
-                    <div className="mt-4 flex gap-4">
+                    <div className="mt-1 md:mt-2">{slide.subheadline}</div>
+                    <div className="mt-3 md:mt-4 flex flex-wrap gap-2 md:gap-4">
                       <Button 
-                        size="lg" 
-                        className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white min-w-[140px] rounded-full shadow-lg text-base md:text-lg"
+                        size={isMobile ? "sm" : "lg"}
+                        className="bg-kapraye-burgundy hover:bg-kapraye-burgundy/90 text-white rounded-full shadow-lg text-sm sm:text-base md:text-lg"
                       >
                         Shop Collection
                       </Button>
                       <Button 
-                        size="lg"
+                        size={isMobile ? "sm" : "lg"}
                         variant="outline"
-                        className="border-white/70 text-white bg-black/70 hover:bg-black/90 min-w-[140px] rounded-full text-base md:text-lg"
+                        className="border-white/70 text-white bg-black/70 hover:bg-black/90 rounded-full text-sm sm:text-base md:text-lg"
                       >
                         Explore SHUKRAN
                       </Button>
@@ -108,18 +111,17 @@ export function HeroSection() {
                 className="w-4 h-4 flex items-center justify-center"
               >
                 {activeIndex === i ? (
-                  <CircleDot className="text-white drop-shadow" size={18} />
+                  <CircleDot className="text-white drop-shadow" size={isMobile ? 16 : 18} />
                 ) : (
-                  <Circle className="text-white/70" size={16} />
+                  <Circle className="text-white/70" size={isMobile ? 14 : 16} />
                 )}
               </button>
             ))}
           </div>
         </Carousel>
       </div>
-      <div className="absolute -right-20 top-1/4 w-64 h-64 rounded-full bg-kapraye-pink opacity-10 blur-3xl pointer-events-none"></div>
-      <div className="absolute -left-20 bottom-1/4 w-80 h-80 rounded-full bg-kapraye-mauve opacity-10 blur-3xl pointer-events-none"></div>
+      <div className="absolute -right-20 top-1/4 w-40 sm:w-64 h-40 sm:h-64 rounded-full bg-kapraye-pink opacity-10 blur-3xl pointer-events-none"></div>
+      <div className="absolute -left-20 bottom-1/4 w-48 sm:w-80 h-48 sm:h-80 rounded-full bg-kapraye-mauve opacity-10 blur-3xl pointer-events-none"></div>
     </section>
   );
 }
-

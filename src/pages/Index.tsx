@@ -1,3 +1,4 @@
+
 import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedCategories } from "@/components/home/featured-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
@@ -30,22 +31,22 @@ const Index = () => {
 
   return (
     <MainLayout>
-      <div className="space-y-10 md:space-y-16">
+      <div className="space-y-8 md:space-y-16">
         <HeroSection />
-        <div className="md:mt-6">
+        <div className="mt-4 md:mt-6">
           <FeaturedCategories />
         </div>
         <AboutSection />
-        <div className="md:mt-6">
+        <div className="mt-4 md:mt-6">
           <FeaturedProducts />
         </div>
-        <div className="md:mt-8">
+        <div className="mt-6 md:mt-8">
           <ShopTheLook />
         </div>
         <LoyaltySection />
         <NewsletterSection />
-        <section className="py-8 md:py-12">
-          <div className="max-w-2xl mx-auto text-center">
+        <section className="py-6 md:py-12">
+          <div className="max-w-2xl mx-auto text-center px-4">
             <a
               href="/notes"
               className="inline-block px-4 py-2 text-base sm:text-lg bg-kapraye-burgundy text-white rounded-lg shadow hover:bg-kapraye-burgundy/90 transition"
