@@ -26,7 +26,7 @@ interface CheckoutForm {
 }
 
 export default function EnhancedCheckoutPage() {
-  const { cart, removeFromCart, updateQuantity, clearCart } = useWooCommerceCart();
+  const { items, removeItem, updateItemQuantity, clearCart } = useWooCommerceCart();
   const { formatPrice } = useAppSettings();
   const { toast } = useToast();
   
@@ -44,7 +44,7 @@ export default function EnhancedCheckoutPage() {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal > 3000 ? 0 : 200;
   const total = subtotal + shipping;
 
@@ -84,7 +84,7 @@ export default function EnhancedCheckoutPage() {
     }
   };
 
-  if (cart.length === 0) {
+  if (items.length === 0) {
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-20 mt-16 text-center">
@@ -289,12 +289,12 @@ export default function EnhancedCheckoutPage() {
                     <CardTitle>Order Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {cart.map((item) => (
-                      <div key={`${item.id}-${item.selectedSize}`} className="flex justify-between items-start">
+                    {items.map((item) => (
+                      <div key={`${item.id}-${item.size}`} className="flex justify-between items-start">
                         <div className="flex-1">
                           <h4 className="font-medium text-sm">{item.name}</h4>
                           <p className="text-xs text-gray-600">
-                            Size: {item.selectedSize} | Qty: {item.quantity}
+                            Size: {item.size} | Qty: {item.quantity}
                           </p>
                         </div>
                         <span className="font-medium">{formatPrice(item.price * item.quantity)}</span>
