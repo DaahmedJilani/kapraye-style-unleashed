@@ -43,7 +43,18 @@ export function useLoyalty() {
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      
+      // Transform the data to match UserProfile interface
+      const profileData: UserProfile = {
+        id: data.id,
+        full_name: data.full_name,
+        loyalty_points: data.loyalty_points || 0,
+        loyalty_tier: data.loyalty_tier || 'bronze',
+        phone: data.phone,
+        avatar_url: data.avatar_url
+      };
+      
+      setProfile(profileData);
     } catch (err: any) {
       console.error('Error fetching profile:', err);
       setError(err.message);
@@ -63,7 +74,18 @@ export function useLoyalty() {
         .limit(50);
 
       if (error) throw error;
-      setTransactions(data || []);
+      
+      // Transform the data to match LoyaltyTransaction interface
+      const transactionData: LoyaltyTransaction[] = (data || []).map(item => ({
+        id: item.id,
+        type: item.type as 'earned' | 'redeemed' | 'expired' | 'adjustment',
+        points: item.points,
+        description: item.description || '',
+        created_at: item.created_at,
+        order_id: item.order_id || undefined
+      }));
+      
+      setTransactions(transactionData);
     } catch (err: any) {
       console.error('Error fetching transactions:', err);
       setError(err.message);

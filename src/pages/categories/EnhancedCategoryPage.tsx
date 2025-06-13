@@ -30,8 +30,6 @@ export function EnhancedCategoryPage({
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('menu_order');
   const [loading, setLoading] = useState(true);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
-  const [onSale, setOnSale] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -62,14 +60,6 @@ export function EnhancedCategoryPage({
 
   const handleSortChange = (newSort: string) => {
     setSortOption(newSort);
-  };
-
-  const handlePriceRangeChange = (range: [number, number]) => {
-    setPriceRange(range);
-  };
-
-  const handleSaleToggle = (saleOnly: boolean) => {
-    setOnSale(saleOnly);
   };
 
   return (
@@ -140,10 +130,6 @@ export function EnhancedCategoryPage({
                       }}
                       sortOption={sortOption}
                       onSortChange={handleSortChange}
-                      priceRange={priceRange}
-                      onPriceRangeChange={handlePriceRangeChange}
-                      onSale={onSale}
-                      onSaleToggle={handleSaleToggle}
                     />
                   </div>
                 </div>
@@ -154,9 +140,6 @@ export function EnhancedCategoryPage({
                 categoryId={selectedCategory}
                 search={searchQuery}
                 orderby={sortOption}
-                minPrice={priceRange[0]}
-                maxPrice={priceRange[1]}
-                onSale={onSale}
                 perPage={24}
               />
             </div>
