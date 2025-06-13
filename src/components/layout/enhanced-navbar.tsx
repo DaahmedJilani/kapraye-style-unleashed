@@ -1,134 +1,286 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { EnhancedShoppingCart } from '@/components/woocommerce/EnhancedShoppingCart';
-import { ProductSearch } from '@/components/woocommerce/ProductSearch';
-import { AccountDropdown } from '@/components/account/account-dropdown';
-import { SettingsMenu } from '@/components/settings/settings-menu';
-import { Menu, X, Heart, User } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Link, useNavigate } from "react-router-dom";
+import { Search, ShoppingBag, User, Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { SettingsMenu } from "@/components/settings/settings-menu";
+import { AccountDropdown } from "@/components/account/account-dropdown";
+import { EnhancedShoppingCart } from "@/components/woocommerce/EnhancedShoppingCart";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
+interface NavLink {
+  name: string;
+  href: string;
+}
+
+const mainLinks: NavLink[] = [
+  { name: "Men", href: "/men" },
+  { name: "Kids", href: "/kids" },
+];
+
+const womenLinks: NavLink[] = [
+  { name: "Women", href: "/women" },
+  { name: "Eastern", href: "/eastern" },
+  { name: "Western", href: "/western" },
+  { name: "Saudi Style", href: "/saudi" },
+];
+
+const secondaryLinks: NavLink[] = [
+  { name: "Makeup", href: "/makeup" },
+  { name: "Accessories", href: "/accessories" },
+  { name: "Perfumes", href: "/perfumes" },
+  { name: "Shoes", href: "/shoes" },
+];
 
 export function EnhancedNavbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
-  const navigationItems = [
-    { name: 'Men', href: '/men' },
-    { name: 'Women', href: '/women' },
-    { name: 'Kids', href: '/kids' },
-    { name: 'Eastern', href: '/eastern' },
-    { name: 'Western', href: '/western' },
-    { name: 'Saudi Style', href: '/saudi' },
-    { name: 'Makeup', href: '/makeup' },
-    { name: 'Accessories', href: '/accessories' },
-    { name: 'Perfumes', href: '/perfumes' },
-    { name: 'Shoes', href: '/shoes' },
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm("");
+    }
+  };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-playfair font-bold text-kapraye-burgundy">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/95 backdrop-blur-md border-b border-kapraye-cream shadow-sm' 
+          : 'bg-transparent'
+      }`} 
+      style={{ height: '72px' }}
+    >
+      <nav className="container py-5 px-2 sm:px-4 md:px-8 flex justify-between items-center" style={{ height: '72px' }}>
+        {/* Logo and Title */}
+        <div className="flex-shrink-0 flex items-center space-x-2">
+          <Link to="/" className="flex items-center" style={{ lineHeight: 1 }}>
+            <span className={`text-3xl font-above-beyond font-normal leading-none transition-colors duration-300 ${
+              isScrolled ? 'text-kapraye-burgundy' : 'text-white'
+            }`} style={{ lineHeight: 1.1, paddingTop: '0.15rem', paddingBottom: '0.15rem' }}>
               Kaprayé
             </span>
           </Link>
+          <span className={`text-sm font-allure select-none transition-colors duration-300 ${
+            isScrolled ? 'text-kapraye-mauve' : 'text-white/80'
+          }`} style={{ marginTop: '0.3rem' }}>
+            By Rayan
+          </span>
+        </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navigationItems.slice(0, 6).map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-700 hover:text-kapraye-burgundy transition-colors font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:block flex-1 max-w-lg mx-8">
-            <ProductSearch />
-          </div>
-
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Settings Menu */}
-            <SettingsMenu />
-
-            {/* Wishlist */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/wishlist')}
-              className="hidden sm:flex"
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center space-x-6">
+          {mainLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.href}
+              className={`text-sm font-medium transition-colors hover:text-kapraye-pink ${
+                isScrolled ? 'text-foreground' : 'text-white hover:text-kapraye-cream'
+              }`}
             >
-              <Heart className="h-5 w-5" />
-            </Button>
+              {link.name}
+            </Link>
+          ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
+                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                }`}
+              >
+                Women <ChevronDown className="w-4 h-4 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[160px]">
+              {womenLinks.map((link) => (
+                <DropdownMenuItem
+                  key={link.name}
+                  className="cursor-pointer"
+                  onSelect={() => {
+                    setMobileMenuOpen(false);
+                    navigate(link.href);
+                  }}
+                >
+                  {link.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div className={`h-4 w-px mx-2 ${isScrolled ? 'bg-kapraye-mauve/40' : 'bg-white/40'}`} />
+          {secondaryLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.href}
+              className={`text-sm font-medium transition-colors hover:text-kapraye-pink ${
+                isScrolled ? 'text-foreground' : 'text-white hover:text-kapraye-cream'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
 
-            {/* Account */}
-            <AccountDropdown />
-
-            {/* Shopping Cart */}
+        {/* Compact Search and Right Actions */}
+        <div className="flex items-center space-x-2">
+          <form
+            className="hidden md:block"
+            onSubmit={handleSearch}
+            style={{ minWidth: 0 }}
+          >
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Search…"
+                className={`pl-8 pr-3 py-1.5 rounded-md border text-sm w-36 focus:w-48 transition-all focus:ring-2 focus:ring-kapraye-pink focus:border-kapraye-pink ${
+                  isScrolled 
+                    ? 'border-kapraye-cream bg-white placeholder:text-muted-foreground' 
+                    : 'border-white/30 bg-white/10 placeholder:text-white/70 text-white'
+                }`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-kapraye-pink"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </div>
+          </form>
+          
+          <div className="hidden md:block">
+            <SettingsMenu />
+          </div>
+          <div className="flex items-center gap-2">
             <EnhancedShoppingCart />
+            <AccountDropdown />
+          </div>
+          <button
+            className={`lg:hidden p-2 rounded-full transition-colors ml-2 ${
+              isScrolled 
+                ? 'hover:bg-kapraye-cream/50 text-foreground' 
+                : 'hover:bg-white/20 text-white'
+            }`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </nav>
 
-            {/* Mobile Menu Toggle */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-80">
-                <div className="py-6">
-                  {/* Mobile Search */}
-                  <div className="mb-6 md:hidden">
-                    <ProductSearch />
-                  </div>
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in">
+          <div className="container py-6 px-4 flex flex-col space-y-6">
+            {/* Search Form */}
+            <form className="mb-6" onSubmit={handleSearch}>
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="Search…"
+                  className="pl-8 pr-3 py-2 rounded-md border border-kapraye-cream bg-white placeholder:text-muted-foreground text-sm w-full"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 text-kapraye-pink"
+                >
+                  <Search className="h-4 w-4" />
+                </button>
+              </div>
+            </form>
 
-                  {/* Mobile Navigation */}
-                  <div className="space-y-4">
-                    {navigationItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-lg font-medium text-gray-700 hover:text-kapraye-burgundy hover:bg-gray-50 rounded-lg transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* Mobile Actions */}
-                  <div className="mt-8 pt-8 border-t space-y-4">
+            {/* Navigation Links */}
+            <div className="flex flex-col space-y-3">
+              <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Collections</h3>
+              {mainLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div>
+                <div className="text-base py-2 font-medium text-kapraye-burgundy">Women</div>
+                <div className="flex flex-col pl-4 space-y-1">
+                  {womenLinks.map((link) => (
                     <Link
-                      to="/wishlist"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:text-kapraye-burgundy transition-colors"
+                      key={link.name}
+                      to={link.href}
+                      className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Heart className="h-5 w-5" />
-                      Wishlist
+                      {link.name}
                     </Link>
-                    <Link
-                      to="/auth"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:text-kapraye-burgundy transition-colors"
-                    >
-                      <User className="h-5 w-5" />
-                      Account
-                    </Link>
-                  </div>
+                  ))}
                 </div>
-              </SheetContent>
-            </Sheet>
+              </div>
+            </div>
+            
+            <div className="w-full h-px bg-kapraye-mauve/30"></div>
+            
+            <div className="flex flex-col space-y-3">
+              <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Categories</h3>
+              {secondaryLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+            
+            <div className="w-full h-px bg-kapraye-mauve/30"></div>
+            
+            <div className="flex flex-col space-y-3">
+              <Link
+                to="/loyalty"
+                className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors flex items-center space-x-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <User className="h-5 w-5" />
+                <span>SHUKRAN Loyalty</span>
+              </Link>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <SettingsMenu />
+              <Button variant="outline" className="w-full mt-2 border-kapraye-pink text-kapraye-burgundy hover:text-kapraye-pink">
+                Sign In / Register
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }

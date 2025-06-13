@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,7 +14,7 @@ import EnhancedIndex from "./pages/EnhancedIndex";
 import Auth from "./pages/auth";
 import Dashboard from "./pages/dashboard";
 import DynamicProductPage from "./pages/product/DynamicProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
+import EnhancedCheckoutPage from "./pages/enhanced-checkout";
 import Wishlist from "./pages/wishlist";
 import Loyalty from "./pages/loyalty";
 import Search from "./pages/search";
@@ -40,14 +41,7 @@ import Terms from "./pages/company/terms";
 import Privacy from "./pages/company/privacy";
 import Careers from "./pages/company/careers";
 
-// Admin pages
-import AdminIndex from "./pages/admin/index";
-import AdminProducts from "./pages/admin/products";
-import AdminSetup from "./pages/admin/setup";
-import AdminProductsImport from "./pages/admin/products/import";
-
 import NotFound from "./pages/NotFound";
-import { ProtectedRoute } from "./components/auth/protected-route";
 
 const queryClient = new QueryClient();
 
@@ -68,7 +62,7 @@ function App() {
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/dashboard/*" element={<Dashboard />} />
                     <Route path="/product/:slug" element={<DynamicProductPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/checkout" element={<EnhancedCheckoutPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/loyalty" element={<Loyalty />} />
                     <Route path="/search" element={<Search />} />
@@ -94,24 +88,6 @@ function App() {
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/careers" element={<Careers />} />
-
-                    {/* Admin routes */}
-                    <Route path="/admin/setup" element={<AdminSetup />} />
-                    <Route path="/admin" element={
-                      <ProtectedRoute>
-                        <AdminIndex />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/admin/products" element={
-                      <ProtectedRoute>
-                        <AdminProducts />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/admin/products/import" element={
-                      <ProtectedRoute>
-                        <AdminProductsImport />
-                      </ProtectedRoute>
-                    } />
 
                     {/* 404 page */}
                     <Route path="*" element={<NotFound />} />
