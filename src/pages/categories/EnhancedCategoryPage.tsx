@@ -125,7 +125,6 @@ export function EnhancedCategoryPage({
                 <div className="flex flex-col lg:flex-row gap-6">
                   <div className="flex-1">
                     <ProductSearch 
-                      onSearchResults={(query) => handleSearch(query)}
                       placeholder="Search in this category..."
                       className="max-w-lg"
                     />
