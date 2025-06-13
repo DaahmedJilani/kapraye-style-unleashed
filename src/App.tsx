@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppSettingsProvider } from "./contexts/AppSettingsContext";
 import { CartProvider } from "./contexts/CartContext";
+import { WooCommerceCartProvider } from "./contexts/WooCommerceCartContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Loyalty from "./pages/loyalty";
@@ -46,80 +47,82 @@ function App() {
     <div className="font-sans bg-white">
       <QueryClientProvider client={queryClient}>
         <AppSettingsProvider>
-          <CartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/loyalty" element={<Loyalty />} />
-                  <Route path="/dashboard/*" element={<Dashboard />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  
-                  {/* Main category pages */}
-                  <Route path="/men" element={<MenPage />} />
-                  <Route path="/women" element={<WomenPage />} />
-                  <Route path="/kids" element={<KidsPage />} />
-                  <Route path="/eastern" element={<EasternPage />} />
-                  <Route path="/western" element={<WesternPage />} />
-                  <Route path="/saudi" element={<SaudiPage />} />
-                  <Route path="/product/:id" element={<ProductPage />} />
-                  <Route path="/quiz" element={<QuizPage />} />
-                  <Route path="/recommendations" element={<Recommendations />} />
-                  
-                  {/* Company routes */}
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/careers" element={<CareersPage />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/privacy" element={<PrivacyPage />} />
-                  
-                  {/* Category routes */}
-                  <Route path="/makeup" element={<MakeupPage />} />
-                  <Route path="/accessories" element={<AccessoriesPage />} />
-                  <Route path="/perfumes" element={<PerfumesPage />} />
-                  <Route path="/shoes" element={<ShoesPage />} />
-                  
-                  {/* Subcategory routes */}
-                  <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
-                  
-                  {/* Admin Routes - Protected */}
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <ProtectedRoute>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/admin/products" 
-                    element={
-                      <ProtectedRoute>
-                        <ProductsAdminPage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/admin/products/import" 
-                    element={
-                      <ProtectedRoute>
-                        <ProductImportPage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route path="/admin/setup" element={<AdminSetupPage />} />
-                  
-                  <Route path="/notes" element={<NotesPage />} />
-                  
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </CartProvider>
+          <WooCommerceCartProvider>
+            <CartProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/loyalty" element={<Loyalty />} />
+                    <Route path="/dashboard/*" element={<Dashboard />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    
+                    {/* Main category pages */}
+                    <Route path="/men" element={<MenPage />} />
+                    <Route path="/women" element={<WomenPage />} />
+                    <Route path="/kids" element={<KidsPage />} />
+                    <Route path="/eastern" element={<EasternPage />} />
+                    <Route path="/western" element={<WesternPage />} />
+                    <Route path="/saudi" element={<SaudiPage />} />
+                    <Route path="/product/:id" element={<ProductPage />} />
+                    <Route path="/quiz" element={<QuizPage />} />
+                    <Route path="/recommendations" element={<Recommendations />} />
+                    
+                    {/* Company routes */}
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/careers" element={<CareersPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    
+                    {/* Category routes */}
+                    <Route path="/makeup" element={<MakeupPage />} />
+                    <Route path="/accessories" element={<AccessoriesPage />} />
+                    <Route path="/perfumes" element={<PerfumesPage />} />
+                    <Route path="/shoes" element={<ShoesPage />} />
+                    
+                    {/* Subcategory routes */}
+                    <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
+                    
+                    {/* Admin Routes - Protected */}
+                    <Route 
+                      path="/admin" 
+                      element={
+                        <ProtectedRoute>
+                          <AdminDashboard />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/admin/products" 
+                      element={
+                        <ProtectedRoute>
+                          <ProductsAdminPage />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/admin/products/import" 
+                      element={
+                        <ProtectedRoute>
+                          <ProductImportPage />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route path="/admin/setup" element={<AdminSetupPage />} />
+                    
+                    <Route path="/notes" element={<NotesPage />} />
+                    
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </CartProvider>
+          </WooCommerceCartProvider>
         </AppSettingsProvider>
       </QueryClientProvider>
     </div>
