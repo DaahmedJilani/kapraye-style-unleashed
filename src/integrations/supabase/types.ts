@@ -198,6 +198,8 @@ export type Database = {
           full_name: string | null
           id: string
           loyalty_points: number | null
+          loyalty_tier: string | null
+          phone: string | null
           updated_at: string
           username: string | null
         }
@@ -207,6 +209,8 @@ export type Database = {
           full_name?: string | null
           id: string
           loyalty_points?: number | null
+          loyalty_tier?: string | null
+          phone?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -216,6 +220,8 @@ export type Database = {
           full_name?: string | null
           id?: string
           loyalty_points?: number | null
+          loyalty_tier?: string | null
+          phone?: string | null
           updated_at?: string
           username?: string | null
         }
