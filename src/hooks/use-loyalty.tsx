@@ -44,13 +44,13 @@ export function useLoyalty() {
 
       if (error) throw error;
       
-      // Transform the data to match UserProfile interface
+      // Transform the data to match UserProfile interface, providing defaults for missing fields
       const profileData: UserProfile = {
         id: data.id,
         full_name: data.full_name,
         loyalty_points: data.loyalty_points || 0,
         loyalty_tier: data.loyalty_tier || 'bronze',
-        phone: data.phone,
+        phone: data.phone || null,
         avatar_url: data.avatar_url
       };
       
