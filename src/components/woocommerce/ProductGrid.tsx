@@ -6,12 +6,16 @@ import { WCProduct, woocommerceApi } from '@/lib/woocommerce';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductGridProps {
   categoryId?: number;
   search?: string;
   featured?: boolean;
   onSale?: boolean;
+  orderby?: string;
+  minPrice?: number;
+  maxPrice?: number;
   perPage?: number;
   className?: string;
 }
@@ -21,6 +25,9 @@ export function ProductGrid({
   search, 
   featured, 
   onSale, 
+  orderby = 'menu_order',
+  minPrice,
+  maxPrice,
   perPage = 12,
   className = '' 
 }: ProductGridProps) {
@@ -31,6 +38,7 @@ export function ProductGrid({
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const fetchProducts = async (pageNum: number = 1, append: boolean = false) => {
     try {
@@ -40,13 +48,18 @@ export function ProductGrid({
       const params: any = {
         per_page: perPage,
         page: pageNum,
+        orderby: orderby,
+        order: orderby === 'price' ? 'asc' : 'desc',
       };
 
       if (categoryId) params.category = categoryId;
       if (search) params.search = search;
       if (featured) params.featured = true;
       if (onSale) params.on_sale = true;
+      if (minPrice !== undefined) params.min_price = minPrice;
+      if (maxPrice !== undefined) params.max_price = maxPrice;
 
+      console.log('Fetching products with params:', params);
       const fetchedProducts = await woocommerceApi.getProducts(params);
       
       if (append) {
@@ -57,9 +70,14 @@ export function ProductGrid({
 
       setHasMore(fetchedProducts.length === perPage);
       setError(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching products:', err);
       setError('Failed to load products. Please try again.');
+      toast({
+        variant: "destructive",
+        title: "Error loading products",
+        description: err.message || "Please try again later.",
+      });
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -69,7 +87,7 @@ export function ProductGrid({
   useEffect(() => {
     setPage(1);
     fetchProducts(1, false);
-  }, [categoryId, search, featured, onSale]);
+  }, [categoryId, search, featured, onSale, orderby, minPrice, maxPrice, perPage]);
 
   const loadMore = () => {
     const nextPage = page + 1;

@@ -4,128 +4,120 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppSettingsProvider } from "./contexts/AppSettingsContext";
-import { CartProvider } from "./contexts/CartContext";
 import { WooCommerceCartProvider } from "./contexts/WooCommerceCartContext";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Loyalty from "./pages/loyalty";
-import Dashboard from "./pages/dashboard";
+import { AppSettingsProvider } from "./contexts/AppSettingsContext";
+
+// Import pages
+import EnhancedIndex from "./pages/EnhancedIndex";
 import Auth from "./pages/auth";
-import Wishlist from "./pages/wishlist";
-import MenPage from "./pages/categories/men";
-import WomenPage from "./pages/categories/women";
-import KidsPage from "./pages/categories/kids";
-import EasternPage from "./pages/categories/eastern";
-import WesternPage from "./pages/categories/western";
-import SaudiPage from "./pages/categories/saudi";
+import Dashboard from "./pages/dashboard";
 import ProductPage from "./pages/product/ProductPage";
-import QuizPage from "./pages/quiz";
+import CheckoutPage from "./pages/CheckoutPage";
+import Wishlist from "./pages/wishlist";
+import Loyalty from "./pages/loyalty";
+import Search from "./pages/search";
+import Quiz from "./pages/quiz";
 import Recommendations from "./pages/recommendations";
-import AboutPage from "./pages/company/about";
-import ContactPage from "./pages/company/contact";
-import CareersPage from "./pages/company/careers";
-import TermsPage from "./pages/company/terms";
-import PrivacyPage from "./pages/company/privacy";
-import MakeupPage from "./pages/categories/makeup";
-import AccessoriesPage from "./pages/categories/accessories";
-import PerfumesPage from "./pages/categories/perfumes";
-import ShoesPage from "./pages/categories/shoes";
-import SubcategoryPage from "./pages/subcategory/SubcategoryPage";
-import SearchPage from "./pages/search";
-import AdminDashboard from "./pages/admin/index";
-import ProductsAdminPage from "./pages/admin/products";
-import ProductImportPage from "./pages/admin/products/import";
-import AdminSetupPage from "./pages/admin/setup";
+import Notes from "./pages/notes";
+
+// Category pages
+import Men from "./pages/categories/men";
+import Women from "./pages/categories/women";
+import Kids from "./pages/categories/kids";
+import Eastern from "./pages/categories/eastern";
+import Western from "./pages/categories/western";
+import Saudi from "./pages/categories/saudi";
+import Makeup from "./pages/categories/makeup";
+import Accessories from "./pages/categories/accessories";
+import Perfumes from "./pages/categories/perfumes";
+import Shoes from "./pages/categories/shoes";
+
+// Company pages
+import About from "./pages/company/about";
+import Contact from "./pages/company/contact";
+import Terms from "./pages/company/terms";
+import Privacy from "./pages/company/privacy";
+import Careers from "./pages/company/careers";
+
+// Admin pages
+import AdminIndex from "./pages/admin/index";
+import AdminProducts from "./pages/admin/products";
+import AdminSetup from "./pages/admin/setup";
+import AdminProductsImport from "./pages/admin/products/import";
+
+import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/auth/protected-route";
-import NotesPage from "./pages/notes";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="font-sans bg-white">
-      <QueryClientProvider client={queryClient}>
-        <AppSettingsProvider>
-          <WooCommerceCartProvider>
-            <CartProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/loyalty" element={<Loyalty />} />
-                    <Route path="/dashboard/*" element={<Dashboard />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/wishlist" element={<Wishlist />} />
-                    <Route path="/search" element={<SearchPage />} />
-                    
-                    {/* Main category pages */}
-                    <Route path="/men" element={<MenPage />} />
-                    <Route path="/women" element={<WomenPage />} />
-                    <Route path="/kids" element={<KidsPage />} />
-                    <Route path="/eastern" element={<EasternPage />} />
-                    <Route path="/western" element={<WesternPage />} />
-                    <Route path="/saudi" element={<SaudiPage />} />
-                    <Route path="/product/:id" element={<ProductPage />} />
-                    <Route path="/quiz" element={<QuizPage />} />
-                    <Route path="/recommendations" element={<Recommendations />} />
-                    
-                    {/* Company routes */}
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                    <Route path="/careers" element={<CareersPage />} />
-                    <Route path="/terms" element={<TermsPage />} />
-                    <Route path="/privacy" element={<PrivacyPage />} />
-                    
-                    {/* Category routes */}
-                    <Route path="/makeup" element={<MakeupPage />} />
-                    <Route path="/accessories" element={<AccessoriesPage />} />
-                    <Route path="/perfumes" element={<PerfumesPage />} />
-                    <Route path="/shoes" element={<ShoesPage />} />
-                    
-                    {/* Subcategory routes */}
-                    <Route path="/:category/:subcategory" element={<SubcategoryPage />} />
-                    
-                    {/* Admin Routes - Protected */}
-                    <Route 
-                      path="/admin" 
-                      element={
-                        <ProtectedRoute>
-                          <AdminDashboard />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/admin/products" 
-                      element={
-                        <ProtectedRoute>
-                          <ProductsAdminPage />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/admin/products/import" 
-                      element={
-                        <ProtectedRoute>
-                          <ProductImportPage />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route path="/admin/setup" element={<AdminSetupPage />} />
-                    
-                    <Route path="/notes" element={<NotesPage />} />
-                    
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
-            </CartProvider>
-          </WooCommerceCartProvider>
-        </AppSettingsProvider>
-      </QueryClientProvider>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <AppSettingsProvider>
+        <WooCommerceCartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Main pages */}
+                <Route path="/" element={<EnhancedIndex />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="/product/:slug" element={<ProductPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/loyalty" element={<Loyalty />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                <Route path="/notes" element={<Notes />} />
+
+                {/* Category pages */}
+                <Route path="/men" element={<Men />} />
+                <Route path="/women" element={<Women />} />
+                <Route path="/kids" element={<Kids />} />
+                <Route path="/eastern" element={<Eastern />} />
+                <Route path="/western" element={<Western />} />
+                <Route path="/saudi" element={<Saudi />} />
+                <Route path="/makeup" element={<Makeup />} />
+                <Route path="/accessories" element={<Accessories />} />
+                <Route path="/perfumes" element={<Perfumes />} />
+                <Route path="/shoes" element={<Shoes />} />
+
+                {/* Company pages */}
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/careers" element={<Careers />} />
+
+                {/* Admin routes */}
+                <Route path="/admin/setup" element={<AdminSetup />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute>
+                    <AdminIndex />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/products" element={
+                  <ProtectedRoute>
+                    <AdminProducts />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/products/import" element={
+                  <ProtectedRoute>
+                    <AdminProductsImport />
+                  </ProtectedRoute>
+                } />
+
+                {/* 404 page */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </WooCommerceCartProvider>
+      </AppSettingsProvider>
+    </QueryClientProvider>
   );
 }
 

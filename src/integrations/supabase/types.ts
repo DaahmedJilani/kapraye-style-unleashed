@@ -9,6 +9,63 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          address_1: string
+          address_2: string | null
+          city: string
+          company: string | null
+          country: string
+          created_at: string
+          first_name: string
+          id: string
+          is_default: boolean | null
+          last_name: string
+          phone: string | null
+          postcode: string
+          state: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_1: string
+          address_2?: string | null
+          city: string
+          company?: string | null
+          country?: string
+          created_at?: string
+          first_name: string
+          id?: string
+          is_default?: boolean | null
+          last_name: string
+          phone?: string | null
+          postcode: string
+          state: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_1?: string
+          address_2?: string | null
+          city?: string
+          company?: string | null
+          country?: string
+          created_at?: string
+          first_name?: string
+          id?: string
+          is_default?: boolean | null
+          last_name?: string
+          phone?: string | null
+          postcode?: string
+          state?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_users: {
         Row: {
           created_at: string | null
@@ -26,6 +83,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      loyalty_transactions: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          order_id: string | null
+          points: number
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          points: number
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          points?: number
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notes: {
         Row: {
@@ -51,6 +146,48 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string
+          currency: string | null
+          id: string
+          order_number: string | null
+          points_earned: number | null
+          points_used: number | null
+          status: string
+          total: number
+          updated_at: string
+          user_id: string | null
+          woocommerce_order_id: number
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          id?: string
+          order_number?: string | null
+          points_earned?: number | null
+          points_used?: number | null
+          status: string
+          total: number
+          updated_at?: string
+          user_id?: string | null
+          woocommerce_order_id: number
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          id?: string
+          order_number?: string | null
+          points_earned?: number | null
+          points_used?: number | null
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id?: string | null
+          woocommerce_order_id?: number
         }
         Relationships: []
       }
@@ -146,12 +283,59 @@ export type Database = {
           },
         ]
       }
+      wishlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: number
+          product_image: string | null
+          product_name: string
+          product_price: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: number
+          product_image?: string | null
+          product_name: string
+          product_price?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: number
+          product_image?: string | null
+          product_name?: string
+          product_price?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_loyalty_points: {
+        Args: {
+          p_user_id: string
+          p_order_id: string
+          p_points: number
+          p_description?: string
+        }
+        Returns: undefined
+      }
+      redeem_loyalty_points: {
+        Args: {
+          p_user_id: string
+          p_order_id: string
+          p_points: number
+          p_description?: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

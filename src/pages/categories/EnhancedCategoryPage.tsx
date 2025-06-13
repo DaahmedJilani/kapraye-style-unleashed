@@ -6,25 +6,32 @@ import { ProductSearch } from '@/components/woocommerce/ProductSearch';
 import { SortAndFilterSidebar } from '@/components/home/SortAndFilterSidebar';
 import { WCCategory, woocommerceApi } from '@/lib/woocommerce';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 interface EnhancedCategoryPageProps {
   categorySlug: string;
   title: string;
   description: string;
   heroImage?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export function EnhancedCategoryPage({ 
   categorySlug, 
   title, 
   description, 
-  heroImage 
+  heroImage,
+  seoTitle,
+  seoDescription
 }: EnhancedCategoryPageProps) {
   const [categories, setCategories] = useState<WCCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('menu_order');
   const [loading, setLoading] = useState(true);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [onSale, setOnSale] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -53,77 +60,110 @@ export function EnhancedCategoryPage({
     setSearchQuery(query);
   };
 
-  return (
-    <MainLayout>
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative h-64 md:h-80 bg-gradient-to-r from-kapraye-burgundy to-kapraye-pink overflow-hidden">
-          {heroImage && (
-            <div className="absolute inset-0">
-              <img
-                src={heroImage}
-                alt={title}
-                className="w-full h-full object-cover opacity-30"
-              />
-            </div>
-          )}
-          <div className="relative z-10 h-full flex items-center">
-            <div className="container mx-auto px-4">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center text-white"
-              >
-                <h1 className="text-4xl md:text-6xl font-playfair font-medium mb-4">
-                  {title}
-                </h1>
-                <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-                  {description}
-                </p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
+  const handleSortChange = (newSort: string) => {
+    setSortOption(newSort);
+  };
 
-        {/* Category Content */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            {/* Search and Filters */}
-            <div className="mb-8">
-              <div className="flex flex-col lg:flex-row gap-6">
-                <div className="flex-1">
-                  <ProductSearch 
-                    onSearchResults={() => {}}
-                    placeholder="Search in this category..."
-                    className="max-w-lg"
-                  />
-                </div>
-                <div className="lg:w-80">
-                  <SortAndFilterSidebar
-                    categories={categories.map(cat => cat.name)}
-                    selectedCategory={categories.find(cat => cat.id === selectedCategory)?.name || ''}
-                    onCategoryChange={(categoryName) => {
-                      const category = categories.find(cat => cat.name === categoryName);
-                      setSelectedCategory(category?.id);
-                    }}
-                    sortOption={sortOption}
-                    onSortChange={setSortOption}
-                  />
-                </div>
+  const handlePriceRangeChange = (range: [number, number]) => {
+    setPriceRange(range);
+  };
+
+  const handleSaleToggle = (saleOnly: boolean) => {
+    setOnSale(saleOnly);
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>{seoTitle || `${title} - Kaprayé`}</title>
+        <meta name="description" content={seoDescription || description} />
+        <meta property="og:title" content={seoTitle || `${title} - Kaprayé`} />
+        <meta property="og:description" content={seoDescription || description} />
+        <meta property="og:type" content="website" />
+        {heroImage && <meta property="og:image" content={heroImage} />}
+        <link rel="canonical" href={`https://kapraye.com/${categorySlug}`} />
+      </Helmet>
+
+      <MainLayout>
+        <div className="min-h-screen">
+          {/* Hero Section */}
+          <section className="relative h-64 md:h-80 bg-gradient-to-r from-kapraye-burgundy to-kapraye-pink overflow-hidden">
+            {heroImage && (
+              <div className="absolute inset-0">
+                <img
+                  src={heroImage}
+                  alt={title}
+                  className="w-full h-full object-cover opacity-30"
+                  loading="eager"
+                />
+              </div>
+            )}
+            <div className="relative z-10 h-full flex items-center">
+              <div className="container mx-auto px-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="text-center text-white"
+                >
+                  <h1 className="text-4xl md:text-6xl font-playfair font-medium mb-4">
+                    {title}
+                  </h1>
+                  <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
+                    {description}
+                  </p>
+                </motion.div>
               </div>
             </div>
+          </section>
 
-            {/* Products Grid */}
-            <ProductGrid
-              categoryId={selectedCategory}
-              search={searchQuery}
-              perPage={24}
-            />
-          </div>
-        </section>
-      </div>
-    </MainLayout>
+          {/* Category Content */}
+          <section className="py-12">
+            <div className="container mx-auto px-4">
+              {/* Search and Filters */}
+              <div className="mb-8">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex-1">
+                    <ProductSearch 
+                      onSearchResults={(query) => handleSearch(query)}
+                      placeholder="Search in this category..."
+                      className="max-w-lg"
+                    />
+                  </div>
+                  <div className="lg:w-80">
+                    <SortAndFilterSidebar
+                      categories={categories.map(cat => cat.name)}
+                      selectedCategory={categories.find(cat => cat.id === selectedCategory)?.name || ''}
+                      onCategoryChange={(categoryName) => {
+                        const category = categories.find(cat => cat.name === categoryName);
+                        setSelectedCategory(category?.id);
+                      }}
+                      sortOption={sortOption}
+                      onSortChange={handleSortChange}
+                      priceRange={priceRange}
+                      onPriceRangeChange={handlePriceRangeChange}
+                      onSale={onSale}
+                      onSaleToggle={handleSaleToggle}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Products Grid */}
+              <ProductGrid
+                categoryId={selectedCategory}
+                search={searchQuery}
+                orderby={sortOption}
+                minPrice={priceRange[0]}
+                maxPrice={priceRange[1]}
+                onSale={onSale}
+                perPage={24}
+              />
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    </>
   );
 }
 
