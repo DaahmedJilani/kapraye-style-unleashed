@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { WooCommerceCartProvider } from "./contexts/WooCommerceCartContext";
 import { CartProvider } from "./contexts/CartContext";
 import { AppSettingsProvider } from "./contexts/AppSettingsContext";
@@ -52,74 +53,76 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppSettingsProvider>
-        <CartProvider>
-          <WooCommerceCartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  {/* Main pages */}
-                  <Route path="/" element={<EnhancedIndex />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/dashboard/*" element={<Dashboard />} />
-                  <Route path="/product/:slug" element={<DynamicProductPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/loyalty" element={<Loyalty />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/quiz" element={<Quiz />} />
-                  <Route path="/recommendations" element={<Recommendations />} />
-                  <Route path="/notes" element={<Notes />} />
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AppSettingsProvider>
+          <CartProvider>
+            <WooCommerceCartProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Routes>
+                    {/* Main pages */}
+                    <Route path="/" element={<EnhancedIndex />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/dashboard/*" element={<Dashboard />} />
+                    <Route path="/product/:slug" element={<DynamicProductPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/loyalty" element={<Loyalty />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/quiz" element={<Quiz />} />
+                    <Route path="/recommendations" element={<Recommendations />} />
+                    <Route path="/notes" element={<Notes />} />
 
-                  {/* Category pages */}
-                  <Route path="/men" element={<Men />} />
-                  <Route path="/women" element={<Women />} />
-                  <Route path="/kids" element={<Kids />} />
-                  <Route path="/eastern" element={<Eastern />} />
-                  <Route path="/western" element={<Western />} />
-                  <Route path="/saudi" element={<Saudi />} />
-                  <Route path="/makeup" element={<Makeup />} />
-                  <Route path="/accessories" element={<Accessories />} />
-                  <Route path="/perfumes" element={<Perfumes />} />
-                  <Route path="/shoes" element={<Shoes />} />
+                    {/* Category pages */}
+                    <Route path="/men" element={<Men />} />
+                    <Route path="/women" element={<Women />} />
+                    <Route path="/kids" element={<Kids />} />
+                    <Route path="/eastern" element={<Eastern />} />
+                    <Route path="/western" element={<Western />} />
+                    <Route path="/saudi" element={<Saudi />} />
+                    <Route path="/makeup" element={<Makeup />} />
+                    <Route path="/accessories" element={<Accessories />} />
+                    <Route path="/perfumes" element={<Perfumes />} />
+                    <Route path="/shoes" element={<Shoes />} />
 
-                  {/* Company pages */}
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/careers" element={<Careers />} />
+                    {/* Company pages */}
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/careers" element={<Careers />} />
 
-                  {/* Admin routes */}
-                  <Route path="/admin/setup" element={<AdminSetup />} />
-                  <Route path="/admin" element={
-                    <ProtectedRoute>
-                      <AdminIndex />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/admin/products" element={
-                    <ProtectedRoute>
-                      <AdminProducts />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/admin/products/import" element={
-                    <ProtectedRoute>
-                      <AdminProductsImport />
-                    </ProtectedRoute>
-                  } />
+                    {/* Admin routes */}
+                    <Route path="/admin/setup" element={<AdminSetup />} />
+                    <Route path="/admin" element={
+                      <ProtectedRoute>
+                        <AdminIndex />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/admin/products" element={
+                      <ProtectedRoute>
+                        <AdminProducts />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/admin/products/import" element={
+                      <ProtectedRoute>
+                        <AdminProductsImport />
+                      </ProtectedRoute>
+                    } />
 
-                  {/* 404 page */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </WooCommerceCartProvider>
-        </CartProvider>
-      </AppSettingsProvider>
-    </QueryClientProvider>
+                    {/* 404 page */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </WooCommerceCartProvider>
+          </CartProvider>
+        </AppSettingsProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 
