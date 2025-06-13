@@ -8,12 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 
 interface ProductSearchProps {
+  onSearch?: (query: string) => void;
   onSearchResults?: (results: WCProduct[]) => void;
   placeholder?: string;
   className?: string;
 }
 
 export function ProductSearch({ 
+  onSearch,
   onSearchResults, 
   placeholder = "Search products...",
   className = ""
@@ -42,6 +44,7 @@ export function ProductSearch({
       if (query.length < 2) {
         setResults([]);
         setShowResults(false);
+        onSearchResults?.([]);
         return;
       }
 
@@ -51,6 +54,7 @@ export function ProductSearch({
         setResults(searchResults.slice(0, 8)); // Limit to 8 results
         setShowResults(true);
         onSearchResults?.(searchResults);
+        onSearch?.(query);
       } catch (error) {
         console.error('Search error:', error);
         setResults([]);
@@ -61,7 +65,7 @@ export function ProductSearch({
 
     const timeoutId = setTimeout(searchProducts, 300);
     return () => clearTimeout(timeoutId);
-  }, [query, onSearchResults]);
+  }, [query, onSearchResults, onSearch]);
 
   const handleProductClick = (product: WCProduct) => {
     setShowResults(false);
@@ -81,6 +85,8 @@ export function ProductSearch({
     setQuery('');
     setResults([]);
     setShowResults(false);
+    onSearch?.('');
+    onSearchResults?.([]);
   };
 
   return (

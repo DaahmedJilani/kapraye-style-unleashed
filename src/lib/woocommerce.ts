@@ -1,10 +1,9 @@
-
 import axios from 'axios';
 
-// WooCommerce REST API configuration
-const WC_BASE_URL = process.env.VITE_WC_BASE_URL || 'https://your-store.com/wp-json/wc/v3';
-const WC_CONSUMER_KEY = process.env.VITE_WC_CONSUMER_KEY || '';
-const WC_CONSUMER_SECRET = process.env.VITE_WC_CONSUMER_SECRET || '';
+// WooCommerce REST API configuration with provided credentials
+const WC_BASE_URL = 'https://xn--kapray-gva.com/wp-json/wc/v3';
+const WC_CONSUMER_KEY = 'ck_35a5a56861741c78f3ad4ecd6458d732eff33504';
+const WC_CONSUMER_SECRET = 'cs_5bda9cdf0fa8bdf218bb5e194df60aafebf41ffb';
 
 // Create axios instance with WooCommerce auth
 const wcApi = axios.create({
@@ -236,7 +235,7 @@ export interface WCLineItem {
   image: WCImage;
 }
 
-// API functions
+// Enhanced API functions with better error handling
 export const woocommerceApi = {
   // Products
   async getProducts(params?: {
@@ -248,59 +247,152 @@ export const woocommerceApi = {
     on_sale?: boolean;
     orderby?: string;
     order?: string;
+    min_price?: number;
+    max_price?: number;
   }): Promise<WCProduct[]> {
-    const response = await wcApi.get('/products', { params });
-    return response.data;
+    try {
+      const response = await wcApi.get('/products', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      throw new Error('Failed to fetch products from WooCommerce');
+    }
   },
 
   async getProduct(id: number): Promise<WCProduct> {
-    const response = await wcApi.get(`/products/${id}`);
-    return response.data;
+    try {
+      const response = await wcApi.get(`/products/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      throw new Error(`Failed to fetch product ${id} from WooCommerce`);
+    }
   },
 
   async getProductBySlug(slug: string): Promise<WCProduct> {
-    const response = await wcApi.get('/products', {
-      params: { slug }
-    });
-    return response.data[0];
+    try {
+      const response = await wcApi.get('/products', {
+        params: { slug }
+      });
+      if (response.data.length === 0) {
+        throw new Error('Product not found');
+      }
+      return response.data[0];
+    } catch (error) {
+      console.error('Error fetching product by slug:', error);
+      throw new Error(`Failed to fetch product ${slug} from WooCommerce`);
+    }
   },
 
   // Categories
   async getCategories(): Promise<WCCategory[]> {
-    const response = await wcApi.get('/products/categories');
-    return response.data;
+    try {
+      const response = await wcApi.get('/products/categories', {
+        params: { per_page: 100 }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      throw new Error('Failed to fetch categories from WooCommerce');
+    }
   },
 
   async getCategory(id: number): Promise<WCCategory> {
-    const response = await wcApi.get(`/products/categories/${id}`);
-    return response.data;
+    try {
+      const response = await wcApi.get(`/products/categories/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching category:', error);
+      throw new Error(`Failed to fetch category ${id} from WooCommerce`);
+    }
   },
 
   // Orders
   async createOrder(orderData: Partial<WCOrder>): Promise<WCOrder> {
-    const response = await wcApi.post('/orders', orderData);
-    return response.data;
+    try {
+      const response = await wcApi.post('/orders', orderData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw new Error('Failed to create order in WooCommerce');
+    }
   },
 
   async getOrder(id: number): Promise<WCOrder> {
-    const response = await wcApi.get(`/orders/${id}`);
-    return response.data;
+    try {
+      const response = await wcApi.get(`/orders/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      throw new Error(`Failed to fetch order ${id} from WooCommerce`);
+    }
   },
 
   async getCustomerOrders(customerId: number): Promise<WCOrder[]> {
-    const response = await wcApi.get('/orders', {
-      params: { customer: customerId }
-    });
-    return response.data;
+    try {
+      const response = await wcApi.get('/orders', {
+        params: { customer: customerId }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching customer orders:', error);
+      throw new Error(`Failed to fetch orders for customer ${customerId} from WooCommerce`);
+    }
   },
 
   // Search
   async searchProducts(query: string): Promise<WCProduct[]> {
-    const response = await wcApi.get('/products', {
-      params: { search: query, per_page: 20 }
-    });
-    return response.data;
+    try {
+      const response = await wcApi.get('/products', {
+        params: { search: query, per_page: 20 }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error searching products:', error);
+      throw new Error('Failed to search products in WooCommerce');
+    }
   },
+
+  // Cart functionality (using WooCommerce Store API)
+  async createCart(): Promise<any> {
+    try {
+      // Using WooCommerce Store API for cart management
+      const response = await axios.post(`${WC_BASE_URL.replace('/wc/v3', '/wc/store/v1')}/cart`);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating cart:', error);
+      throw new Error('Failed to create cart in WooCommerce');
+    }
+  },
+
+  async addToCart(productId: number, quantity: number = 1, variationId?: number): Promise<any> {
+    try {
+      const cartData = {
+        id: productId,
+        quantity: quantity,
+        ...(variationId && { variation_id: variationId })
+      };
+      
+      const response = await axios.post(
+        `${WC_BASE_URL.replace('/wc/v3', '/wc/store/v1')}/cart/add-item`,
+        cartData
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      throw new Error('Failed to add item to cart in WooCommerce');
+    }
+  },
+
+  async getCart(): Promise<any> {
+    try {
+      const response = await axios.get(`${WC_BASE_URL.replace('/wc/v3', '/wc/store/v1')}/cart`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      throw new Error('Failed to fetch cart from WooCommerce');
+    }
+  }
 };
 
 export default wcApi;

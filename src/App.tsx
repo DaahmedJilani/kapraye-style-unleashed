@@ -11,7 +11,7 @@ import { AppSettingsProvider } from "./contexts/AppSettingsContext";
 import EnhancedIndex from "./pages/EnhancedIndex";
 import Auth from "./pages/auth";
 import Dashboard from "./pages/dashboard";
-import ProductPage from "./pages/product/ProductPage";
+import DynamicProductPage from "./pages/product/DynamicProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import Wishlist from "./pages/wishlist";
 import Loyalty from "./pages/loyalty";
@@ -64,7 +64,7 @@ function App() {
                 <Route path="/" element={<EnhancedIndex />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/dashboard/*" element={<Dashboard />} />
-                <Route path="/product/:slug" element={<ProductPage />} />
+                <Route path="/product/:slug" element={<DynamicProductPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/loyalty" element={<Loyalty />} />
