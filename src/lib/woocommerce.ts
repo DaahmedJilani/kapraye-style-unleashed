@@ -1,9 +1,10 @@
+
 import axios from 'axios';
 
-// WooCommerce REST API configuration with provided credentials
-const WC_BASE_URL = 'https://xn--kapray-gva.com/wp-json/wc/v3';
-const WC_CONSUMER_KEY = 'ck_35a5a56861741c78f3ad4ecd6458d732eff33504';
-const WC_CONSUMER_SECRET = 'cs_5bda9cdf0fa8bdf218bb5e194df60aafebf41ffb';
+// WooCommerce REST API configuration with new credentials
+const WC_BASE_URL = 'https://kaprayé.com/wp-json/wc/v3';
+const WC_CONSUMER_KEY = 'ck_a63d102e460ac2f6f78df4986a3d0d3dd3992186';
+const WC_CONSUMER_SECRET = 'cs_e20d2d50368ec940cab6d705dd876c82591b450a';
 
 // Create axios instance with WooCommerce auth
 const wcApi = axios.create({
