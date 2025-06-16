@@ -27,7 +27,11 @@ export default function DynamicProductPage() {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!slug) return;
+      if (!slug) {
+        setError('No product slug provided');
+        setLoading(false);
+        return;
+      }
       
       try {
         setLoading(true);
@@ -104,7 +108,7 @@ export default function DynamicProductPage() {
     );
   }
 
-  const productImages = product.images.map(img => img.src);
+  const productImages = product.images?.map(img => img.src) || [];
   const hasSize = product.attributes?.some(attr => attr.name.toLowerCase().includes('size'));
   const sizeOptions = hasSize ? 
     product.attributes?.find(attr => attr.name.toLowerCase().includes('size'))?.options || [] : 
@@ -117,7 +121,7 @@ export default function DynamicProductPage() {
         <meta name="description" content={product.short_description || product.description} />
         <meta property="og:title" content={`${product.name} - Kaprayé`} />
         <meta property="og:description" content={product.short_description || product.description} />
-        <meta property="og:image" content={product.images[0]?.src} />
+        <meta property="og:image" content={product.images?.[0]?.src} />
         <meta property="og:type" content="product" />
         <meta property="product:price:amount" content={product.price} />
         <meta property="product:price:currency" content="PKR" />
