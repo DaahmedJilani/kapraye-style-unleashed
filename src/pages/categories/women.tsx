@@ -1,7 +1,8 @@
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductSearch } from "@/components/home/product-search";
 import { SortAndFilterSidebar } from "@/components/home/SortAndFilterSidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
@@ -9,36 +10,47 @@ import { ShoppingCart } from "@/components/cart/shopping-cart";
 import { useToast } from "@/hooks/use-toast";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
 import { useNavigate, Link } from "react-router-dom";
+import { useWooCommerceCart } from "@/contexts/WooCommerceCartContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { WCProduct, woocommerceApi } from "@/lib/woocommerce";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Product {
+interface Subcategory {
   id: string;
   name: string;
+  description: string;
   image: string;
-  price: number;
-  category: string;
+  route: string;
 }
 
-const womenProducts: Product[] = [
+const womenSubcategories: Subcategory[] = [
   {
-    id: "women-1",
-    name: "Designer Evening Gown",
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=800",
-    price: 250.00,
-    category: "Dresses"
+    id: "eastern",
+    name: "Eastern Wear",
+    description: "Traditional Pakistani and South Asian clothing",
+    image: "https://images.unsplash.com/photo-1605518216938-7c31b7b14ad0?q=80&w=800",
+    route: "/eastern"
   },
   {
-    id: "women-2",
-    name: "Silk Blouse",
-    image: "https://images.unsplash.com/photo-1551489186-cf8726f514f8?q=80&w=800",
-    price: 120.00,
-    category: "Tops"
+    id: "western",
+    name: "Western Wear", 
+    description: "Contemporary western fashion styles",
+    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800",
+    route: "/western"
   },
   {
-    id: "women-3",
-    name: "Tailored Pants",
-    image: "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?q=80&w=800",
-    price: 150.00,
-    category: "Pants"
+    id: "saudi",
+    name: "Saudi Style",
+    description: "Elegant Middle Eastern inspired fashion",
+    image: "https://images.unsplash.com/photo-1633934542143-827a422485a4?q=80&w=800",
+    route: "/saudi"
+  },
+  {
+    id: "makeup",
+    name: "Makeup & Beauty",
+    description: "Premium cosmetics and beauty essentials",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800",
+    route: "/makeup"
   }
 ];
 
@@ -46,59 +58,78 @@ export default function WomenPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [products, setProducts] = useState<WCProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { formatPrice } = useAppSettings();
   const navigate = useNavigate();
+  const { addItem } = useWooCommerceCart();
+  const isMobile = useIsMobile();
 
-  const categories = Array.from(new Set(womenProducts.map(product => product.category)));
+  useEffect(() => {
+    const fetchWomenProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch women's products from WooCommerce
+        const womenProducts = await woocommerceApi.getProducts({ 
+          category: 'women', // This should match your WooCommerce category slug
+          per_page: 12 
+        });
+        
+        setProducts(womenProducts);
+      } catch (error) {
+        console.error('Error fetching women products:', error);
+        setError('Failed to load women\'s products');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  let sortedProducts = womenProducts.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === "all" || product.category === activeCategory;
+    fetchWomenProducts();
+  }, []);
+
+  const categories = Array.from(new Set(
+    products.flatMap(product => product.categories?.map(cat => cat.name) || []).filter(Boolean)
+  ));
+
+  let sortedProducts = products.filter(product => {
+    const productName = product.name || '';
+    const matchesSearch = productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.categories?.some(cat => 
+                           cat.name?.toLowerCase().includes(searchTerm.toLowerCase())
+                         );
+    const matchesCategory = activeCategory === "all" || 
+                          product.categories?.some(cat => cat.name === activeCategory);
     return matchesSearch && matchesCategory;
   });
 
   if (sortOption === "price-asc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => a.price - b.price);
+    sortedProducts = [...sortedProducts].sort((a, b) => parseFloat(a.price || '0') - parseFloat(b.price || '0'));
   } else if (sortOption === "price-desc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => b.price - a.price);
+    sortedProducts = [...sortedProducts].sort((a, b) => parseFloat(b.price || '0') - parseFloat(a.price || '0'));
   } else if (sortOption === "name-asc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => a.name.localeCompare(b.name));
+    sortedProducts = [...sortedProducts].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   } else if (sortOption === "name-desc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => b.name.localeCompare(a.name));
+    sortedProducts = [...sortedProducts].sort((a, b) => (b.name || '').localeCompare(a.name || ''));
   }
 
-  const addToCart = (product: Product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
-    });
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
+  const handleAddToCart = async (product: WCProduct) => {
+    try {
+      await addItem(product, 1);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add product to cart. Please try again.",
+      });
+    }
   };
 
-  const goToProductPage = (productId: string) => {
-    navigate(`/product/${productId}`);
-  };
-  
-  const navigateToSubcategory = (subcategory: string) => {
-    navigate(`/women/${subcategory.toLowerCase().replace(/\s+/g, '-')}`, {
-      state: {
-        title: subcategory,
-        mainCategory: 'women'
-      }
-    });
+  const goToProductPage = (productSlug: string) => {
+    navigate(`/product/${productSlug}`);
   };
 
   return (
@@ -109,37 +140,39 @@ export default function WomenPage() {
             Women's Collection
           </h1>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            Explore our curated collection of women's fashion, from elegant dresses to contemporary casual wear.
+            Explore our curated collection of women's fashion, from traditional Eastern wear to contemporary Western styles.
           </p>
         </div>
 
+        {/* Subcategories Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
-            Browse by Category
+            Browse by Style
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {categories.map((category) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {womenSubcategories.map((subcategory) => (
               <div
-                key={category}
-                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => navigateToSubcategory(category)}
+                key={subcategory.id}
+                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+                onClick={() => navigate(subcategory.route)}
               >
                 <div className="aspect-[3/2] overflow-hidden bg-gray-100">
                   <img
-                    src={womenProducts.find(p => p.category === category)?.image || ''}
-                    alt={category}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
+                    src={subcategory.image}
+                    alt={subcategory.name}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <div className="p-4 text-center">
-                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy">{category}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">View all {category.toLowerCase()}</p>
+                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy mb-2">{subcategory.name}</h3>
+                  <p className="text-sm text-muted-foreground">{subcategory.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
+        {/* Products Section */}
         <div className="flex flex-col sm:flex-row gap-8">
           <SortAndFilterSidebar
             categories={categories}
@@ -154,65 +187,126 @@ export default function WomenPage() {
                 <ProductSearch onSearch={setSearchTerm} />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedProducts.map((product, index) => (
-                <div 
-                  key={product.id}
-                  className="group relative animate-fade-in cursor-pointer"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => goToProductPage(product.id)}
-                >
-                  <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="mt-4 space-y-1">
-                    <div className="flex justify-between">
-                      <h3 className="text-sm text-kapraye-burgundy">
-                        <span onClick={e => e.stopPropagation()}>{product.category}</span>
-                      </h3>
-                    </div>
-                    <h3 className="font-playfair text-lg font-medium text-foreground">
-                      {product.name}
-                    </h3>
-                    <p className="text-base font-medium text-kapraye-pink">
-                      {formatPrice(product.price)}
-                    </p>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 opacity-0 group-hover:opacity-100">
-                    <div className="flex gap-2" onClick={e => e.stopPropagation()}>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="secondary" size="sm">
-                            Reviews
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
-                          <DialogTitle>Product Reviews</DialogTitle>
-                          <DialogDescription>See what others are saying about this product</DialogDescription>
-                          <ProductReviews productId={product.id} />
-                        </DialogContent>
-                      </Dialog>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart(product);
-                        }}
-                      >
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
 
-            {sortedProducts.length === 0 && (
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="space-y-2">
+                    <Skeleton className="aspect-[3/4] w-full rounded-lg" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={() => window.location.reload()} variant="outline">
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sortedProducts.map((product, index) => (
+                  <div 
+                    key={product.id}
+                    className="group relative animate-fade-in cursor-pointer"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                    onClick={() => goToProductPage(product.slug)}
+                  >
+                    <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
+                      <img
+                        src={product.images?.[0]?.src || '/placeholder.svg'}
+                        alt={product.name || 'Product image'}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      {product.on_sale && (
+                        <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                          Sale
+                        </div>
+                      )}
+                      {product.featured && (
+                        <div className="absolute top-2 right-2 bg-kapraye-burgundy text-white text-xs px-2 py-1 rounded">
+                          Featured
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-4 space-y-1">
+                      <div className="flex justify-between">
+                        <h3 className="text-sm text-kapraye-burgundy">
+                          {product.categories?.[0]?.name || 'Women'}
+                        </h3>
+                      </div>
+                      <h3 className="font-playfair text-lg font-medium text-foreground">
+                        {product.name || 'Product'}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <p className="text-base font-medium text-kapraye-pink">
+                          {formatPrice(parseFloat(product.price || '0'))}
+                        </p>
+                        {product.on_sale && product.regular_price && (
+                          <p className="text-sm text-gray-500 line-through">
+                            {formatPrice(parseFloat(product.regular_price))}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Desktop hover actions */}
+                    <div className={`absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 ${isMobile ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
+                      <div className="flex gap-2" onClick={e => e.stopPropagation()}>
+                        {!isMobile && (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="secondary" size="sm">
+                                Reviews
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                              <DialogTitle>Product Reviews</DialogTitle>
+                              <DialogDescription>See what others are saying about this product</DialogDescription>
+                              <ProductReviews productId={product.id?.toString() || '0'} />
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={product.stock_status !== 'instock'}
+                        >
+                          {product.stock_status === 'instock' ? 'Add to Cart' : 'Out of Stock'}
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Mobile action button */}
+                    {isMobile && (
+                      <div className="absolute bottom-1 right-1 z-10" onClick={e => e.stopPropagation()}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="bg-white/80 backdrop-blur-sm h-6 w-6 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={product.stock_status !== 'instock'}
+                        >
+                          +
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {sortedProducts.length === 0 && !loading && (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
               </div>

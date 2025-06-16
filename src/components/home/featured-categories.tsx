@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Category {
@@ -7,50 +8,62 @@ interface Category {
   name: string;
   image: string;
   description: string;
+  route: string;
 }
 
 const categories: Category[] = [
   {
-    id: "men",
-    name: "Men",
-    image: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80&w=1000",
-    description: "Sophisticated elegance for the modern gentleman"
-  },
-  {
     id: "women",
     name: "Women",
-    image: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1000",
-    description: "Timeless fashion with contemporary flair"
+    image: "https://images.unsplash.com/photo-1594736797933-d0301ba6fe65?q=80&w=1000",
+    description: "Eastern, Western & Saudi styles with makeup essentials",
+    route: "/women"
+  },
+  {
+    id: "men",
+    name: "Men",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000",
+    description: "Contemporary and traditional menswear collection",
+    route: "/men"
   },
   {
     id: "kids",
     name: "Kids",
-    image: "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=1000",
-    description: "Playful styles for the little trendsetters"
+    image: "https://images.unsplash.com/photo-1503919005314-30d93d07d823?q=80&w=1000",
+    description: "Stylish outfits for the little fashionistas",
+    route: "/kids"
   },
   {
-    id: "eastern",
-    name: "Eastern",
-    image: "https://images.unsplash.com/photo-1605518216938-7c31b7b14ad0?q=80&w=1000",
-    description: "Cultural aesthetics with modern sensibilities"
+    id: "accessories",
+    name: "Accessories",
+    image: "https://images.unsplash.com/photo-1617038260892-a3caa4e5f96e?q=80&w=1000",
+    description: "Complete your look with elegant accessories",
+    route: "/accessories"
   },
   {
-    id: "western",
-    name: "Western",
-    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1000",
-    description: "Contemporary designs for everyday luxury"
+    id: "perfumes",
+    name: "Perfumes",
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1000",
+    description: "Luxurious fragrances for every occasion",
+    route: "/perfumes"
   },
   {
-    id: "saudi",
-    name: "Saudi Style",
-    image: "https://images.unsplash.com/photo-1633934542143-827a422485a4?q=80&w=1000",
-    description: "Traditional elegance meets modern design"
+    id: "shoes",
+    name: "Shoes",
+    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1000",
+    description: "Step out in style with our footwear collection",
+    route: "/shoes"
   },
 ];
 
 export function FeaturedCategories() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
+
+  const handleCategoryClick = (route: string) => {
+    navigate(route);
+  };
 
   return (
     <section className="py-6 md:py-20 bg-white" id="categories">
@@ -67,20 +80,13 @@ export function FeaturedCategories() {
         
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-6">
           {categories.map((category, index) => (
-            <a 
+            <div 
               key={category.id}
-              href={`#${category.id}`}
-              className="group relative overflow-hidden rounded-lg md:rounded-xl aspect-[3/4] md:aspect-[4/5] hover-lift"
+              className="group relative overflow-hidden rounded-lg md:rounded-xl aspect-[3/4] md:aspect-[4/5] hover-lift cursor-pointer animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
               onMouseEnter={() => setHoveredId(category.id)}
               onMouseLeave={() => setHoveredId(null)}
-              style={{
-                animationDelay: `${index * 0.1}s`,
-                opacity: 0,
-              }}
-              onLoad={(e) => {
-                e.currentTarget.style.opacity = "1";
-                e.currentTarget.classList.add("animate-fade-in");
-              }}
+              onClick={() => handleCategoryClick(category.route)}
             >
               {/* Image */}
               <div className="absolute inset-0 w-full h-full">
@@ -116,7 +122,7 @@ export function FeaturedCategories() {
                   <span className="text-xs text-white/80">Explore</span>
                 )}
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>

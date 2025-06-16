@@ -1,85 +1,113 @@
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductSearch } from "@/components/home/product-search";
+import { GenderFilter } from "@/components/home/gender-filter";
 import { SortAndFilterSidebar } from "@/components/home/SortAndFilterSidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "@/contexts/AppSettingsContext";
-import { ProductGrid } from "@/components/home/ProductGrid";
-
-interface Product {
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-  category: string;
-}
-
-const accessoryProducts: Product[] = [
-  {
-    id: "acc-1",
-    name: "Designer Handbag",
-    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=800",
-    price: 199.99,
-    category: "Bags"
-  },
-  {
-    id: "acc-2",
-    name: "Gold Necklace",
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800",
-    price: 299.99,
-    category: "Jewelry"
-  }
-];
+import { useNavigate } from "react-router-dom";
+import { useWooCommerceCart } from "@/contexts/WooCommerceCartContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { WCProduct, woocommerceApi } from "@/lib/woocommerce";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AccessoriesPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGender, setSelectedGender] = useState("all");
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
+  const [products, setProducts] = useState<WCProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const navigate = useNavigate();
   const { formatPrice } = useAppSettings();
+  const navigate = useNavigate();
+  const { addItem } = useWooCommerceCart();
+  const isMobile = useIsMobile();
 
-  const categories = Array.from(new Set(accessoryProducts.map(product => product.category)));
+  useEffect(() => {
+    const fetchAccessories = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch accessories from WooCommerce
+        const accessoriesProducts = await woocommerceApi.getProducts({ 
+          category: 'accessories', // This should match your WooCommerce category slug
+          per_page: 20 
+        });
+        
+        setProducts(accessoriesProducts);
+      } catch (error) {
+        console.error('Error fetching accessories:', error);
+        setError('Failed to load accessories');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  let sortedProducts = accessoryProducts.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === "all" || product.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    fetchAccessories();
+  }, []);
+
+  const categories = Array.from(new Set(
+    products.flatMap(product => product.categories?.map(cat => cat.name) || []).filter(Boolean)
+  ));
+
+  let filteredProducts = products.filter(product => {
+    const productName = product.name || '';
+    const matchesSearch = productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.categories?.some(cat => 
+                           cat.name?.toLowerCase().includes(searchTerm.toLowerCase())
+                         );
+    const matchesCategory = activeCategory === "all" || 
+                          product.categories?.some(cat => cat.name === activeCategory);
+    
+    // Gender filtering based on product tags or attributes
+    let matchesGender = true;
+    if (selectedGender !== "all") {
+      const productTags = product.tags?.map(tag => tag.name.toLowerCase()) || [];
+      const productAttributes = product.attributes?.flatMap(attr => attr.options.map(opt => opt.toLowerCase())) || [];
+      const searchTerms = [...productTags, ...productAttributes];
+      
+      matchesGender = searchTerms.some(term => 
+        term.includes(selectedGender) || 
+        (selectedGender === "men" && term.includes("male")) ||
+        (selectedGender === "women" && (term.includes("female") || term.includes("ladies")))
+      );
+    }
+    
+    return matchesSearch && matchesCategory && matchesGender;
   });
 
+  // Apply sorting
   if (sortOption === "price-asc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => a.price - b.price);
+    filteredProducts = [...filteredProducts].sort((a, b) => parseFloat(a.price || '0') - parseFloat(b.price || '0'));
   } else if (sortOption === "price-desc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => b.price - a.price);
+    filteredProducts = [...filteredProducts].sort((a, b) => parseFloat(b.price || '0') - parseFloat(a.price || '0'));
   } else if (sortOption === "name-asc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => a.name.localeCompare(b.name));
+    filteredProducts = [...filteredProducts].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   } else if (sortOption === "name-desc") {
-    sortedProducts = [...sortedProducts].sort((a, b) => b.name.localeCompare(a.name));
+    filteredProducts = [...filteredProducts].sort((a, b) => (b.name || '').localeCompare(a.name || ''));
   }
 
-  const addToCart = (product: Product) => {
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
+  const handleAddToCart = async (product: WCProduct) => {
+    try {
+      await addItem(product, 1);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add product to cart. Please try again.",
+      });
+    }
   };
 
-  const goToProductPage = (productId: string) => {
-    navigate(`/product/${productId}`);
-  };
-
-  const navigateToSubcategory = (subcategory: string) => {
-    navigate(`/accessories/${subcategory.toLowerCase().replace(/\s+/g, '-')}`, {
-      state: {
-        title: subcategory,
-        mainCategory: 'accessories'
-      }
-    });
+  const goToProductPage = (productSlug: string) => {
+    navigate(`/product/${productSlug}`);
   };
 
   return (
@@ -90,35 +118,8 @@ export default function AccessoriesPage() {
             Accessories Collection
           </h1>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            Discover our premium collection of stylish accessories.
+            Complete your look with our curated selection of premium accessories for men and women.
           </p>
-        </div>
-
-        <div className="mb-12">
-          <h2 className="text-2xl font-playfair font-medium text-kapraye-burgundy mb-6 text-center">
-            Browse by Category
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <div
-                key={category}
-                className="bg-white border border-kapraye-cream rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => navigateToSubcategory(category)}
-              >
-                <div className="aspect-[3/2] overflow-hidden bg-gray-100">
-                  <img
-                    src={accessoryProducts.find(p => p.category === category)?.image || ''}
-                    alt={category}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="font-playfair text-lg font-medium text-kapraye-burgundy">{category}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">View all {category.toLowerCase()}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-8">
@@ -129,21 +130,146 @@ export default function AccessoriesPage() {
             sortOption={sortOption}
             onSortChange={setSortOption}
           />
+          
           <div className="flex-1">
             <div className="space-y-6 mb-8">
-              <div className="flex flex-col sm:flex-row gap-4 justify-between">
-                <ProductSearch onSearch={setSearchTerm} />
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                  <ProductSearch onSearch={setSearchTerm} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Filter by Gender</h3>
+                  <GenderFilter 
+                    selectedGender={selectedGender} 
+                    onGenderChange={setSelectedGender} 
+                  />
+                </div>
               </div>
             </div>
-            <ProductGrid
-              products={sortedProducts}
-              onProductClick={goToProductPage}
-              onAddToCart={addToCart}
-              formatPrice={formatPrice}
-            />
-            {sortedProducts.length === 0 && (
+
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="space-y-2">
+                    <Skeleton className="aspect-[3/4] w-full rounded-lg" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
               <div className="text-center py-12">
-                <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={() => window.location.reload()} variant="outline">
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product, index) => (
+                  <div 
+                    key={product.id}
+                    className="group relative animate-fade-in cursor-pointer"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                    onClick={() => goToProductPage(product.slug)}
+                  >
+                    <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
+                      <img
+                        src={product.images?.[0]?.src || '/placeholder.svg'}
+                        alt={product.name || 'Product image'}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      {product.on_sale && (
+                        <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                          Sale
+                        </div>
+                      )}
+                      {product.featured && (
+                        <div className="absolute top-2 right-2 bg-kapraye-burgundy text-white text-xs px-2 py-1 rounded">
+                          Featured
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-4 space-y-1">
+                      <div className="flex justify-between">
+                        <h3 className="text-sm text-kapraye-burgundy">
+                          {product.categories?.[0]?.name || 'Accessories'}
+                        </h3>
+                      </div>
+                      <h3 className="font-playfair text-lg font-medium text-foreground">
+                        {product.name || 'Product'}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <p className="text-base font-medium text-kapraye-pink">
+                          {formatPrice(parseFloat(product.price || '0'))}
+                        </p>
+                        {product.on_sale && product.regular_price && (
+                          <p className="text-sm text-gray-500 line-through">
+                            {formatPrice(parseFloat(product.regular_price))}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Desktop hover actions */}
+                    <div className={`absolute inset-0 flex items-center justify-center bg-kapraye-burgundy/0 group-hover:bg-kapraye-burgundy/10 transition-colors duration-300 ${isMobile ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
+                      <div className="flex gap-2" onClick={e => e.stopPropagation()}>
+                        {!isMobile && (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="secondary" size="sm">
+                                Reviews
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                              <DialogTitle>Product Reviews</DialogTitle>
+                              <DialogDescription>See what others are saying about this product</DialogDescription>
+                              <ProductReviews productId={product.id?.toString() || '0'} />
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={product.stock_status !== 'instock'}
+                        >
+                          {product.stock_status === 'instock' ? 'Add to Cart' : 'Out of Stock'}
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Mobile action button */}
+                    {isMobile && (
+                      <div className="absolute bottom-1 right-1 z-10" onClick={e => e.stopPropagation()}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="bg-white/80 backdrop-blur-sm h-6 w-6 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={product.stock_status !== 'instock'}
+                        >
+                          +
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {filteredProducts.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <p className="text-lg text-muted-foreground">
+                  No accessories found matching your criteria.
+                </p>
               </div>
             )}
           </div>
