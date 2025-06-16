@@ -162,3 +162,6 @@ export const woocommerceApi = {
     }
   }
 };
+
+// Also export as default for backward compatibility
+export default woocommerceApi;
