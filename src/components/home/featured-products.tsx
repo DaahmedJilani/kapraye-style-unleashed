@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ProductSearch } from "./product-search";
 import { ProductFilters } from "./product-filters";
@@ -58,13 +57,14 @@ export function FeaturedProducts() {
   }, []);
 
   const categories = Array.from(new Set(
-    products.flatMap(product => product.categories?.map(cat => cat.name) || [])
+    products.flatMap(product => product.categories?.map(cat => cat.name) || []).filter(Boolean)
   ));
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const productName = product.name || '';
+    const matchesSearch = productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.categories?.some(cat => 
-                           cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+                           cat.name?.toLowerCase().includes(searchTerm.toLowerCase())
                          );
     const matchesCategory = activeCategory === "all" || 
                           product.categories?.some(cat => cat.name === activeCategory);
@@ -171,7 +171,7 @@ export function FeaturedProducts() {
               <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
                 <img
                   src={product.images?.[0]?.src || '/placeholder.svg'}
-                  alt={product.name}
+                  alt={product.name || 'Product image'}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
@@ -193,11 +193,11 @@ export function FeaturedProducts() {
                   </h3>
                 </div>
                 <h3 className="font-playfair text-xs sm:text-sm md:text-lg font-medium text-foreground truncate">
-                  {product.name}
+                  {product.name || 'Product'}
                 </h3>
                 <div className="flex items-center gap-2">
                   <p className="text-xs md:text-base font-medium text-kapraye-pink">
-                    {formatPrice(parseFloat(product.price))}
+                    {formatPrice(parseFloat(product.price || '0'))}
                   </p>
                   {product.on_sale && product.regular_price && (
                     <p className="text-xs text-gray-500 line-through">
