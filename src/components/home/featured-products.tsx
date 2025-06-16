@@ -218,7 +218,7 @@ export function FeaturedProducts() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-2xl">
-                        <ProductReviews productId={product.id.toString()} />
+                        <ProductReviews productId={product.id?.toString() || '0'} />
                       </DialogContent>
                     </Dialog>
                   )}
