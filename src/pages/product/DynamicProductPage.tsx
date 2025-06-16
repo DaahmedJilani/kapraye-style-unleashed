@@ -27,8 +27,8 @@ export default function DynamicProductPage() {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!slug) {
-        setError('No product slug provided');
+      if (!slug || slug === 'undefined') {
+        setError('Invalid product URL');
         setLoading(false);
         return;
       }
@@ -267,7 +267,7 @@ export default function DynamicProductPage() {
               </div>
             )}
             
-            <SimilarItems currentProductId={product.id.toString()} />
+            <SimilarItems currentProductId={product.id?.toString() || '0'} />
           </div>
         </div>
       </MainLayout>
