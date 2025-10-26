@@ -46,6 +46,8 @@ import Careers from "./pages/company/careers";
 import AdminDashboard from "./pages/admin/index";
 import AdminSetup from "./pages/admin/setup";
 import AdminProducts from "./pages/admin/products";
+import AdminProductImport from "./pages/admin/products/import";
+import AdminCategories from "./pages/admin/products/categories";
 import AdminOrders from "./pages/admin/orders";
 import AdminCustomers from "./pages/admin/customers";
 import AdminSettings from "./pages/admin/settings";
@@ -102,6 +104,8 @@ function App() {
                     <Route path="/admin/setup" element={<AdminSetup />} />
                     <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                     <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+                    <Route path="/admin/products/import" element={<ProtectedRoute><AdminProductImport /></ProtectedRoute>} />
+                    <Route path="/admin/products/categories" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
                     <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
                     <Route path="/admin/customers" element={<ProtectedRoute><AdminCustomers /></ProtectedRoute>} />
                     <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />

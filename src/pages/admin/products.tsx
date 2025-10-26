@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { MainLayout } from "@/components/layout/main-layout";
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { ProductForm } from "@/components/admin/product-form";
 import { fetchProducts, deleteProduct } from "@/lib/supabase";
 import { Product } from "@/types/product";
@@ -28,7 +28,24 @@ export default function ProductsAdminPage() {
   const loadProducts = async () => {
     setLoading(true);
     const data = await fetchProducts();
-    setProducts(data);
+    // Map database products to local Product type
+    const mappedProducts = data.map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      description: p.description || '',
+      category: p.category_id || '',
+      subcategory: p.tags?.[0] || '',
+      image: p.featured_image || '',
+      images: p.images || [],
+      sizes: [],
+      inStock: p.stock_status === 'in_stock',
+      details: [],
+      care: [],
+      createdAt: p.created_at,
+      updatedAt: p.updated_at,
+    }));
+    setProducts(mappedProducts);
     setLoading(false);
   };
 
@@ -70,12 +87,13 @@ export default function ProductsAdminPage() {
   );
 
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-20 mt-16">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-playfair font-medium text-kapraye-burgundy">
-            Product Management
-          </h1>
+    <AdminLayout title="Product Management">
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Product Management</h1>
+            <p className="text-muted-foreground">Manage your product inventory</p>
+          </div>
           <Button onClick={() => setOpenProductForm(true)}>Add New Product</Button>
         </div>
 
@@ -185,6 +203,6 @@ export default function ProductsAdminPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </MainLayout>
+    </AdminLayout>
   );
 }

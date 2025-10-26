@@ -105,10 +105,6 @@ export function AccountDropdown() {
             <DropdownMenuItem asChild>
               <Link to="/wishlist">Wishlist</Link>
             </DropdownMenuItem>
-            
-            <DropdownMenuItem asChild>
-              <Link to="/admin/setup">Admin Setup</Link>
-            </DropdownMenuItem>
           </>
         )}
       </DropdownMenuContent>
