@@ -12,134 +12,35 @@ export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient<Database>(supabaseUrl, supabaseAnonKey)
   : null;
 
+// NOTE: These functions are temporarily disabled until the products table is created in Phase 2
+// They will be re-enabled once we create the proper database schema
+
 export async function fetchProducts() {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return [];
-  }
-  
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .order('createdAt', { ascending: false });
-    
-  if (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-  
-  return data || [];
+  console.warn('Products table not yet created - will be available in Phase 2');
+  return [];
 }
 
 export async function fetchProductById(id: string) {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return null;
-  }
-  
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
-    
-  if (error) {
-    console.error('Error fetching product:', error);
-    return null;
-  }
-  
-  return data;
+  console.warn('Products table not yet created - will be available in Phase 2');
+  return null;
 }
 
 export async function createProduct(product: ProductFormData) {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return null;
-  }
-  
-  const { data, error } = await supabase
-    .from('products')
-    .insert([{ 
-      ...product,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }])
-    .select()
-    .single();
-    
-  if (error) {
-    console.error('Error creating product:', error);
-    return null;
-  }
-  
-  return data;
+  console.warn('Products table not yet created - will be available in Phase 2');
+  return null;
 }
 
 export async function updateProduct(id: string, product: ProductFormData) {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return null;
-  }
-  
-  const { data, error } = await supabase
-    .from('products')
-    .update({ 
-      ...product,
-      updatedAt: new Date().toISOString()
-    })
-    .eq('id', id)
-    .select()
-    .single();
-    
-  if (error) {
-    console.error('Error updating product:', error);
-    return null;
-  }
-  
-  return data;
+  console.warn('Products table not yet created - will be available in Phase 2');
+  return null;
 }
 
 export async function deleteProduct(id: string) {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return false;
-  }
-  
-  const { error } = await supabase
-    .from('products')
-    .delete()
-    .eq('id', id);
-    
-  if (error) {
-    console.error('Error deleting product:', error);
-    return false;
-  }
-  
-  return true;
+  console.warn('Products table not yet created - will be available in Phase 2');
+  return false;
 }
 
 export async function uploadProductImage(file: File): Promise<string | null> {
-  if (!supabase) {
-    console.error('Supabase client is not initialized');
-    return null;
-  }
-  
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Date.now()}.${fileExt}`;
-  const filePath = `product-images/${fileName}`;
-
-  const { error } = await supabase.storage
-    .from('products')
-    .upload(filePath, file);
-
-  if (error) {
-    console.error('Error uploading image:', error);
-    return null;
-  }
-
-  const { data } = supabase.storage
-    .from('products')
-    .getPublicUrl(filePath);
-
-  return data.publicUrl;
+  console.warn('Product images storage not yet created - will be available in Phase 2');
+  return null;
 }
