@@ -21,10 +21,11 @@ export default function AdminDashboard() {
     setLoading(true);
     
     try {
-      // Get admin users count
+      // Get admin users count from user_roles table
       const { count: adminCount, error: adminError } = await supabase
-        .from('admin_users')
-        .select('*', { count: 'exact', head: true });
+        .from('user_roles')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'admin');
       
       if (!adminError && adminCount !== null) {
         setAdminCount(adminCount);
