@@ -160,7 +160,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link to="/admin/users">
+                        <Link to="/admin/customers">
                           <Users className="w-4 h-4 mr-2" />
                           <span>Customers</span>
                         </Link>
@@ -176,8 +176,16 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link to="/admin/setup">
+                        <Link to="/admin/settings">
                           <Settings className="w-4 h-4 mr-2" />
+                          <span>Site Settings</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/setup">
+                          <Users className="w-4 h-4 mr-2" />
                           <span>Admin Access</span>
                         </Link>
                       </SidebarMenuButton>

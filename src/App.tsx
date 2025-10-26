@@ -8,6 +8,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { WooCommerceCartProvider } from "./contexts/WooCommerceCartContext";
 import { CartProvider } from "./contexts/CartContext";
 import { AppSettingsProvider } from "./contexts/AppSettingsContext";
+import { ProtectedRoute } from "./components/auth/protected-route";
 
 // Import pages
 import EnhancedIndex from "./pages/EnhancedIndex";
@@ -40,6 +41,14 @@ import Contact from "./pages/company/contact";
 import Terms from "./pages/company/terms";
 import Privacy from "./pages/company/privacy";
 import Careers from "./pages/company/careers";
+
+// Admin pages
+import AdminDashboard from "./pages/admin/index";
+import AdminSetup from "./pages/admin/setup";
+import AdminProducts from "./pages/admin/products";
+import AdminOrders from "./pages/admin/orders";
+import AdminCustomers from "./pages/admin/customers";
+import AdminSettings from "./pages/admin/settings";
 
 import NotFound from "./pages/NotFound";
 
@@ -88,6 +97,14 @@ function App() {
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/careers" element={<Careers />} />
+
+                    {/* Admin routes - Protected */}
+                    <Route path="/admin/setup" element={<AdminSetup />} />
+                    <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                    <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+                    <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
+                    <Route path="/admin/customers" element={<ProtectedRoute><AdminCustomers /></ProtectedRoute>} />
+                    <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
 
                     {/* 404 page */}
                     <Route path="*" element={<NotFound />} />

@@ -31,13 +31,32 @@ export default function AdminDashboard() {
         setAdminCount(adminCount);
       }
       
-      // Check if products table exists (it might not yet)
-      // For now, just set to 0 since we'll create this table later
-      setProductCount(0);
+      // Get products count
+      const { count: productCount, error: productError } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true });
       
-      // For now, just mock these counts as they will be implemented later
-      setOrderCount(0);
-      setUserCount(0);
+      if (!productError && productCount !== null) {
+        setProductCount(productCount);
+      }
+      
+      // Get orders count
+      const { count: orderCount, error: orderError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!orderError && orderCount !== null) {
+        setOrderCount(orderCount);
+      }
+      
+      // Get users count
+      const { count: userCount, error: userError } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!userError && userCount !== null) {
+        setUserCount(userCount);
+      }
     } catch (error) {
       console.error("Error fetching stats:", error);
     } finally {
