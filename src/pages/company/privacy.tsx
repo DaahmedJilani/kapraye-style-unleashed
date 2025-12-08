@@ -10,7 +10,7 @@ export default function PrivacyPage() {
           
           <div className="prose prose-lg">
             <p className="text-lg mb-6">
-              At Kaprayé, we take your privacy seriously. This Privacy Policy document contains types of information that is collected and recorded by Kaprayé and how we use it.
+              At <span className="font-above-beyond">Kaprayé</span>, we take your privacy seriously. This Privacy Policy document contains types of information that is collected and recorded by <span className="font-above-beyond">Kaprayé</span> and how we use it.
             </p>
             
             <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">Information We Collect</h2>

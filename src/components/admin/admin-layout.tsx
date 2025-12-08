@@ -84,7 +84,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
               <div className="px-3 py-2">
                 <Link to="/admin" className="flex items-center">
                   <span className="text-xl font-semibold text-primary">
-                    Kaprayé Admin
+                    <span className="font-above-beyond">Kaprayé</span> Admin
                   </span>
                 </Link>
               </div>

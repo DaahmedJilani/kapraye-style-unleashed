@@ -73,7 +73,7 @@ export function TrustSection() {
               Trusted by Thousands
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Join our growing community of satisfied customers who trust Kaprayé for their fashion needs
+              Join our growing community of satisfied customers who trust <span className="font-above-beyond">Kaprayé</span> for their fashion needs
             </p>
           </div>
 
