@@ -1,11 +1,11 @@
-
 import { MainLayout } from "@/components/layout/main-layout";
-import { EnhancedHeroSection } from "@/components/home/enhanced-hero-section";
-import { FeaturedCategories } from "@/components/home/featured-categories";
+import { PremiumHero } from "@/components/home/premium-hero";
+import { PremiumCategories } from "@/components/home/premium-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import { TrustSection } from "@/components/home/trust-section";
 import { LoyaltySection } from "@/components/home/loyalty-section";
 import { NewsletterSection } from "@/components/home/newsletter-section";
+import { AboutSection } from "@/components/home/about-section";
 import { Helmet } from "react-helmet-async";
 
 export default function EnhancedIndex() {
@@ -22,9 +22,10 @@ export default function EnhancedIndex() {
         <link rel="canonical" href="https://kapraye.com" />
       </Helmet>
       
-      <MainLayout>
-        <EnhancedHeroSection />
-        <FeaturedCategories />
+      <MainLayout useTransparentNavbar>
+        <PremiumHero />
+        <PremiumCategories />
+        <AboutSection />
         <FeaturedProducts />
         <TrustSection />
         <LoyaltySection />
