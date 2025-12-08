@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, Loader2 } from "lucide-react";
+import { Instagram, Facebook, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +20,6 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 interface SocialLinks {
   instagram?: string;
   facebook?: string;
-  twitter?: string;
   tiktok?: string;
 }
 
@@ -28,10 +27,9 @@ export function Footer() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>({
-    instagram: "https://instagram.com/kapraye",
-    facebook: "https://facebook.com/kapraye",
-    twitter: "https://twitter.com/kapraye",
-    tiktok: "https://tiktok.com/@kapraye",
+    instagram: "https://instagram.com/kaprayeofficial",
+    facebook: "https://www.facebook.com/share/1FHcWgKvzn/?mibextid=wwXIfr",
+    tiktok: "https://tiktok.com/@kapraye.official",
   });
 
   useEffect(() => {
@@ -187,17 +185,6 @@ export function Footer() {
                   aria-label="Facebook"
                 >
                   <Facebook className="w-5 h-5" />
-                </a>
-              )}
-              {socialLinks.twitter && (
-                <a
-                  href={socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-5 h-5" />
                 </a>
               )}
               {socialLinks.tiktok && (
