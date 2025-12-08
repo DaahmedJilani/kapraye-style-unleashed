@@ -33,7 +33,7 @@ export default function CareersPage() {
           <h1 className="text-4xl font-playfair font-medium text-kapraye-burgundy mb-8">Join Our Team</h1>
           
           <p className="text-lg mb-12">
-            At Kaprayé, we're always looking for talented individuals who are passionate about fashion and retail. Join us in our mission to transform the fashion industry in Pakistan.
+            At <span className="font-above-beyond">Kaprayé</span>, we're always looking for talented individuals who are passionate about fashion and retail. Join us in our mission to transform the fashion industry in Pakistan.
           </p>
           
           <div className="space-y-6">

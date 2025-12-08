@@ -157,11 +157,11 @@ export function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Logo & Copyright */}
             <div className="text-center md:text-left">
-              <Link to="/" className="font-allura text-3xl text-white mb-2 block">
+              <Link to="/" className="font-above-beyond text-3xl text-white mb-2 block">
                 Kaprayé
               </Link>
               <p className="text-white/60 text-sm">
-                © {new Date().getFullYear()} Kaprayé. All rights reserved.
+                © {new Date().getFullYear()} <span className="font-above-beyond">Kaprayé</span>. All rights reserved.
               </p>
             </div>
 
