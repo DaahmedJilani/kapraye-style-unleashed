@@ -4,60 +4,83 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
 
-const heroSlides = [
+interface HeroSlide {
+  id: string;
+  badge: string | null;
+  title: string;
+  title_accent: string | null;
+  subtitle: string | null;
+  image_url: string | null;
+  video_url: string | null;
+  cta_text: string | null;
+  cta_link: string | null;
+  display_order: number | null;
+}
+
+const fallbackSlides: HeroSlide[] = [
   {
-    id: 1,
+    id: "1",
     badge: "Eid Collection 2025",
     title: "Elegance",
-    titleAccent: "Redefined",
+    title_accent: "Redefined",
     subtitle: "Discover timeless pieces crafted for those who appreciate quality and cultural heritage",
-    image: "/lovable-uploads/cdc9ab83-eb85-41ae-b867-8befc33219b7.png",
-    cta: "Shop Collection",
-    link: "/women",
-  },
-  {
-    id: 2,
-    badge: "Trending Now",
-    title: "Modern",
-    titleAccent: "Classics",
-    subtitle: "Explore the styles our community loves - contemporary fashion meets tradition",
-    image: "/lovable-uploads/45912cc0-46ec-4968-a1dd-a7b61ede248b.png",
-    cta: "Explore Looks",
-    link: "/women",
-  },
-  {
-    id: 3,
-    badge: "New Arrivals",
-    title: "Luxury",
-    titleAccent: "Awaits",
-    subtitle: "Premium fabrics, exquisite craftsmanship, and designs that tell your story",
-    image: "/lovable-uploads/f7ad58eb-f874-4d63-b84c-77b0e59cf275.png",
-    cta: "View New In",
-    link: "/women",
+    image_url: "/lovable-uploads/cdc9ab83-eb85-41ae-b867-8befc33219b7.png",
+    video_url: null,
+    cta_text: "Shop Collection",
+    cta_link: "/women",
+    display_order: 1,
   },
 ];
 
 export function PremiumHero() {
+  const [slides, setSlides] = useState<HeroSlide[]>(fallbackSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    const fetchSlides = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("hero_slides")
+          .select("*")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setSlides(data);
+        }
+      } catch (error) {
+        console.error("Error fetching hero slides:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
+
+  useEffect(() => {
+    if (!isAutoPlaying || slides.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, slides.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
     setIsAutoPlaying(false);
   };
 
-  const slide = heroSlides[currentSlide];
+  const slide = slides[currentSlide];
+
+  if (!slide) return null;
 
   return (
     <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-background">
@@ -72,11 +95,22 @@ export function PremiumHero() {
           className="absolute inset-0"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
-          <img
-            src={slide.image}
-            alt=""
-            className="w-full h-full object-cover object-center"
-          />
+          {slide.video_url ? (
+            <video
+              src={slide.video_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover object-center"
+            />
+          ) : (
+            <img
+              src={slide.image_url || ""}
+              alt=""
+              className="w-full h-full object-cover object-center"
+            />
+          )}
         </motion.div>
       </AnimatePresence>
 
@@ -112,17 +146,19 @@ export function PremiumHero() {
               transition={{ duration: 0.5 }}
             >
               {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.6 }}
-                className="mb-6"
-              >
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 backdrop-blur-sm border border-secondary/30 text-sm font-medium text-foreground">
-                  <Sparkles className="w-4 h-4" />
-                  {slide.badge}
-                </span>
-              </motion.div>
+              {slide.badge && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  className="mb-6"
+                >
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 backdrop-blur-sm border border-secondary/30 text-sm font-medium text-foreground">
+                    <Sparkles className="w-4 h-4" />
+                    {slide.badge}
+                  </span>
+                </motion.div>
+              )}
 
               {/* Title */}
               <motion.h1
@@ -132,18 +168,22 @@ export function PremiumHero() {
                 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-playfair font-medium leading-[0.95] mb-6"
               >
                 <span className="block text-foreground">{slide.title}</span>
-                <span className="block text-secondary italic">{slide.titleAccent}</span>
+                {slide.title_accent && (
+                  <span className="block text-secondary italic">{slide.title_accent}</span>
+                )}
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-lg md:text-xl text-muted-foreground max-w-lg mb-8"
-              >
-                {slide.subtitle}
-              </motion.p>
+              {slide.subtitle && (
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                  className="text-lg md:text-xl text-muted-foreground max-w-lg mb-8"
+                >
+                  {slide.subtitle}
+                </motion.p>
+              )}
 
               {/* CTA Buttons */}
               <motion.div
@@ -155,9 +195,9 @@ export function PremiumHero() {
                 <Button
                   size={isMobile ? "default" : "lg"}
                   className="group bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
-                  onClick={() => navigate(slide.link)}
+                  onClick={() => navigate(slide.cta_link || "/women")}
                 >
-                  {slide.cta}
+                  {slide.cta_text || "Shop Now"}
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button
@@ -173,35 +213,37 @@ export function PremiumHero() {
           </AnimatePresence>
 
           {/* Slide Indicators */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="flex items-center gap-3 mt-12 md:mt-16"
-          >
-            {heroSlides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`relative h-1 rounded-full transition-all duration-500 ${
-                  index === currentSlide 
-                    ? "w-12 bg-primary" 
-                    : "w-6 bg-muted hover:bg-secondary"
-                }`}
-              >
-                {index === currentSlide && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute inset-0 bg-primary rounded-full"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
-            <span className="ml-4 text-sm text-muted-foreground font-medium">
-              {String(currentSlide + 1).padStart(2, "0")} / {String(heroSlides.length).padStart(2, "0")}
-            </span>
-          </motion.div>
+          {slides.length > 1 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex items-center gap-3 mt-12 md:mt-16"
+            >
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`relative h-1 rounded-full transition-all duration-500 ${
+                    index === currentSlide 
+                      ? "w-12 bg-primary" 
+                      : "w-6 bg-muted hover:bg-secondary"
+                  }`}
+                >
+                  {index === currentSlide && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute inset-0 bg-primary rounded-full"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
+              ))}
+              <span className="ml-4 text-sm text-muted-foreground font-medium">
+                {String(currentSlide + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+              </span>
+            </motion.div>
+          )}
         </div>
       </div>
 

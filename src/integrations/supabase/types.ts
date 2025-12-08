@@ -115,6 +115,81 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          is_read: boolean | null
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      hero_slides: {
+        Row: {
+          badge: string | null
+          created_at: string | null
+          cta_link: string | null
+          cta_text: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          subtitle: string | null
+          title: string
+          title_accent: string | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          badge?: string | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          subtitle?: string | null
+          title: string
+          title_accent?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          badge?: string | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          subtitle?: string | null
+          title?: string
+          title_accent?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       loyalty_transactions: {
         Row: {
           created_at: string
@@ -192,6 +267,27 @@ export type Database = {
           mime_type?: string
           original_filename?: string
           uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          email: string
+          id: string
+          is_active: boolean | null
+          subscribed_at: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          is_active?: boolean | null
+          subscribed_at?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          subscribed_at?: string | null
         }
         Relationships: []
       }
