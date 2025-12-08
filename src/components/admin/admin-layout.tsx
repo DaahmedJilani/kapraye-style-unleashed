@@ -13,8 +13,8 @@ import {
   LogOut, 
   FileText,
   Upload,
-  Search,
-  ShoppingBag
+  ShoppingBag,
+  Image
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -174,6 +174,14 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                 <SidebarGroupLabel>Configuration</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link to="/admin/hero-slides">
+                          <Image className="w-4 h-4 mr-2" />
+                          <span>Hero Slides</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link to="/admin/settings">

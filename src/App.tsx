@@ -51,7 +51,7 @@ import AdminCategories from "./pages/admin/products/categories";
 import AdminOrders from "./pages/admin/orders";
 import AdminCustomers from "./pages/admin/customers";
 import AdminSettings from "./pages/admin/settings";
-
+import AdminHeroSlides from "./pages/admin/hero-slides";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -109,6 +109,7 @@ function App() {
                     <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
                     <Route path="/admin/customers" element={<ProtectedRoute><AdminCustomers /></ProtectedRoute>} />
                     <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
+                    <Route path="/admin/hero-slides" element={<ProtectedRoute><AdminHeroSlides /></ProtectedRoute>} />
 
                     {/* 404 page */}
                     <Route path="*" element={<NotFound />} />
