@@ -45,7 +45,16 @@ const PRODUCTS_QUERY = `
           title
           description
           handle
+          tags
+          productType
+          vendor
           priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          compareAtPriceRange {
             minVariantPrice {
               amount
               currencyCode
@@ -92,8 +101,18 @@ const PRODUCT_BY_HANDLE_QUERY = `
       id
       title
       description
+      descriptionHtml
       handle
+      tags
+      productType
+      vendor
       priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      compareAtPriceRange {
         minVariantPrice {
           amount
           currencyCode
@@ -116,7 +135,12 @@ const PRODUCT_BY_HANDLE_QUERY = `
               amount
               currencyCode
             }
+            compareAtPrice {
+              amount
+              currencyCode
+            }
             availableForSale
+            quantityAvailable
             selectedOptions {
               name
               value
@@ -127,6 +151,38 @@ const PRODUCT_BY_HANDLE_QUERY = `
       options {
         name
         values
+      }
+    }
+  }
+`;
+
+const RELATED_PRODUCTS_QUERY = `
+  query GetRelatedProducts($productId: ID!, $first: Int!) {
+    productRecommendations(productId: $productId) {
+      id
+      title
+      handle
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      images(first: 1) {
+        edges {
+          node {
+            url
+            altText
+          }
+        }
+      }
+      variants(first: 1) {
+        edges {
+          node {
+            id
+            availableForSale
+          }
+        }
       }
     }
   }
@@ -195,6 +251,17 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;
+  }
+}
+
+export async function fetchRelatedProducts(productId: string, first = 8): Promise<ShopifyProduct['node'][]> {
+  try {
+    const data = await storefrontApiRequest(RELATED_PRODUCTS_QUERY, { productId, first });
+    if (!data) return [];
+    return data.data.productRecommendations || [];
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    return [];
   }
 }
 

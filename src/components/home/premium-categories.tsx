@@ -4,12 +4,20 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Import your brand images
+import womenNewArrival from "@/assets/collections/women-new-arrival.jpeg";
+import womenTrendBoss from "@/assets/collections/women-trend-boss.jpeg";
+import womenEmbroidery from "@/assets/collections/women-embroidery.jpeg";
+import menWhite from "@/assets/collections/men-white.png";
+import menNavy from "@/assets/collections/men-navy.png";
+
 interface Category {
   id: string;
   name: string;
   slug: string;
   image: string;
   description: string;
+  badge?: string;
 }
 
 const containerVariants = {
@@ -36,25 +44,41 @@ const itemVariants = {
 
 const categories: Category[] = [
   {
-    id: "women",
-    name: "Women",
+    id: "women-new",
+    name: "New Arrivals",
     slug: "women",
-    image: "https://images.unsplash.com/photo-1594736797933-d0301ba6fe65?q=80&w=1000",
-    description: "Elegant stitched & unstitched collections",
+    image: womenNewArrival,
+    description: "Fresh styles just dropped",
+    badge: "NEW",
   },
   {
-    id: "men",
-    name: "Men",
+    id: "women-trend",
+    name: "Trend Boss",
+    slug: "women/stitched",
+    image: womenTrendBoss,
+    description: "Premium stitched collection",
+  },
+  {
+    id: "women-embroidery",
+    name: "Embroidery",
+    slug: "women/unstitched",
+    image: womenEmbroidery,
+    description: "Exquisite handcrafted designs",
+    badge: "35% OFF",
+  },
+  {
+    id: "men-classic",
+    name: "Men's Classic",
     slug: "men",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000",
-    description: "Premium formal & casual wear",
+    image: menWhite,
+    description: "Timeless elegance for him",
   },
   {
-    id: "kids",
-    name: "Kids",
-    slug: "kids",
-    image: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000",
-    description: "Adorable styles for little ones",
+    id: "men-premium",
+    name: "Men's Premium",
+    slug: "men/unstitched",
+    image: menNavy,
+    description: "Luxury unstitched fabrics",
   },
 ];
 
@@ -65,7 +89,7 @@ export function PremiumCategories() {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 320;
+      const scrollAmount = 340;
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -100,7 +124,7 @@ export function PremiumCategories() {
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full"
+            className="rounded-full border-border"
             onClick={() => scroll('left')}
           >
             <ChevronLeft className="h-5 w-5" />
@@ -108,7 +132,7 @@ export function PremiumCategories() {
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full"
+            className="rounded-full border-border"
             onClick={() => scroll('right')}
           >
             <ChevronRight className="h-5 w-5" />
@@ -123,18 +147,31 @@ export function PremiumCategories() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0"
+            className="flex md:grid md:grid-cols-5 gap-4 md:gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {categories.map((category) => (
               <motion.div
                 key={category.id}
                 variants={itemVariants}
-                className="group relative overflow-hidden rounded-2xl cursor-pointer aspect-[4/5] md:aspect-[3/4] flex-shrink-0 w-[280px] md:w-auto snap-center"
+                className="group relative overflow-hidden rounded-2xl cursor-pointer aspect-[3/4] flex-shrink-0 w-[280px] md:w-auto snap-center"
                 onMouseEnter={() => setHoveredId(category.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 onClick={() => navigate(`/${category.slug}`)}
               >
+                {/* Badge */}
+                {category.badge && (
+                  <div className="absolute top-4 left-4 z-20">
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      category.badge === "NEW" 
+                        ? "bg-secondary text-secondary-foreground" 
+                        : "bg-destructive text-destructive-foreground"
+                    }`}>
+                      {category.badge}
+                    </span>
+                  </div>
+                )}
+
                 {/* Image */}
                 <div className="absolute inset-0">
                   <motion.img
@@ -147,15 +184,15 @@ export function PremiumCategories() {
                     transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                   />
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 </div>
 
                 {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
+                <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
                   {/* Category Name */}
                   <div className="flex items-end justify-between">
                     <div>
-                      <h3 className="text-3xl md:text-4xl font-playfair font-medium text-primary-foreground mb-2">
+                      <h3 className="text-2xl md:text-2xl font-playfair font-medium text-white mb-1">
                         {category.name}
                       </h3>
                       <motion.p
@@ -164,7 +201,7 @@ export function PremiumCategories() {
                           y: hoveredId === category.id ? 0 : 5,
                         }}
                         transition={{ duration: 0.3 }}
-                        className="text-primary-foreground/80 text-sm md:text-base"
+                        className="text-white/80 text-sm"
                       >
                         {category.description}
                       </motion.p>
@@ -173,13 +210,13 @@ export function PremiumCategories() {
                     {/* Arrow Icon */}
                     <motion.div
                       animate={{
-                        scale: hoveredId === category.id ? 1 : 0.8,
+                        scale: hoveredId === category.id ? 1.1 : 0.9,
                         opacity: hoveredId === category.id ? 1 : 0.6,
                       }}
                       transition={{ duration: 0.3 }}
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center"
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
                     >
-                      <ArrowUpRight className="w-6 h-6 md:w-7 md:h-7 text-primary-foreground" />
+                      <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </motion.div>
                   </div>
                 </div>

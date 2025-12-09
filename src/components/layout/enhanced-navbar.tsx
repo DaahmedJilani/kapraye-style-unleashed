@@ -44,7 +44,11 @@ const kidsLinks: NavLink[] = [
   { name: "Babies", href: "/kids/babies" },
 ];
 
-export function EnhancedNavbar() {
+interface EnhancedNavbarProps {
+  isTransparent?: boolean;
+}
+
+export function EnhancedNavbar({ isTransparent = false }: EnhancedNavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,11 +71,14 @@ export function EnhancedNavbar() {
     }
   };
 
+  // Determine if we should use light text (transparent mode and not scrolled)
+  const useLightText = isTransparent && !isScrolled;
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-md border-b border-kapraye-cream shadow-sm' 
+        isScrolled || !isTransparent
+          ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-sm' 
           : 'bg-transparent'
       }`} 
       style={{ height: '72px' }}
@@ -81,13 +88,13 @@ export function EnhancedNavbar() {
         <div className="flex-shrink-0 flex items-center space-x-2">
           <Link to="/" className="flex items-center" style={{ lineHeight: 1 }}>
             <span className={`text-3xl font-above-beyond font-normal leading-none transition-colors duration-300 ${
-              isScrolled ? 'text-kapraye-burgundy' : 'text-white'
+              useLightText ? 'text-white' : 'text-primary'
             }`} style={{ lineHeight: 1.1, paddingTop: '0.15rem', paddingBottom: '0.15rem' }}>
               Kaprayé
             </span>
           </Link>
           <span className={`text-sm font-allure select-none transition-colors duration-300 ${
-            isScrolled ? 'text-kapraye-mauve' : 'text-white/80'
+            useLightText ? 'text-white/80' : 'text-secondary'
           }`} style={{ marginTop: '0.3rem' }}>
             By Rayan
           </span>
@@ -101,7 +108,7 @@ export function EnhancedNavbar() {
               <Button 
                 variant="ghost" 
                 className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
-                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                  useLightText ? 'text-white hover:text-white/80 hover:bg-white/10' : 'text-foreground hover:text-secondary hover:bg-transparent'
                 }`}
               >
                 Women <ChevronDown className="w-4 h-4 ml-1" />
@@ -126,7 +133,7 @@ export function EnhancedNavbar() {
               <Button 
                 variant="ghost" 
                 className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
-                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                  useLightText ? 'text-white hover:text-white/80 hover:bg-white/10' : 'text-foreground hover:text-secondary hover:bg-transparent'
                 }`}
               >
                 Men <ChevronDown className="w-4 h-4 ml-1" />
@@ -151,7 +158,7 @@ export function EnhancedNavbar() {
               <Button 
                 variant="ghost" 
                 className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
-                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                  useLightText ? 'text-white hover:text-white/80 hover:bg-white/10' : 'text-foreground hover:text-secondary hover:bg-transparent'
                 }`}
               >
                 Kids <ChevronDown className="w-4 h-4 ml-1" />
@@ -182,17 +189,17 @@ export function EnhancedNavbar() {
               <input
                 type="search"
                 placeholder="Search…"
-                className={`pl-8 pr-3 py-1.5 rounded-md border text-sm w-36 focus:w-48 transition-all focus:ring-2 focus:ring-kapraye-pink focus:border-kapraye-pink ${
-                  isScrolled 
-                    ? 'border-kapraye-cream bg-white placeholder:text-muted-foreground' 
-                    : 'border-white/30 bg-white/10 placeholder:text-white/70 text-white'
+                className={`pl-8 pr-3 py-1.5 rounded-md border text-sm w-36 focus:w-48 transition-all focus:ring-2 focus:ring-secondary focus:border-secondary ${
+                  useLightText 
+                    ? 'border-white/30 bg-white/10 placeholder:text-white/70 text-white' 
+                    : 'border-border bg-background placeholder:text-muted-foreground text-foreground'
                 }`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button
                 type="submit"
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-kapraye-pink"
+                className={`absolute left-2 top-1/2 -translate-y-1/2 ${useLightText ? 'text-white/70' : 'text-secondary'}`}
               >
                 <Search className="h-4 w-4" />
               </button>
@@ -202,16 +209,16 @@ export function EnhancedNavbar() {
           <div className="hidden md:block">
             <SettingsMenu />
           </div>
-          <div className="flex items-center gap-2">
+          <div className={`flex items-center gap-2 ${useLightText ? '[&_button]:text-white [&_svg]:text-white' : ''}`}>
             <NotificationBell />
             <CartDrawer />
             <AccountDropdown />
           </div>
           <button
             className={`lg:hidden p-2 rounded-full transition-colors ml-2 ${
-              isScrolled 
-                ? 'hover:bg-kapraye-cream/50 text-foreground' 
-                : 'hover:bg-white/20 text-white'
+              useLightText 
+                ? 'hover:bg-white/20 text-white' 
+                : 'hover:bg-muted text-foreground'
             }`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -226,7 +233,7 @@ export function EnhancedNavbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 top-[72px] bg-background z-40 animate-fade-in overflow-y-auto">
           <div className="container py-6 px-4 flex flex-col space-y-6">
             {/* Search Form */}
             <form className="mb-6" onSubmit={handleSearch}>
@@ -234,13 +241,13 @@ export function EnhancedNavbar() {
                 <input
                   type="search"
                   placeholder="Search…"
-                  className="pl-8 pr-3 py-2 rounded-md border border-kapraye-cream bg-white placeholder:text-muted-foreground text-sm w-full"
+                  className="pl-8 pr-3 py-2 rounded-md border border-border bg-background placeholder:text-muted-foreground text-sm w-full"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <button
                   type="submit"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 text-kapraye-pink"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 text-secondary"
                 >
                   <Search className="h-4 w-4" />
                 </button>
@@ -251,13 +258,13 @@ export function EnhancedNavbar() {
             <div className="flex flex-col space-y-4">
               {/* Women Section */}
               <div>
-                <div className="text-base py-2 font-medium text-kapraye-burgundy">Women</div>
+                <div className="text-base py-2 font-medium text-primary">Women</div>
                 <div className="flex flex-col pl-4 space-y-1">
                   {womenLinks.map((link) => (
                     <Link
                       key={link.name}
                       to={link.href}
-                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      className="text-sm py-2 text-foreground hover:text-secondary transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.name}
@@ -268,13 +275,13 @@ export function EnhancedNavbar() {
 
               {/* Men Section */}
               <div>
-                <div className="text-base py-2 font-medium text-kapraye-burgundy">Men</div>
+                <div className="text-base py-2 font-medium text-primary">Men</div>
                 <div className="flex flex-col pl-4 space-y-1">
                   {menLinks.map((link) => (
                     <Link
                       key={link.name}
                       to={link.href}
-                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      className="text-sm py-2 text-foreground hover:text-secondary transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.name}
@@ -285,13 +292,13 @@ export function EnhancedNavbar() {
 
               {/* Kids Section */}
               <div>
-                <div className="text-base py-2 font-medium text-kapraye-burgundy">Kids</div>
+                <div className="text-base py-2 font-medium text-primary">Kids</div>
                 <div className="flex flex-col pl-4 space-y-1">
                   {kidsLinks.map((link) => (
                     <Link
                       key={link.name}
                       to={link.href}
-                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      className="text-sm py-2 text-foreground hover:text-secondary transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.name}
@@ -301,12 +308,12 @@ export function EnhancedNavbar() {
               </div>
             </div>
             
-            <div className="w-full h-px bg-kapraye-mauve/30"></div>
+            <div className="w-full h-px bg-border"></div>
             
             <div className="flex flex-col space-y-3">
               <Link
                 to="/loyalty"
-                className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors flex items-center space-x-2"
+                className="text-base py-2 text-foreground hover:text-secondary transition-colors flex items-center space-x-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <User className="h-5 w-5" />
@@ -315,7 +322,7 @@ export function EnhancedNavbar() {
             </div>
             <div className="flex flex-col space-y-2">
               <SettingsMenu />
-              <Button variant="outline" className="w-full mt-2 border-kapraye-pink text-kapraye-burgundy hover:text-kapraye-pink">
+              <Button variant="outline" className="w-full mt-2 border-secondary text-primary hover:text-secondary">
                 Sign In / Register
               </Button>
             </div>
