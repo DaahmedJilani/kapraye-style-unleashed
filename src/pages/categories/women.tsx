@@ -21,13 +21,6 @@ const womenSubcategories = [
     description: "Elegant Middle Eastern inspired fashion",
     image: "https://images.unsplash.com/photo-1633934542143-827a422485a4?q=80&w=800",
     route: "/saudi"
-  },
-  {
-    id: "makeup",
-    name: "Makeup & Beauty",
-    description: "Premium cosmetics and beauty essentials",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800",
-    route: "/makeup"
   }
 ];
 
