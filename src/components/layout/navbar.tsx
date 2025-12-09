@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SettingsMenu } from "@/components/settings/settings-menu";
 import { AccountDropdown } from "@/components/account/account-dropdown";
 import { CartDrawer } from "@/components/shopify/CartDrawer";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -136,6 +137,7 @@ export function Navbar() {
             <SettingsMenu />
           </div>
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <CartDrawer />
             <AccountDropdown />
           </div>
