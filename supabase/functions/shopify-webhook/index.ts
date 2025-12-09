@@ -99,6 +99,44 @@ Deno.serve(async (req) => {
   }
 })
 
+async function sendEmailNotification(
+  type: string,
+  email: string,
+  customerName: string,
+  orderNumber: string,
+  orderTotal: string,
+  userId?: string,
+  loyaltyPoints?: number
+) {
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-email-notification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
+      },
+      body: JSON.stringify({
+        type,
+        email,
+        customerName,
+        orderNumber,
+        orderTotal,
+        userId,
+        loyaltyPoints,
+      }),
+    })
+    
+    if (!response.ok) {
+      console.error('Failed to send email notification:', await response.text())
+    } else {
+      console.log(`Email notification sent: ${type} to ${email}`)
+    }
+  } catch (error) {
+    console.error('Error sending email notification:', error)
+  }
+}
+
 async function handleOrderCreated(supabase: any, order: ShopifyOrder) {
   console.log(`Processing order #${order.order_number}`)
 
@@ -108,10 +146,14 @@ async function handleOrderCreated(supabase: any, order: ShopifyOrder) {
   
   if (!user) {
     console.log(`No user found for email: ${order.email}`)
-    // Still store order for guest checkout tracking
   }
 
   const userId = user?.id
+  const customerName = order.customer 
+    ? `${order.customer.first_name} ${order.customer.last_name}` 
+    : order.billing_address 
+      ? `${order.billing_address.first_name} ${order.billing_address.last_name}`
+      : 'Valued Customer'
 
   // Check if order already exists
   const { data: existingOrder } = await supabase
@@ -139,7 +181,7 @@ async function handleOrderCreated(supabase: any, order: ShopifyOrder) {
   // Create order in database
   const orderData = {
     order_number: `SHOP-${order.order_number}`,
-    user_id: userId || '00000000-0000-0000-0000-000000000000', // Guest user placeholder
+    user_id: userId || '00000000-0000-0000-0000-000000000000',
     status: mapShopifyStatus(order.fulfillment_status),
     payment_method: 'shopify',
     payment_status: order.financial_status,
@@ -167,7 +209,7 @@ async function handleOrderCreated(supabase: any, order: ShopifyOrder) {
   // Create order items
   const orderItems = order.line_items.map(item => ({
     order_id: newOrder.id,
-    product_id: null, // Shopify products don't map to our products table
+    product_id: null,
     quantity: item.quantity,
     price: parseFloat(item.price),
     subtotal: parseFloat(item.price) * item.quantity,
@@ -187,14 +229,41 @@ async function handleOrderCreated(supabase: any, order: ShopifyOrder) {
     console.error('Failed to create order items:', itemsError)
   }
 
+  // Send order confirmation email
+  await sendEmailNotification(
+    'order_confirmed',
+    order.email,
+    customerName,
+    `SHOP-${order.order_number}`,
+    order.total_price,
+    userId
+  )
+
   // Award loyalty points if user exists and order is paid
   if (userId && order.financial_status === 'paid') {
-    await awardLoyaltyPoints(supabase, userId, order)
+    const points = await awardLoyaltyPoints(supabase, userId, order)
+    
+    // Send loyalty points notification
+    if (points > 0) {
+      await sendEmailNotification(
+        'loyalty_points',
+        order.email,
+        customerName,
+        `SHOP-${order.order_number}`,
+        order.total_price,
+        userId,
+        points
+      )
+    }
   }
 }
 
 async function handleOrderFulfilled(supabase: any, order: ShopifyOrder) {
   console.log(`Order #${order.order_number} fulfilled`)
+
+  const customerName = order.customer 
+    ? `${order.customer.first_name} ${order.customer.last_name}` 
+    : 'Valued Customer'
 
   // Update order status
   await supabase
@@ -204,10 +273,28 @@ async function handleOrderFulfilled(supabase: any, order: ShopifyOrder) {
       updated_at: new Date().toISOString()
     })
     .eq('order_number', `SHOP-${order.order_number}`)
+
+  // Find user for notification
+  const { data: users } = await supabase.auth.admin.listUsers()
+  const user = users?.users?.find((u: any) => u.email === order.email)
+
+  // Send shipped/delivered email
+  await sendEmailNotification(
+    'order_delivered',
+    order.email,
+    customerName,
+    `SHOP-${order.order_number}`,
+    order.total_price,
+    user?.id
+  )
 }
 
 async function handleOrderCancelled(supabase: any, order: ShopifyOrder) {
   console.log(`Order #${order.order_number} cancelled`)
+
+  const customerName = order.customer 
+    ? `${order.customer.first_name} ${order.customer.last_name}` 
+    : 'Valued Customer'
 
   // Update order status
   const { data: existingOrder } = await supabase
@@ -220,20 +307,57 @@ async function handleOrderCancelled(supabase: any, order: ShopifyOrder) {
     .select()
     .single()
 
+  // Find user
+  const { data: users } = await supabase.auth.admin.listUsers()
+  const user = users?.users?.find((u: any) => u.email === order.email)
+
+  // Send cancellation email
+  await sendEmailNotification(
+    'order_cancelled',
+    order.email,
+    customerName,
+    `SHOP-${order.order_number}`,
+    order.total_price,
+    user?.id
+  )
+
   // Reverse loyalty points if applicable
   if (existingOrder?.user_id && existingOrder.user_id !== '00000000-0000-0000-0000-000000000000') {
     const pointsToRemove = calculateLoyaltyPoints(parseFloat(order.total_price))
     
-    // Deduct points
-    await supabase.rpc('adjust_loyalty_points', {
-      user_id: existingOrder.user_id,
-      points: -pointsToRemove,
-      description: `Points reversed for cancelled order #${order.order_number}`
-    })
+    // Get current profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('loyalty_points')
+      .eq('id', existingOrder.user_id)
+      .single()
+
+    if (profile) {
+      const newPoints = Math.max(0, (profile.loyalty_points || 0) - pointsToRemove)
+      
+      await supabase
+        .from('profiles')
+        .update({ 
+          loyalty_points: newPoints,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingOrder.user_id)
+
+      // Create reversal transaction
+      await supabase
+        .from('loyalty_transactions')
+        .insert({
+          user_id: existingOrder.user_id,
+          type: 'deducted',
+          points: -pointsToRemove,
+          description: `Points reversed for cancelled order #${order.order_number}`,
+          order_id: `SHOP-${order.order_number}`
+        })
+    }
   }
 }
 
-async function awardLoyaltyPoints(supabase: any, userId: string, order: ShopifyOrder) {
+async function awardLoyaltyPoints(supabase: any, userId: string, order: ShopifyOrder): Promise<number> {
   const points = calculateLoyaltyPoints(parseFloat(order.total_price))
   
   console.log(`Awarding ${points} loyalty points to user ${userId}`)
@@ -247,7 +371,7 @@ async function awardLoyaltyPoints(supabase: any, userId: string, order: ShopifyO
 
   if (!profile) {
     console.log('Profile not found for user')
-    return
+    return 0
   }
 
   // Update loyalty points
@@ -263,7 +387,7 @@ async function awardLoyaltyPoints(supabase: any, userId: string, order: ShopifyO
 
   if (updateError) {
     console.error('Failed to update loyalty points:', updateError)
-    return
+    return 0
   }
 
   // Create loyalty transaction
@@ -282,6 +406,8 @@ async function awardLoyaltyPoints(supabase: any, userId: string, order: ShopifyO
   }
 
   console.log(`Loyalty points updated: ${profile.loyalty_points} -> ${newPoints}`)
+  
+  return points
 }
 
 function calculateLoyaltyPoints(orderTotal: number): number {
