@@ -20,7 +20,7 @@ export default function EnhancedIndex() {
         <link rel="canonical" href="https://kapraye.com" />
       </Helmet>
       
-      <MainLayout>
+      <MainLayout hasHero={true}>
         <PremiumHero />
         <PremiumCategories />
         <AboutSection />

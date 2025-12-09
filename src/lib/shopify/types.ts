@@ -3,8 +3,18 @@ export interface ShopifyProduct {
     id: string;
     title: string;
     description: string;
+    descriptionHtml?: string;
     handle: string;
+    tags?: string[];
+    productType?: string;
+    vendor?: string;
     priceRange: {
+      minVariantPrice: {
+        amount: string;
+        currencyCode: string;
+      };
+    };
+    compareAtPriceRange?: {
       minVariantPrice: {
         amount: string;
         currencyCode: string;
@@ -27,7 +37,12 @@ export interface ShopifyProduct {
             amount: string;
             currencyCode: string;
           };
+          compareAtPrice?: {
+            amount: string;
+            currencyCode: string;
+          };
           availableForSale: boolean;
+          quantityAvailable?: number;
           selectedOptions: Array<{
             name: string;
             value: string;
