@@ -12,7 +12,6 @@ import EnhancedIndex from "./pages/EnhancedIndex";
 import Auth from "./pages/auth";
 import Dashboard from "./pages/dashboard";
 import ShopifyProductPage from "./pages/shopify/ShopifyProductPage";
-import DynamicProductPage from "./pages/product/DynamicProductPage";
 import ShopifyCheckoutPage from "./pages/shopify-checkout";
 import OrderSuccess from "./pages/order-success";
 import Wishlist from "./pages/wishlist";
@@ -69,7 +68,7 @@ function App() {
                 <Route path="/" element={<EnhancedIndex />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/dashboard/*" element={<Dashboard />} />
-                <Route path="/product/:slug" element={<DynamicProductPage />} />
+                <Route path="/product/:handle" element={<ShopifyProductPage />} />
                 <Route path="/shop/:handle" element={<ShopifyProductPage />} />
                 <Route path="/checkout" element={<ShopifyCheckoutPage />} />
                 <Route path="/cart" element={<ShopifyCheckoutPage />} />
