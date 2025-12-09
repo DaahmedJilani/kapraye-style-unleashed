@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SettingsMenu } from "@/components/settings/settings-menu";
 import { AccountDropdown } from "@/components/account/account-dropdown";
-import { EnhancedShoppingCart } from "@/components/woocommerce/EnhancedShoppingCart";
+import { CartDrawer } from "@/components/shopify/CartDrawer";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
@@ -176,7 +176,7 @@ export function PremiumNavbar() {
             </div>
 
             {/* Cart & Account */}
-            <EnhancedShoppingCart />
+            <CartDrawer />
             <AccountDropdown />
 
             {/* Mobile Menu Toggle */}

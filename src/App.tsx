@@ -14,6 +14,7 @@ import { ProtectedRoute } from "./components/auth/protected-route";
 import EnhancedIndex from "./pages/EnhancedIndex";
 import Auth from "./pages/auth";
 import Dashboard from "./pages/dashboard";
+import ShopifyProductPage from "./pages/shopify/ShopifyProductPage";
 import DynamicProductPage from "./pages/product/DynamicProductPage";
 import EnhancedCheckoutPage from "./pages/enhanced-checkout";
 import Wishlist from "./pages/wishlist";
@@ -73,6 +74,7 @@ function App() {
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/dashboard/*" element={<Dashboard />} />
                     <Route path="/product/:slug" element={<DynamicProductPage />} />
+                    <Route path="/shop/:handle" element={<ShopifyProductPage />} />
                     <Route path="/checkout" element={<EnhancedCheckoutPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/loyalty" element={<Loyalty />} />
