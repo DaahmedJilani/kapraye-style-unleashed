@@ -18,23 +18,36 @@ interface NavLink {
   href: string;
 }
 
-const mainLinks: NavLink[] = [
-  { name: "Men", href: "/men" },
-  { name: "Kids", href: "/kids" },
-];
-
+// Women subcategories - product based
 const womenLinks: NavLink[] = [
   { name: "All Women", href: "/women" },
-  { name: "Eastern", href: "/eastern" },
-  { name: "Western", href: "/western" },
-  { name: "Saudi Style", href: "/saudi" },
+  { name: "Stitched", href: "/women/stitched" },
+  { name: "Unstitched", href: "/women/unstitched" },
+  { name: "T-Shirts", href: "/women/tshirts" },
+  { name: "Jeans", href: "/women/jeans" },
+  { name: "Bodycon", href: "/women/bodycon" },
+  { name: "Western Dresses", href: "/women/western-dresses" },
+  { name: "Undergarments", href: "/women/undergarments" },
 ];
 
-const secondaryLinks: NavLink[] = [
-  { name: "Makeup", href: "/makeup" },
-  { name: "Accessories", href: "/accessories" },
-  { name: "Perfumes", href: "/perfumes" },
-  { name: "Shoes", href: "/shoes" },
+// Men subcategories - product based
+const menLinks: NavLink[] = [
+  { name: "All Men", href: "/men" },
+  { name: "Stitched", href: "/men/stitched" },
+  { name: "Unstitched", href: "/men/unstitched" },
+  { name: "T-Shirts", href: "/men/tshirts" },
+  { name: "Jeans", href: "/men/jeans" },
+  { name: "Formal", href: "/men/formal" },
+  { name: "Casual", href: "/men/casual" },
+];
+
+// Kids subcategories
+const kidsLinks: NavLink[] = [
+  { name: "All Kids", href: "/kids" },
+  { name: "Rompers", href: "/kids/rompers" },
+  { name: "Bodysuits", href: "/kids/bodysuits" },
+  { name: "T-Shirts", href: "/kids/tshirts" },
+  { name: "Dresses", href: "/kids/dresses" },
 ];
 
 export function PremiumNavbar() {
@@ -58,6 +71,7 @@ export function PremiumNavbar() {
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
       setSearchTerm("");
       setSearchOpen(false);
+      setMobileMenuOpen(false);
     }
   };
 
@@ -78,11 +92,11 @@ export function PremiumNavbar() {
           <Link to="/" className="flex items-center gap-2 group">
             <motion.span
               whileHover={{ scale: 1.02 }}
-              className="text-3xl md:text-4xl font-above-beyond text-primary font-normal transition-colors"
+              className="text-2xl sm:text-3xl md:text-4xl font-above-beyond text-primary font-normal transition-colors"
             >
               Kaprayé
             </motion.span>
-            <span className="text-sm font-allure text-muted hidden sm:block mt-2">
+            <span className="text-xs sm:text-sm font-allure text-muted hidden sm:block mt-2">
               By Rayan
             </span>
           </Link>
@@ -115,33 +129,57 @@ export function PremiumNavbar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {mainLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className={`relative text-sm font-medium px-4 py-2 rounded-full transition-colors group ${
-                  isScrolled ? "hover:bg-muted" : "hover:bg-foreground/5"
-                }`}
-              >
-                {link.name}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-1/2 rounded-full" />
-              </Link>
-            ))}
+            {/* Men Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+                    isScrolled ? "hover:bg-muted" : "hover:bg-foreground/5"
+                  }`}
+                >
+                  Men
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="min-w-[180px] p-2">
+                {menLinks.map((link) => (
+                  <DropdownMenuItem
+                    key={link.name}
+                    className="cursor-pointer rounded-md px-3 py-2"
+                    onSelect={() => navigate(link.href)}
+                  >
+                    {link.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            <div className="h-5 w-px bg-border mx-2" />
-
-            {secondaryLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className={`relative text-sm font-medium px-3 py-2 rounded-full transition-colors group ${
-                  isScrolled ? "hover:bg-muted" : "hover:bg-foreground/5"
-                }`}
-              >
-                {link.name}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-1/2 rounded-full" />
-              </Link>
-            ))}
+            {/* Kids Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+                    isScrolled ? "hover:bg-muted" : "hover:bg-foreground/5"
+                  }`}
+                >
+                  Kids
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="min-w-[180px] p-2">
+                {kidsLinks.map((link) => (
+                  <DropdownMenuItem
+                    key={link.name}
+                    className="cursor-pointer rounded-md px-3 py-2"
+                    onSelect={() => navigate(link.href)}
+                  >
+                    {link.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Right Actions */}
@@ -235,13 +273,13 @@ export function PremiumNavbar() {
             transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
             className="lg:hidden fixed inset-0 top-0 bg-background z-40 overflow-y-auto"
           >
-            <div className="container py-24 px-6 flex flex-col">
+            <div className="container py-20 px-6 flex flex-col min-h-screen">
               {/* Close Button Area */}
               <div className="absolute top-4 right-4">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full"
+                  className="rounded-full h-12 w-12"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <X className="h-6 w-6" />
@@ -249,13 +287,13 @@ export function PremiumNavbar() {
               </div>
 
               {/* Search */}
-              <form onSubmit={handleSearch} className="mb-8">
+              <form onSubmit={handleSearch} className="mb-8 mt-4">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="search"
                     placeholder="Search..."
-                    className="w-full pl-12 pr-4 py-3 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full pl-12 pr-4 py-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary text-base"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -263,22 +301,23 @@ export function PremiumNavbar() {
               </form>
 
               {/* Navigation Links */}
-              <div className="space-y-6">
+              <div className="space-y-8 flex-1">
+                {/* Women Section */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
+                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4 font-medium">
                     Women
                   </h3>
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {womenLinks.map((link, index) => (
                       <motion.div
                         key={link.name}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
+                        transition={{ delay: index * 0.03 }}
                       >
                         <Link
                           to={link.href}
-                          className="block text-2xl font-playfair text-foreground hover:text-secondary transition-colors py-2"
+                          className="block text-lg font-medium text-foreground hover:text-secondary transition-colors py-3 px-4 rounded-lg hover:bg-muted/50 active:bg-muted"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {link.name}
@@ -290,21 +329,22 @@ export function PremiumNavbar() {
 
                 <div className="h-px bg-border" />
 
+                {/* Men Section */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-                    Collections
+                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4 font-medium">
+                    Men
                   </h3>
-                  <div className="space-y-2">
-                    {mainLinks.map((link, index) => (
+                  <div className="grid grid-cols-2 gap-2">
+                    {menLinks.map((link, index) => (
                       <motion.div
                         key={link.name}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: (womenLinks.length + index) * 0.05 }}
+                        transition={{ delay: (womenLinks.length + index) * 0.03 }}
                       >
                         <Link
                           to={link.href}
-                          className="block text-2xl font-playfair text-foreground hover:text-secondary transition-colors py-2"
+                          className="block text-lg font-medium text-foreground hover:text-secondary transition-colors py-3 px-4 rounded-lg hover:bg-muted/50 active:bg-muted"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {link.name}
@@ -316,21 +356,22 @@ export function PremiumNavbar() {
 
                 <div className="h-px bg-border" />
 
+                {/* Kids Section */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-                    Categories
+                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4 font-medium">
+                    Kids
                   </h3>
                   <div className="grid grid-cols-2 gap-2">
-                    {secondaryLinks.map((link, index) => (
+                    {kidsLinks.map((link, index) => (
                       <motion.div
                         key={link.name}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: (womenLinks.length + mainLinks.length + index) * 0.05 }}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (womenLinks.length + menLinks.length + index) * 0.03 }}
                       >
                         <Link
                           to={link.href}
-                          className="block text-lg text-foreground hover:text-secondary transition-colors py-2"
+                          className="block text-lg font-medium text-foreground hover:text-secondary transition-colors py-3 px-4 rounded-lg hover:bg-muted/50 active:bg-muted"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {link.name}
@@ -342,10 +383,10 @@ export function PremiumNavbar() {
               </div>
 
               {/* Bottom Actions */}
-              <div className="mt-auto pt-8 space-y-4">
+              <div className="pt-8 pb-4 space-y-3 border-t border-border mt-8">
                 <Link
                   to="/wishlist"
-                  className="flex items-center gap-3 text-lg text-foreground hover:text-secondary transition-colors"
+                  className="flex items-center gap-3 text-lg font-medium text-foreground hover:text-secondary transition-colors py-3 px-4 rounded-lg hover:bg-muted/50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Heart className="w-5 h-5" />
@@ -353,15 +394,15 @@ export function PremiumNavbar() {
                 </Link>
                 <Link
                   to="/loyalty"
-                  className="flex items-center gap-3 text-lg text-foreground hover:text-secondary transition-colors"
+                  className="flex items-center gap-3 text-lg font-medium text-foreground hover:text-secondary transition-colors py-3 px-4 rounded-lg hover:bg-muted/50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-secondary-foreground">
+                  <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-secondary-foreground">
                     S
                   </span>
                   SHUKRAN Loyalty
                 </Link>
-                <div className="pt-4">
+                <div className="pt-2 px-4">
                   <SettingsMenu />
                 </div>
               </div>
