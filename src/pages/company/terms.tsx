@@ -1,4 +1,3 @@
-
 import { MainLayout } from "@/components/layout/main-layout";
 
 export default function TermsPage() {
@@ -10,22 +9,78 @@ export default function TermsPage() {
           
           <div className="prose prose-lg">
             <p className="text-lg mb-6">
-              Welcome to <span className="font-above-beyond">Kaprayé</span>. By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.
+              Welcome to <span className="font-above-beyond">Kaprayé</span>. These Terms and Conditions govern your use of our website and services. By accessing or using our website, you agree to be bound by these terms.
+            </p>
+
+            <p className="text-sm text-muted-foreground mb-6">Last updated: {new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">1. Acceptance of Terms</h2>
+            <p className="mb-6">
+              By using this website, you confirm that you are at least 18 years old or have obtained parental consent. If you do not agree with these terms, please do not use our services.
             </p>
             
-            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">1. Use License</h2>
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">2. Products and Pricing</h2>
+            <p className="mb-4">All prices are listed in Pakistani Rupees (PKR) and include applicable taxes unless otherwise stated.</p>
+            <ul className="list-disc pl-6 mb-6 space-y-2">
+              <li>We reserve the right to modify prices without prior notice</li>
+              <li>Product images are for illustration purposes; actual colors may vary slightly</li>
+              <li>We make every effort to ensure product descriptions are accurate</li>
+              <li>Availability of products is subject to stock levels</li>
+            </ul>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">3. Orders and Payment</h2>
+            <p className="mb-4">When you place an order:</p>
+            <ul className="list-disc pl-6 mb-6 space-y-2">
+              <li>You are making an offer to purchase the products</li>
+              <li>We reserve the right to accept or reject any order</li>
+              <li>Order confirmation will be sent via email/SMS</li>
+              <li>Payment methods accepted: Cash on Delivery (COD), Bank Transfer, JazzCash, EasyPaisa</li>
+            </ul>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">4. Delivery</h2>
             <p className="mb-6">
-              Permission is granted to temporarily download one copy of the materials (information or software) on <span className="font-above-beyond">Kaprayé</span>'s website for personal, non-commercial transitory viewing only.
+              We deliver across Pakistan. Delivery times and charges are as specified in our Shipping Policy. Risk of loss transfers to you upon delivery.
             </p>
             
-            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">2. Disclaimer</h2>
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">5. Returns and Refunds</h2>
             <p className="mb-6">
-              The materials on <span className="font-above-beyond">Kaprayé</span>'s website are provided on an 'as is' basis. <span className="font-above-beyond">Kaprayé</span> makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+              Returns and refunds are subject to our Refund Policy. Please review our Refund Policy for detailed information on eligibility and process.
             </p>
             
-            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">3. Limitations</h2>
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">6. Intellectual Property</h2>
             <p className="mb-6">
-              In no event shall <span className="font-above-beyond">Kaprayé</span> or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on <span className="font-above-beyond">Kaprayé</span>'s website.
+              All content on this website including text, graphics, logos, images, and software is the property of <span className="font-above-beyond">Kaprayé</span> and is protected by Pakistani and international copyright laws. Unauthorized use is prohibited.
+            </p>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">7. User Conduct</h2>
+            <p className="mb-4">You agree not to:</p>
+            <ul className="list-disc pl-6 mb-6 space-y-2">
+              <li>Use the website for any unlawful purpose</li>
+              <li>Attempt to gain unauthorized access to our systems</li>
+              <li>Transmit any viruses or malicious code</li>
+              <li>Infringe upon our intellectual property rights</li>
+            </ul>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">8. Limitation of Liability</h2>
+            <p className="mb-6">
+              To the maximum extent permitted by law, <span className="font-above-beyond">Kaprayé</span> shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our website or products.
+            </p>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">9. Governing Law</h2>
+            <p className="mb-6">
+              These Terms shall be governed by and construed in accordance with the laws of Pakistan. Any disputes shall be subject to the exclusive jurisdiction of the courts in Lahore, Pakistan.
+            </p>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">10. Changes to Terms</h2>
+            <p className="mb-6">
+              We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting on this website. Continued use of the website constitutes acceptance of modified terms.
+            </p>
+            
+            <h2 className="text-2xl font-playfair text-kapraye-burgundy mt-8 mb-4">11. Contact Information</h2>
+            <p className="mb-6">
+              For any questions regarding these Terms, please contact us at:<br />
+              Email: support@kapraye.com<br />
+              WhatsApp: +92 300 1234567
             </p>
           </div>
         </div>

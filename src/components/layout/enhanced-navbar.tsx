@@ -18,18 +18,31 @@ interface NavLink {
   href: string;
 }
 
-const mainLinks: NavLink[] = [
-  { name: "Men", href: "/men" },
-  { name: "Kids", href: "/kids" },
-];
-
 const womenLinks: NavLink[] = [
-  { name: "Women", href: "/women" },
-  { name: "Eastern", href: "/eastern" },
-  { name: "Western", href: "/western" },
-  { name: "Saudi Style", href: "/saudi" },
+  { name: "All Women", href: "/women" },
+  { name: "Unstitched", href: "/women/unstitched" },
+  { name: "Stitched", href: "/women/stitched" },
+  { name: "Tees", href: "/women/tees" },
+  { name: "Bottoms", href: "/women/bottoms" },
+  { name: "Under-garments", href: "/women/undergarments" },
+  { name: "Bodycon", href: "/women/bodycon" },
+  { name: "Western Dresses", href: "/women/western-dresses" },
+  { name: "Beauty & Cosmetics", href: "/women/beauty-cosmetics" },
 ];
 
+const menLinks: NavLink[] = [
+  { name: "All Men", href: "/men" },
+  { name: "Unstitched", href: "/men/unstitched" },
+  { name: "Tees", href: "/men/tees" },
+  { name: "Bottoms", href: "/men/bottoms" },
+];
+
+const kidsLinks: NavLink[] = [
+  { name: "All Kids", href: "/kids" },
+  { name: "Boys", href: "/kids/boys" },
+  { name: "Girls", href: "/kids/girls" },
+  { name: "Babies", href: "/kids/babies" },
+];
 
 export function EnhancedNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -81,18 +94,8 @@ export function EnhancedNavbar() {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-6">
-          {mainLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-kapraye-pink ${
-                isScrolled ? 'text-foreground' : 'text-white hover:text-kapraye-cream'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+        <div className="hidden lg:flex items-center space-x-4">
+          {/* Women Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -104,15 +107,62 @@ export function EnhancedNavbar() {
                 Women <ChevronDown className="w-4 h-4 ml-1" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="min-w-[160px]">
+            <DropdownMenuContent align="start" className="min-w-[180px]">
               {womenLinks.map((link) => (
                 <DropdownMenuItem
                   key={link.name}
                   className="cursor-pointer"
-                  onSelect={() => {
-                    setMobileMenuOpen(false);
-                    navigate(link.href);
-                  }}
+                  onSelect={() => navigate(link.href)}
+                >
+                  {link.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Men Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
+                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                }`}
+              >
+                Men <ChevronDown className="w-4 h-4 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[160px]">
+              {menLinks.map((link) => (
+                <DropdownMenuItem
+                  key={link.name}
+                  className="cursor-pointer"
+                  onSelect={() => navigate(link.href)}
+                >
+                  {link.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Kids Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`flex items-center text-sm font-medium px-2 py-1 transition-colors ${
+                  isScrolled ? 'text-foreground hover:text-kapraye-pink' : 'text-white hover:text-kapraye-cream'
+                }`}
+              >
+                Kids <ChevronDown className="w-4 h-4 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[140px]">
+              {kidsLinks.map((link) => (
+                <DropdownMenuItem
+                  key={link.name}
+                  className="cursor-pointer"
+                  onSelect={() => navigate(link.href)}
                 >
                   {link.name}
                 </DropdownMenuItem>
@@ -176,7 +226,7 @@ export function EnhancedNavbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in">
+        <div className="lg:hidden fixed inset-0 top-16 bg-background z-40 animate-fade-in overflow-y-auto">
           <div className="container py-6 px-4 flex flex-col space-y-6">
             {/* Search Form */}
             <form className="mb-6" onSubmit={handleSearch}>
@@ -198,18 +248,8 @@ export function EnhancedNavbar() {
             </form>
 
             {/* Navigation Links */}
-            <div className="flex flex-col space-y-3">
-              <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Collections</h3>
-              {mainLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
+            <div className="flex flex-col space-y-4">
+              {/* Women Section */}
               <div>
                 <div className="text-base py-2 font-medium text-kapraye-burgundy">Women</div>
                 <div className="flex flex-col pl-4 space-y-1">
@@ -217,7 +257,41 @@ export function EnhancedNavbar() {
                     <Link
                       key={link.name}
                       to={link.href}
-                      className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Men Section */}
+              <div>
+                <div className="text-base py-2 font-medium text-kapraye-burgundy">Men</div>
+                <div className="flex flex-col pl-4 space-y-1">
+                  {menLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Kids Section */}
+              <div>
+                <div className="text-base py-2 font-medium text-kapraye-burgundy">Kids</div>
+                <div className="flex flex-col pl-4 space-y-1">
+                  {kidsLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      className="text-sm py-2 text-foreground hover:text-kapraye-pink transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.name}
@@ -226,7 +300,6 @@ export function EnhancedNavbar() {
                 </div>
               </div>
             </div>
-            
             
             <div className="w-full h-px bg-kapraye-mauve/30"></div>
             
