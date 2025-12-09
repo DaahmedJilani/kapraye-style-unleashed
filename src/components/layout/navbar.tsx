@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, User, Menu, X, ChevronDown } from "lucide-react";
+import { Search, User, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SettingsMenu } from "@/components/settings/settings-menu";
 import { AccountDropdown } from "@/components/account/account-dropdown";
-import { EnhancedShoppingCart } from "@/components/woocommerce/EnhancedShoppingCart";
+import { CartDrawer } from "@/components/shopify/CartDrawer";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -136,7 +136,7 @@ export function Navbar() {
             <SettingsMenu />
           </div>
           <div className="flex items-center gap-2">
-            <EnhancedShoppingCart />
+            <CartDrawer />
             <AccountDropdown />
           </div>
           <button

@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { WCProduct } from '@/lib/woocommerce';
+import type { ShopifyProduct } from '@/lib/shopify/types';
 
 interface WishlistItem {
   id: string;
@@ -41,7 +40,7 @@ export function useWishlist() {
     }
   };
 
-  const addToWishlist = async (product: WCProduct) => {
+  const addToWishlist = async (product: ShopifyProduct) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -53,18 +52,21 @@ export function useWishlist() {
         return false;
       }
 
+      const price = product.node.priceRange?.minVariantPrice?.amount;
+      const image = product.node.images?.edges?.[0]?.node?.url;
+
       const { error } = await supabase
         .from('wishlist_items')
         .insert({
           user_id: user.id,
-          product_id: product.id,
-          product_name: product.name,
-          product_image: product.images[0]?.src || null,
-          product_price: parseFloat(product.price) || null,
+          product_id: parseInt(product.node.id.replace(/\D/g, '').slice(0, 8)) || Date.now(),
+          product_name: product.node.title,
+          product_image: image || null,
+          product_price: price ? parseFloat(price) : null,
         });
 
       if (error) {
-        if (error.code === '23505') { // Unique constraint violation
+        if (error.code === '23505') {
           toast({
             title: "Already in wishlist",
             description: "This item is already in your wishlist.",
@@ -77,7 +79,7 @@ export function useWishlist() {
       await fetchWishlist();
       toast({
         title: "Added to wishlist",
-        description: `${product.name} has been added to your wishlist.`,
+        description: `${product.node.title} has been added to your wishlist.`,
       });
       return true;
     } catch (err: any) {
@@ -157,7 +159,6 @@ export function useWishlist() {
   useEffect(() => {
     fetchWishlist().finally(() => setLoading(false));
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (session?.user) {
