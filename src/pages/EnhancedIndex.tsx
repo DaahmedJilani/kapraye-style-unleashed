@@ -1,8 +1,6 @@
 import { MainLayout } from "@/components/layout/main-layout";
 import { PremiumHero } from "@/components/home/premium-hero";
 import { PremiumCategories } from "@/components/home/premium-categories";
-import { FeaturedProducts } from "@/components/home/featured-products";
-import { TrustSection } from "@/components/home/trust-section";
 import { LoyaltySection } from "@/components/home/loyalty-section";
 import { NewsletterSection } from "@/components/home/newsletter-section";
 import { AboutSection } from "@/components/home/about-section";
@@ -26,8 +24,6 @@ export default function EnhancedIndex() {
         <PremiumHero />
         <PremiumCategories />
         <AboutSection />
-        <FeaturedProducts />
-        <TrustSection />
         <LoyaltySection />
         <NewsletterSection />
       </MainLayout>
