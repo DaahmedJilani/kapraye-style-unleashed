@@ -30,12 +30,6 @@ const womenLinks: NavLink[] = [
   { name: "Saudi Style", href: "/saudi" },
 ];
 
-const secondaryLinks: NavLink[] = [
-  { name: "Makeup", href: "/makeup" },
-  { name: "Accessories", href: "/accessories" },
-  { name: "Perfumes", href: "/perfumes" },
-  { name: "Shoes", href: "/shoes" },
-];
 
 export function EnhancedNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -125,18 +119,6 @@ export function EnhancedNavbar() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className={`h-4 w-px mx-2 ${isScrolled ? 'bg-kapraye-mauve/40' : 'bg-white/40'}`} />
-          {secondaryLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-kapraye-pink ${
-                isScrolled ? 'text-foreground' : 'text-white hover:text-kapraye-cream'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
         </div>
 
         {/* Compact Search and Right Actions */}
@@ -245,21 +227,6 @@ export function EnhancedNavbar() {
               </div>
             </div>
             
-            <div className="w-full h-px bg-kapraye-mauve/30"></div>
-            
-            <div className="flex flex-col space-y-3">
-              <h3 className="text-lg font-playfair font-medium text-kapraye-burgundy">Categories</h3>
-              {secondaryLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-base py-2 text-foreground hover:text-kapraye-pink transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
             
             <div className="w-full h-px bg-kapraye-mauve/30"></div>
             

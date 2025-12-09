@@ -28,10 +28,6 @@ import Kids from "./pages/categories/kids";
 import Eastern from "./pages/categories/eastern";
 import Western from "./pages/categories/western";
 import Saudi from "./pages/categories/saudi";
-import Makeup from "./pages/categories/makeup";
-import Accessories from "./pages/categories/accessories";
-import Perfumes from "./pages/categories/perfumes";
-import Shoes from "./pages/categories/shoes";
 
 // Company pages
 import About from "./pages/company/about";
@@ -87,10 +83,6 @@ function App() {
                 <Route path="/eastern" element={<Eastern />} />
                 <Route path="/western" element={<Western />} />
                 <Route path="/saudi" element={<Saudi />} />
-                <Route path="/makeup" element={<Makeup />} />
-                <Route path="/accessories" element={<Accessories />} />
-                <Route path="/perfumes" element={<Perfumes />} />
-                <Route path="/shoes" element={<Shoes />} />
 
                 {/* Company pages */}
                 <Route path="/about" element={<About />} />
