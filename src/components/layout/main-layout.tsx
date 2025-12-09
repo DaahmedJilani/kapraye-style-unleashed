@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { PremiumNavbar } from "./premium-navbar";
+import { EnhancedNavbar } from "./enhanced-navbar";
 import { Footer } from "./footer";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 
@@ -10,7 +10,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <PremiumNavbar />
+      <EnhancedNavbar />
       <main className="flex-1">
         {children}
       </main>
