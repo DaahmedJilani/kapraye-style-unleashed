@@ -29,7 +29,7 @@ const Index = () => {
   }, []);
 
   return (
-    <MainLayout useTransparentNavbar>
+    <MainLayout>
       <PremiumHero />
       <PremiumCategories />
       <AboutSection />
