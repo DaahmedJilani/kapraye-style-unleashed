@@ -64,8 +64,8 @@ export default function ContactPage() {
               <Mail className="h-6 w-6 text-kapraye-burgundy" />
               <div>
                 <h3 className="font-medium mb-1">Email Us</h3>
-                <a href="mailto:support@kapraye.com" className="text-sm text-muted-foreground hover:text-kapraye-burgundy transition-colors">
-                  support@kapraye.com
+                <a href="mailto:support@kaprayé.com" className="text-sm text-muted-foreground hover:text-kapraye-burgundy transition-colors">
+                  support@kaprayé.com
                 </a>
               </div>
             </div>
@@ -74,8 +74,8 @@ export default function ContactPage() {
               <Phone className="h-6 w-6 text-kapraye-burgundy" />
               <div>
                 <h3 className="font-medium mb-1">Call Us</h3>
-                <a href="tel:+923001234567" className="text-sm text-muted-foreground hover:text-kapraye-burgundy transition-colors">
-                  +92 300 1234567
+                <a href="tel:+923360126555" className="text-sm text-muted-foreground hover:text-kapraye-burgundy transition-colors">
+                  +92 336 0126555
                 </a>
               </div>
             </div>
