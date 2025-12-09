@@ -1,12 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { WooCommerceCartProvider } from "./contexts/WooCommerceCartContext";
-import { CartProvider } from "./contexts/CartContext";
 import { AppSettingsProvider } from "./contexts/AppSettingsContext";
 import { ProtectedRoute } from "./components/auth/protected-route";
 
@@ -16,7 +13,8 @@ import Auth from "./pages/auth";
 import Dashboard from "./pages/dashboard";
 import ShopifyProductPage from "./pages/shopify/ShopifyProductPage";
 import DynamicProductPage from "./pages/product/DynamicProductPage";
-import EnhancedCheckoutPage from "./pages/enhanced-checkout";
+import ShopifyCheckoutPage from "./pages/shopify-checkout";
+import OrderSuccess from "./pages/order-success";
 import Wishlist from "./pages/wishlist";
 import Loyalty from "./pages/loyalty";
 import Search from "./pages/search";
@@ -62,64 +60,62 @@ function App() {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <AppSettingsProvider>
-          <CartProvider>
-            <WooCommerceCartProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
-                  <Routes>
-                    {/* Main pages */}
-                    <Route path="/" element={<EnhancedIndex />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/dashboard/*" element={<Dashboard />} />
-                    <Route path="/product/:slug" element={<DynamicProductPage />} />
-                    <Route path="/shop/:handle" element={<ShopifyProductPage />} />
-                    <Route path="/checkout" element={<EnhancedCheckoutPage />} />
-                    <Route path="/wishlist" element={<Wishlist />} />
-                    <Route path="/loyalty" element={<Loyalty />} />
-                    <Route path="/search" element={<Search />} />
-                    <Route path="/quiz" element={<Quiz />} />
-                    <Route path="/recommendations" element={<Recommendations />} />
-                    <Route path="/notes" element={<Notes />} />
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Main pages */}
+                <Route path="/" element={<EnhancedIndex />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="/product/:slug" element={<DynamicProductPage />} />
+                <Route path="/shop/:handle" element={<ShopifyProductPage />} />
+                <Route path="/checkout" element={<ShopifyCheckoutPage />} />
+                <Route path="/cart" element={<ShopifyCheckoutPage />} />
+                <Route path="/order-success" element={<OrderSuccess />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/loyalty" element={<Loyalty />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                <Route path="/notes" element={<Notes />} />
 
-                    {/* Category pages */}
-                    <Route path="/men" element={<Men />} />
-                    <Route path="/women" element={<Women />} />
-                    <Route path="/kids" element={<Kids />} />
-                    <Route path="/eastern" element={<Eastern />} />
-                    <Route path="/western" element={<Western />} />
-                    <Route path="/saudi" element={<Saudi />} />
-                    <Route path="/makeup" element={<Makeup />} />
-                    <Route path="/accessories" element={<Accessories />} />
-                    <Route path="/perfumes" element={<Perfumes />} />
-                    <Route path="/shoes" element={<Shoes />} />
+                {/* Category pages */}
+                <Route path="/men" element={<Men />} />
+                <Route path="/women" element={<Women />} />
+                <Route path="/kids" element={<Kids />} />
+                <Route path="/eastern" element={<Eastern />} />
+                <Route path="/western" element={<Western />} />
+                <Route path="/saudi" element={<Saudi />} />
+                <Route path="/makeup" element={<Makeup />} />
+                <Route path="/accessories" element={<Accessories />} />
+                <Route path="/perfumes" element={<Perfumes />} />
+                <Route path="/shoes" element={<Shoes />} />
 
-                    {/* Company pages */}
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/careers" element={<Careers />} />
+                {/* Company pages */}
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/careers" element={<Careers />} />
 
-                    {/* Admin routes - Protected */}
-                    <Route path="/admin/setup" element={<AdminSetup />} />
-                    <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                    <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-                    <Route path="/admin/products/import" element={<ProtectedRoute><AdminProductImport /></ProtectedRoute>} />
-                    <Route path="/admin/products/categories" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
-                    <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
-                    <Route path="/admin/customers" element={<ProtectedRoute><AdminCustomers /></ProtectedRoute>} />
-                    <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
-                    <Route path="/admin/hero-slides" element={<ProtectedRoute><AdminHeroSlides /></ProtectedRoute>} />
+                {/* Admin routes - Protected */}
+                <Route path="/admin/setup" element={<AdminSetup />} />
+                <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+                <Route path="/admin/products/import" element={<ProtectedRoute><AdminProductImport /></ProtectedRoute>} />
+                <Route path="/admin/products/categories" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
+                <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
+                <Route path="/admin/customers" element={<ProtectedRoute><AdminCustomers /></ProtectedRoute>} />
+                <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
+                <Route path="/admin/hero-slides" element={<ProtectedRoute><AdminHeroSlides /></ProtectedRoute>} />
 
-                    {/* 404 page */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
-            </WooCommerceCartProvider>
-          </CartProvider>
+                {/* 404 page */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
         </AppSettingsProvider>
       </QueryClientProvider>
     </HelmetProvider>
