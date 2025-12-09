@@ -96,7 +96,6 @@ export function Footer() {
               <li><Link to="/women" className="text-white/80 hover:text-white transition-colors">Women</Link></li>
               <li><Link to="/men" className="text-white/80 hover:text-white transition-colors">Men</Link></li>
               <li><Link to="/kids" className="text-white/80 hover:text-white transition-colors">Kids</Link></li>
-              <li><Link to="/accessories" className="text-white/80 hover:text-white transition-colors">Accessories</Link></li>
             </ul>
           </div>
 
@@ -104,10 +103,10 @@ export function Footer() {
           <div>
             <h3 className="font-playfair text-lg font-medium mb-4">Categories</h3>
             <ul className="space-y-3">
-              <li><Link to="/eastern" className="text-white/80 hover:text-white transition-colors">Eastern Wear</Link></li>
-              <li><Link to="/western" className="text-white/80 hover:text-white transition-colors">Western Wear</Link></li>
-              <li><Link to="/perfumes" className="text-white/80 hover:text-white transition-colors">Perfumes</Link></li>
-              <li><Link to="/shoes" className="text-white/80 hover:text-white transition-colors">Shoes</Link></li>
+              <li><Link to="/women/unstitched" className="text-white/80 hover:text-white transition-colors">Unstitched</Link></li>
+              <li><Link to="/women/stitched" className="text-white/80 hover:text-white transition-colors">Stitched</Link></li>
+              <li><Link to="/women/tees" className="text-white/80 hover:text-white transition-colors">Tees</Link></li>
+              <li><Link to="/women/bottoms" className="text-white/80 hover:text-white transition-colors">Bottoms</Link></li>
             </ul>
           </div>
 
@@ -120,6 +119,8 @@ export function Footer() {
               <li><Link to="/careers" className="text-white/80 hover:text-white transition-colors">Careers</Link></li>
               <li><Link to="/privacy" className="text-white/80 hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="text-white/80 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/refund" className="text-white/80 hover:text-white transition-colors">Refund Policy</Link></li>
+              <li><Link to="/shipping" className="text-white/80 hover:text-white transition-colors">Shipping Policy</Link></li>
             </ul>
           </div>
 
