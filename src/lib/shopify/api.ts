@@ -156,6 +156,71 @@ const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+const PRODUCT_BY_HANDLE_FALLBACK_QUERY = `
+  query GetProductByHandleFallback($query: String!) {
+    products(first: 1, query: $query) {
+      edges {
+        node {
+          id
+          title
+          description
+          descriptionHtml
+          handle
+          tags
+          productType
+          vendor
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          compareAtPriceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          images(first: 10) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          variants(first: 100) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                availableForSale
+                quantityAvailable
+                selectedOptions {
+                  name
+                  value
+                }
+              }
+            }
+          }
+          options {
+            name
+            values
+          }
+        }
+      }
+    }
+  }
+`;
+
 const RELATED_PRODUCTS_QUERY = `
   query GetRelatedProducts($productId: ID!, $first: Int!) {
     productRecommendations(productId: $productId) {
@@ -246,22 +311,30 @@ export async function fetchShopifyProducts(first = 50, query?: string): Promise<
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct['node'] | null> {
   try {
     console.log('Fetching product by handle:', handle);
+    
+    // First try productByHandle query
     const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
     
-    if (!data) {
-      console.error('No data returned for handle:', handle);
-      return null;
+    if (data?.data?.productByHandle) {
+      console.log('Successfully fetched product via productByHandle:', data.data.productByHandle.title);
+      return data.data.productByHandle;
     }
     
-    const product = data.data?.productByHandle;
+    // Fallback: try products query with handle filter
+    console.log('productByHandle returned null, trying fallback query for handle:', handle);
+    const fallbackData = await storefrontApiRequest(PRODUCT_BY_HANDLE_FALLBACK_QUERY, { 
+      query: `handle:${handle}` 
+    });
     
-    if (!product) {
-      console.error('Product not found for handle:', handle, 'Response:', JSON.stringify(data));
-      return null;
+    const fallbackProduct = fallbackData?.data?.products?.edges?.[0]?.node;
+    
+    if (fallbackProduct) {
+      console.log('Successfully fetched product via fallback query:', fallbackProduct.title);
+      return fallbackProduct;
     }
     
-    console.log('Successfully fetched product:', product.title);
-    return product;
+    console.error('Product not found for handle:', handle);
+    return null;
   } catch (error) {
     console.error('Error fetching product by handle:', handle, error);
     return null;
