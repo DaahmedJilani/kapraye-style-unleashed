@@ -1,5 +1,4 @@
 import { ShopifyProductGrid } from "@/components/shopify/ShopifyProductGrid";
-import { ShoppingCart } from "../cart/shopping-cart";
 import { SettingsMenu } from "../settings/settings-menu";
 
 export function FeaturedProducts() {
@@ -17,7 +16,6 @@ export function FeaturedProducts() {
           </div>
           <div className="flex items-center gap-2 md:gap-4 min-w-fit">
             <SettingsMenu />
-            <ShoppingCart />
           </div>
         </div>
         

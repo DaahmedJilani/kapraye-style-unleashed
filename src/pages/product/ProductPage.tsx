@@ -1,14 +1,12 @@
-
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductInfo } from "@/components/product/product-info";
 import { ProductTabs } from "@/components/product/product-tabs";
 import { SimilarItems } from "@/components/product/similar-items";
-import { ShoppingCart } from "@/components/cart/shopping-cart";
 import { useToast } from "@/hooks/use-toast";
-import { useCart } from "@/contexts/CartContext";
+import { useCartStore } from "@/stores/cartStore";
 
 interface WishlistItem {
   id: string;
@@ -20,9 +18,8 @@ interface WishlistItem {
 
 export default function ProductPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const { addItem } = useCart();
+  const addItem = useCartStore((state) => state.addItem);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
@@ -78,13 +75,49 @@ export default function ProductPage() {
       return;
     }
     
+    // Create a mock ShopifyProduct structure for legacy product pages
+    const mockShopifyProduct = {
+      node: {
+        id: product.id,
+        title: product.name,
+        description: product.description,
+        handle: product.id,
+        priceRange: {
+          minVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: 'PKR'
+          }
+        },
+        images: {
+          edges: product.images.map(url => ({ node: { url, altText: product.name } }))
+        },
+        variants: {
+          edges: [{
+            node: {
+              id: `${product.id}-${selectedSize}`,
+              title: selectedSize,
+              price: { amount: product.price.toString(), currencyCode: 'PKR' },
+              availableForSale: true,
+              selectedOptions: [{ name: 'Size', value: selectedSize }]
+            }
+          }]
+        },
+        options: [{ name: 'Size', values: product.sizes }]
+      }
+    };
+    
     addItem({
-      id: `${product.id}-${selectedSize}`,
-      name: product.name,
-      price: product.price,
+      product: mockShopifyProduct,
+      variantId: `${product.id}-${selectedSize}`,
+      variantTitle: selectedSize,
+      price: { amount: product.price.toString(), currencyCode: 'PKR' },
       quantity: quantity,
-      image: product.images[0],
-      size: selectedSize
+      selectedOptions: [{ name: 'Size', value: selectedSize }]
+    });
+    
+    toast({
+      title: "Added to cart",
+      description: `${product.name} (Size: ${selectedSize}) has been added to your cart.`
     });
   };
 
@@ -132,9 +165,6 @@ export default function ProductPage() {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-10 mt-16 max-w-7xl">
-        <div className="flex justify-end mb-6">
-          <ShoppingCart />
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7">
             <ProductGallery 
