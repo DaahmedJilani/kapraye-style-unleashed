@@ -245,11 +245,25 @@ export async function fetchShopifyProducts(first = 50, query?: string): Promise<
 
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct['node'] | null> {
   try {
+    console.log('Fetching product by handle:', handle);
     const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
-    if (!data) return null;
-    return data.data.productByHandle;
+    
+    if (!data) {
+      console.error('No data returned for handle:', handle);
+      return null;
+    }
+    
+    const product = data.data?.productByHandle;
+    
+    if (!product) {
+      console.error('Product not found for handle:', handle, 'Response:', JSON.stringify(data));
+      return null;
+    }
+    
+    console.log('Successfully fetched product:', product.title);
+    return product;
   } catch (error) {
-    console.error('Error fetching product:', error);
+    console.error('Error fetching product by handle:', handle, error);
     return null;
   }
 }
