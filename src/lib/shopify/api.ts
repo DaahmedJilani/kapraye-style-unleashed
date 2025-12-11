@@ -97,7 +97,7 @@ const PRODUCTS_QUERY = `
 
 const PRODUCT_BY_HANDLE_QUERY = `
   query GetProductByHandle($handle: String!) {
-    productByHandle(handle: $handle) {
+    product(handle: $handle) {
       id
       title
       description
@@ -312,16 +312,15 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   try {
     console.log('Fetching product by handle:', handle);
     
-    // First try productByHandle query
     const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
     
-    if (data?.data?.productByHandle) {
-      console.log('Successfully fetched product via productByHandle:', data.data.productByHandle.title);
-      return data.data.productByHandle;
+    if (data?.data?.product) {
+      console.log('Successfully fetched product:', data.data.product.title);
+      return data.data.product;
     }
     
     // Fallback: try products query with handle filter
-    console.log('productByHandle returned null, trying fallback query for handle:', handle);
+    console.log('product() returned null, trying fallback for:', handle);
     const fallbackData = await storefrontApiRequest(PRODUCT_BY_HANDLE_FALLBACK_QUERY, { 
       query: `handle:${handle}` 
     });
@@ -329,7 +328,7 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
     const fallbackProduct = fallbackData?.data?.products?.edges?.[0]?.node;
     
     if (fallbackProduct) {
-      console.log('Successfully fetched product via fallback query:', fallbackProduct.title);
+      console.log('Successfully fetched via fallback:', fallbackProduct.title);
       return fallbackProduct;
     }
     
