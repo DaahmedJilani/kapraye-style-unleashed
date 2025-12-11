@@ -95,69 +95,9 @@ const PRODUCTS_QUERY = `
   }
 `;
 
-const PRODUCT_BY_HANDLE_QUERY = `
-  query GetProductByHandle($handle: String!) {
-    product(handle: $handle) {
-      id
-      title
-      description
-      descriptionHtml
-      handle
-      tags
-      productType
-      vendor
-      priceRange {
-        minVariantPrice {
-          amount
-          currencyCode
-        }
-      }
-      compareAtPriceRange {
-        minVariantPrice {
-          amount
-          currencyCode
-        }
-      }
-      images(first: 10) {
-        edges {
-          node {
-            url
-            altText
-          }
-        }
-      }
-      variants(first: 100) {
-        edges {
-          node {
-            id
-            title
-            price {
-              amount
-              currencyCode
-            }
-            compareAtPrice {
-              amount
-              currencyCode
-            }
-            availableForSale
-            quantityAvailable
-            selectedOptions {
-              name
-              value
-            }
-          }
-        }
-      }
-      options {
-        name
-        values
-      }
-    }
-  }
-`;
-
-const PRODUCT_BY_HANDLE_FALLBACK_QUERY = `
-  query GetProductByHandleFallback($query: String!) {
+// Single product query using products search - this is the most reliable method
+const SINGLE_PRODUCT_QUERY = `
+  query GetSingleProduct($query: String!) {
     products(first: 1, query: $query) {
       edges {
         node {
@@ -312,24 +252,16 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   try {
     console.log('Fetching product by handle:', handle);
     
-    const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
-    
-    if (data?.data?.product) {
-      console.log('Successfully fetched product:', data.data.product.title);
-      return data.data.product;
-    }
-    
-    // Fallback: try products query with handle filter
-    console.log('product() returned null, trying fallback for:', handle);
-    const fallbackData = await storefrontApiRequest(PRODUCT_BY_HANDLE_FALLBACK_QUERY, { 
+    // Use products search query - this is proven to work
+    const data = await storefrontApiRequest(SINGLE_PRODUCT_QUERY, { 
       query: `handle:${handle}` 
     });
     
-    const fallbackProduct = fallbackData?.data?.products?.edges?.[0]?.node;
+    const product = data?.data?.products?.edges?.[0]?.node;
     
-    if (fallbackProduct) {
-      console.log('Successfully fetched via fallback:', fallbackProduct.title);
-      return fallbackProduct;
+    if (product) {
+      console.log('Successfully fetched product:', product.title);
+      return product;
     }
     
     console.error('Product not found for handle:', handle);
