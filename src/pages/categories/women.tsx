@@ -64,7 +64,7 @@ export default function WomenPage() {
     <ShopifyCategoryPage
       title="Women's Collection"
       description="Explore our curated collection of women's fashion, from traditional wear to contemporary styles."
-      query="tag:women OR product_type:women"
+      query="product_type:Unstitched OR product_type:Stitched OR tag:women"
       subcategories={womenSubcategories}
     />
   );

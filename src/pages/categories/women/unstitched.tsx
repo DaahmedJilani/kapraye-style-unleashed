@@ -5,7 +5,7 @@ export default function WomenUnstitchedPage() {
     <ShopifyCategoryPage
       title="Women's Unstitched"
       description="Premium unstitched fabric collections for women. Create your own custom designs with our finest quality materials."
-      query="tag:women-unstitched OR (tag:women AND tag:unstitched)"
+      query="product_type:Unstitched"
     />
   );
 }

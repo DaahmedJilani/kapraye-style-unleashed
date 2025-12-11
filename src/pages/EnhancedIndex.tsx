@@ -1,6 +1,7 @@
 import { MainLayout } from "@/components/layout/main-layout";
 import { PremiumHero } from "@/components/home/premium-hero";
 import { PremiumCategories } from "@/components/home/premium-categories";
+import { FeaturedProducts } from "@/components/home/featured-products";
 import { LoyaltySection } from "@/components/home/loyalty-section";
 import { NewsletterSection } from "@/components/home/newsletter-section";
 import { AboutSection } from "@/components/home/about-section";
@@ -23,6 +24,7 @@ export default function EnhancedIndex() {
       <MainLayout hasHero={true}>
         <PremiumHero />
         <PremiumCategories />
+        <FeaturedProducts />
         <AboutSection />
         <LoyaltySection />
         <NewsletterSection />
