@@ -138,13 +138,12 @@ const SINGLE_PRODUCT_QUERY = `
                   amount
                   currencyCode
                 }
-                compareAtPrice {
-                  amount
-                  currencyCode
-                }
-                availableForSale
-                quantityAvailable
-                selectedOptions {
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            availableForSale
+            selectedOptions {
                   name
                   value
                 }
