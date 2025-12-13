@@ -161,7 +161,7 @@ const SINGLE_PRODUCT_QUERY = `
 `;
 
 const RELATED_PRODUCTS_QUERY = `
-  query GetRelatedProducts($productId: ID!, $first: Int!) {
+  query GetRelatedProducts($productId: ID!) {
     productRecommendations(productId: $productId) {
       id
       title
@@ -271,9 +271,9 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   }
 }
 
-export async function fetchRelatedProducts(productId: string, first = 8): Promise<ShopifyProduct['node'][]> {
+export async function fetchRelatedProducts(productId: string): Promise<ShopifyProduct['node'][]> {
   try {
-    const data = await storefrontApiRequest(RELATED_PRODUCTS_QUERY, { productId, first });
+    const data = await storefrontApiRequest(RELATED_PRODUCTS_QUERY, { productId });
     if (!data) return [];
     return data.data.productRecommendations || [];
   } catch (error) {
